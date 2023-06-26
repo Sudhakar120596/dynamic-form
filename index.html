@@ -142,6 +142,8 @@
 // AJAX function to submit the form
       $('#TripForm').submit(function(e) {
       e.preventDefault();
+      alert('Form submitted'); // simple alert to verify the form submission event
+
 
       var data = $(this).serializeArray(); // This is an array of objects
       var travelerData = []; // This will store all traveler data
