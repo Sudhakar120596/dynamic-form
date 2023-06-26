@@ -18,29 +18,33 @@
     </select>
 
     <!-- Section 1 -->
-    <h2>Section 1</h2>
-    <label for="destination">Destination:</label>
-    <input type="text" id="destination" name="destination" maxlength="20">
+    <div id="section1">
+      <h2>Section 1</h2>
+      <label for="destination">Destination:</label>
+      <input type="text" id="destination" name="destination" maxlength="20">
+      
+      <label for="tripStartDate">Trip Starting Date:</label>
+      <input type="date" id="tripStartDate" name="tripStartDate">
+      
+      <label for="tripEndDate">Trip End Date:</label>
+      <input type="date" id="tripEndDate" name="tripEndDate">
+      
+      <label for="bookingID">Booking ID:</label>
+      <input type="text" id="bookingID" name="bookingID" maxlength="20">
+      
+      <label for="numberOfTravelers">No. Of Travelers:</label>
+      <input type="number" id="numberOfTravelers" name="numberOfTravelers" min="1">
 
-    <label for="tripStartDate">Trip Starting Date:</label>
-    <input type="date" id="tripStartDate" name="tripStartDate">
-
-    <label for="tripEndDate">Trip End Date:</label>
-    <input type="date" id="tripEndDate" name="tripEndDate">
-
-    <label for="bookingID">Booking ID:</label>
-    <input type="text" id="bookingID" name="bookingID" maxlength="20">
-
-    <label for="numberOfTravelers">No. Of Travelers:</label>
-    <input type="number" id="numberOfTravelers" name="numberOfTravelers" min="1">
-
-    <!-- Section 2 -->
-    <h2>Section 2</h2>
-
-    <!-- Traveler Info -->
-    <div id="travelerInfoContainer">
-      <!-- Traveler info will be added here -->
+      <button type="button" id="goToSection2">Next</button>
     </div>
+
+    <div id="section2" style="display: none;">
+      <!-- Section 2 -->
+      <h2>Section 2</h2>
+      <!-- Your form fields here -->
+      <div id="travelerInfoContainer">
+        <!-- Traveler info will be added here -->
+      </div>
 
     <input type="submit" value="Submit">
   </form>
