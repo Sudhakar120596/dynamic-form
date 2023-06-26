@@ -50,7 +50,7 @@
   </form>
 
   <script>
-    $(document).ready(function() {
+   $(document).ready(function() {
   // Update form fields when service type changes
   $('#serviceType').change(function() {
     if ($(this).val() === 'CabRental') {
@@ -60,6 +60,11 @@
       $('.foodChoice').show();
       $('.foodAllergy').show();
     }
+  });
+
+  $('#goToSection2').click(function() {
+    $('#section1').hide();
+    $('#section2').show();
   });
 
   // Update traveler info fields when number of travelers changes
