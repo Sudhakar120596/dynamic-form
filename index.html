@@ -141,24 +141,35 @@
   });
 // AJAX function to submit the form
       $('#TripForm').submit(function(e) {
-        e.preventDefault();
+      e.preventDefault();
 
-        var form = $(this);
-        var url = 'https://script.google.com/macros/s/AKfycbyYuAM1Z1_zCNoZQaiJsDcMiz_zeVhMhiR9uh-RJbqj0b13apt7kb4butPwi8Att3KUEw/exec';
+      var data = $(this).serializeArray(); // This is an array of objects
+      var travelerData = []; // This will store all traveler data
 
-        $.ajax({
-          type: 'POST',
-          url: url,
-          data: form.serialize(),
-          success: function(data) {
-            console.log('Submission successful');
-          },
-          error: function(err) {
-            console.log('There was an error: ', err);
-          }
-        });
+      data.forEach(function(item) {
+        if (item.name.startsWith('traveler')) {
+          travelerData.push(item);
+          data.splice(data.indexOf(item), 1);
+        }
+      });
+
+      data.push({name: 'travelers', value: JSON.stringify(travelerData)});
+
+      var url = 'https://script.google.com/macros/s/AKfycbyYuAM1Z1_zCNoZQaiJsDcMiz_zeVhMhiR9uh-RJbqj0b13apt7kb4butPwi8Att3KUEw/exec';
+
+      $.ajax({
+        type: 'POST',
+        url: url,
+        data: $.param(data), // This converts our data array back into a serialized string
+        success: function(data) {
+          console.log('Submission successful');
+        },
+        error: function(err) {
+          console.log('There was an error: ', err);
+        }
       });
     });
-  </script>
+  });
+</script>
 </body>
 </html>
