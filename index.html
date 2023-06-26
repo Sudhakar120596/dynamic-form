@@ -156,24 +156,25 @@ $('#numberOfTravelers').change();
       alert('Form submitted'); // simple alert to verify the form submission event
 
 
-      var data = $(this).serializeArray(); // This is an array of objects
       var travelerData = []; // This will store all traveler data
+      var data = $(this).serializeArray();
 
-      data.forEach(function(item) {
+      data = data.filter(function(item) {
         if (item.name.startsWith('traveler')) {
           travelerData.push(item);
-          data.splice(data.indexOf(item), 1);
+          return false;
         }
+        return true;
       });
 
-      data.push({name: 'travelers', value: JSON.stringify(travelerData)});
-
+      // Append the traveler data as a URL-encoded string
+      var dataString = $.param(data) + "&travelers=" + encodeURIComponent(JSON.stringify(travelerData));
       var url = 'https://script.google.com/macros/s/AKfycbyYuAM1Z1_zCNoZQaiJsDcMiz_zeVhMhiR9uh-RJbqj0b13apt7kb4butPwi8Att3KUEw/exec';
 
       $.ajax({
         type: 'POST',
         url: url,
-        data: $.param(data), // This converts our data array back into a serialized string
+        data: dataString, // This converts our data array back into a serialized string
         success: function(data) {
           console.log('Submission successful');
         },
