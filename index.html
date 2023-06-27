@@ -54,18 +54,19 @@
 
   <script>
    $(document).ready(function() {
-     var firebaseConfig = {
-    apiKey: "AIzaSyDT1R0e9RHa6L9NWWV3Mk9SI6gYHIepe_0",
-    authDomain: "customer-data-f1dd3.firebaseapp.com",
-    projectId: "customer-data-f1dd3",
-    storageBucket: "customer-data-f1dd3.appspot.com",
-    messagingSenderId: "789752762056",
-    appId: "1:789752762056:web:7d434ab157de5ede179ffd",
-    measurementId: "G-4C2QQE2XGX"
-  };
+    const firebaseConfig = {
+      apiKey: "AIzaSyDT1R0e9RHa6L9NWWV3Mk9SI6gYHIepe_0",
+      authDomain: "customer-data-f1dd3.firebaseapp.com",
+      projectId: "customer-data-f1dd3",
+      storageBucket: "customer-data-f1dd3.appspot.com",
+      messagingSenderId: "789752762056",
+      appId: "1:789752762056:web:7d434ab157de5ede179ffd",
+      measurementId: "G-4C2QQE2XGX"
+    };
   
     // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore(app);
 
   // Update form fields when service type changes
   $('#serviceType').change(function() {
@@ -167,11 +168,9 @@
 // Trigger the change event manually
 $('#numberOfTravelers').change();
 // AJAX function to submit the form
-      $('#TripForm').submit(function(e) {
+    $('#TripForm').submit(function(e) {
       e.preventDefault();
-      alert('Form submitted'); // simple alert to verify the form submission event
-
-
+      
       var travelerData = []; // This will store all traveler data
       var data = $(this).serializeArray();
 
@@ -185,18 +184,16 @@ $('#numberOfTravelers').change();
 
       // Append the traveler data as a URL-encoded string
       var dataString = $.param(data) + "&travelers=" + encodeURIComponent(JSON.stringify(travelerData));
-      var url = 'https://script.google.com/macros/s/AKfycbwsrsd-5g8IaWkcS9ccsERt6gWodni6w2hVCBNGL7fjbpWGM-Nia_nEBzrQgqGlo8KRKA/exec';
 
-      $.ajax({
-        type: 'POST',
-        url: url,
-        data: dataString, // This converts our data array back into a serialized string
-        success: function(data) {
-          console.log('Submission successful');
-        },
-        error: function(err) {
-          console.log('There was an error: ', err);
-        }
+      // Adding document to Firestore
+      db.collection("forms").add({
+        formData: dataString
+      })
+      .then((docRef) => {
+          console.log("Document written with ID: ", docRef.id);
+      })
+      .catch((error) => {
+          console.error("Error adding document: ", error);
       });
     });
   });
