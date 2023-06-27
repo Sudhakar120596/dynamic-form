@@ -4,12 +4,12 @@
   <title>Dynamic Form</title>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <!-- Include the Firebase libraries -->
+  <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
 </head>
 <body>
   <h1>Dynamic Form</h1>
-  <!-- Google sign-in button -->
-  <div class="g_id_signin" data-client_id="789752762056-13c29hj9653p9n2j2qq1a6pv7ite81ss.apps.googleusercontent.com"></div>
   
   <form id="TripForm">
     <label for="serviceType">Type of Service:</label>
@@ -53,25 +53,20 @@
   </form>
 
   <script>
-    function handleCredentialResponse(response) {
-      // This function will be called once the user successfully authenticated with Google.
-      // You might want to send the id_token to your backend for verification.
-      // For now, we'll just display the form.
-      $('#TripForm').show();
-    }
-
-    window.onload = function() {
-      // Configure the sign-in button
-      google.accounts.id.initialize({
-        client_id: '789752762056-13c29hj9653p9n2j2qq1a6pv7ite81ss.apps.googleusercontent.com',
-        callback: handleCredentialResponse
-      });
-      google.accounts.id.renderButton(
-        document.querySelector(".g_id_signin"),
-        {theme: 'outline', size: 'large'}  // customize the look of the button
-      );
-    }
    $(document).ready(function() {
+     var firebaseConfig = {
+    apiKey: "AIzaSyDT1R0e9RHa6L9NWWV3Mk9SI6gYHIepe_0",
+    authDomain: "customer-data-f1dd3.firebaseapp.com",
+    projectId: "customer-data-f1dd3",
+    storageBucket: "customer-data-f1dd3.appspot.com",
+    messagingSenderId: "789752762056",
+    appId: "1:789752762056:web:7d434ab157de5ede179ffd",
+    measurementId: "G-4C2QQE2XGX"
+  };
+  
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
   // Update form fields when service type changes
   $('#serviceType').change(function() {
     if ($(this).val() === 'CabRental') {
