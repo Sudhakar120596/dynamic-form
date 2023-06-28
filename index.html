@@ -190,7 +190,9 @@ $('#numberOfTravelers').change();
         formData: dataString
       })
       .then((docRef) => {
-          console.log("Document written with ID: ", docRef.id);
+        console.log("Document written with ID: ", docRef.id);
+        // Hide the form after successful submission
+        $('#TripForm').hide();
       })
       .catch((error) => {
           console.error("Error adding document: ", error);
