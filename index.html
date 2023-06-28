@@ -171,36 +171,51 @@ $('#numberOfTravelers').change();
     $('#TripForm').submit(function(e) {
       e.preventDefault();
       
-      var travelerData = []; // This will store all traveler data
-      var data = $(this).serializeArray();
+  // Get the form data
+  var data = $(this).serializeArray();
 
-      data = data.filter(function(item) {
-        if (item.name.startsWith('traveler')) {
-          travelerData.push(item);
-          return false;
-        }
-        return true;
-      });
+  // Convert the form data to an object
+  var formData = {};
+  data.forEach(function(item) {
+    formData[item.name] = item.value;
+  });
 
-      // Append the traveler data as a URL-encoded string
-      var dataString = $.param(data) + "&travelers=" + encodeURIComponent(JSON.stringify(travelerData));
+  // Get the traveler data
+  var travelerData = [];
+  var numberOfTravelers = formData['numberOfTravelers'];
+  for (var i = 0; i < numberOfTravelers; i++) {
+    var traveler = {};
+    traveler['travelerName'] = formData['travelerName' + i];
+    // Add all other traveler fields...
+    travelerData.push(traveler);
+  }
 
-      // Adding document to Firestore
-      db.collection("forms").add({
-        formData: dataString
-      })
-      .then((docRef) => {
-        console.log("Document written with ID: ", docRef.id);
-        // Hide the form after successful submission
-        $('#TripForm').hide();
+  // Remove the individual traveler fields from the form data
+  Object.keys(formData).forEach(function(key) {
+    if (key.startsWith('traveler')) {
+      delete formData[key];
+    }
+  });
 
-        // Show a success message
-        $('body').append('<p>Your form has been successfully submitted!</p>');
-      })
-      .catch((error) => {
-          console.error("Error adding document: ", error);
-      });
-    });
+  // Add the traveler data to the form data
+  formData['travelers'] = travelerData;
+
+  // Adding document to Firestore
+  db.collection("forms").add({
+    formData: formData
+  })
+  .then((docRef) => {
+    console.log("Document written with ID: ", docRef.id);
+    // Hide the form after successful submission
+    $('#TripForm').hide();
+
+    // Show a success message
+    $('body').append('<p>Your form has been successfully submitted!</p>');
+  })
+  .catch((error) => {
+    console.error("Error adding document: ", error);
+  });
+});
   });
 </script>
 </body>
