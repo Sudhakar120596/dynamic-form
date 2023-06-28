@@ -165,9 +165,10 @@
       `);
     }
   });
-// Trigger the change event manually
-$('#numberOfTravelers').change();
-// AJAX function to submit the form
+    // Trigger the change event manually
+    $('#numberOfTravelers').change();
+
+    // AJAX function to submit the form
     $('#TripForm').submit(function(e) {
       e.preventDefault();
       
@@ -190,7 +191,6 @@ $('#numberOfTravelers').change();
         .catch((error) => {
           console.error("Error adding document: ", error);
         });
-      });
     });
   });
 </script>
