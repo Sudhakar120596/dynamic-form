@@ -52,8 +52,8 @@
     <input type="submit" value="Submit">
   </form>
 
-  <script>
-   $(document).ready(function() {
+<script>
+  $(document).ready(function() {
     const firebaseConfig = {
       apiKey: "AIzaSyDT1R0e9RHa6L9NWWV3Mk9SI6gYHIepe_0",
       authDomain: "customer-data-f1dd3.firebaseapp.com",
@@ -67,104 +67,103 @@
     // Initialize Firebase
     const app = firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore(app);
+    
+    // Update form fields when service type changes
+    $('#serviceType').change(function() {
+      if ($(this).val() === 'CabRental') {
+        $('.foodChoice').hide();
+        $('.foodAllergy').hide();
+      } else {
+        $('.foodChoice').show();
+        $('.foodAllergy').show();
+      }
+    });
 
-  // Update form fields when service type changes
-  $('#serviceType').change(function() {
-    if ($(this).val() === 'CabRental') {
-      $('.foodChoice').hide();
-      $('.foodAllergy').hide();
-    } else {
-      $('.foodChoice').show();
-      $('.foodAllergy').show();
-    }
-  });
+    $('#goToSection2').click(function() {
+      $('#section1').hide();
+      $('#section2').show();
+    });
 
-  $('#goToSection2').click(function() {
-    $('#section1').hide();
-    $('#section2').show();
-  });
+    // Update traveler info fields when number of travelers changes
+    $('#numberOfTravelers').change(function() {
+      var numberOfTravelers = $(this).val();
 
-  // Update traveler info fields when number of travelers changes
-  $('#numberOfTravelers').change(function() {
-    var numberOfTravelers = $(this).val();
-
-    // Clear the traveler info container
-    $('#travelerInfoContainer').empty();
-
-    // Add the traveler info fields for each traveler
-    for (var i = 0; i < numberOfTravelers; i++) {
-      $('#travelerInfoContainer').append(`
+      // Clear the traveler info container
+      $('#travelerInfoContainer').empty();
+      
+      // Add the traveler info fields for each traveler
+for (var i = 0; i < numberOfTravelers; i++) {
+    $('#travelerInfoContainer').append(`
         <div class="travelerInfo">
-          <h3>Traveler ${i + 1}</h3>
+            <h3>Traveler ${i + 1}</h3>
 
-          <label for="travelerName${i}">Your Name:</label>
-          <input type="text" id="travelerName${i}" name="travelerName${i}" maxlength="20">
+            <label for="travelerName${i}">Your Name:</label>
+            <input type="text" id="travelerName${i}" name="travelerName${i}" maxlength="20">
 
-          <label for="age${i}">Age:</label>
-          <input type="number" id="age${i}" name="age${i}">
+            <label for="age${i}">Age:</label>
+            <input type="number" id="age${i}" name="age${i}">
 
-          <label for="gender${i}">Gender:</label>
-          <select id="gender${i}" name="gender${i}">
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-            <option value="Other">Other</option>
-          </select>
+            <label for="gender${i}">Gender:</label>
+            <select id="gender${i}" name="gender${i}">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select>
 
-          <label for="email${i}">Email:</label>
-          <input type="email" id="email${i}" name="email${i}" maxlength="20">
+            <label for="email${i}">Email:</label>
+            <input type="email" id="email${i}" name="email${i}" maxlength="20">
 
-          <label for="phone${i}">Phone Number:</label>
-          <input type="tel" id="phone${i}" name="phone${i}">
+            <label for="phone${i}">Phone Number:</label>
+            <input type="tel" id="phone${i}" name="phone${i}">
 
-          <label for="idProof${i}">Voter/Aadhar Id proof (Max 10mb):</label>
-          <input type="file" id="idProof${i}" name="idProof${i}">
+            <label for="idProof${i}">Voter/Aadhar Id proof (Max 10mb):</label>
+            <input type="file" id="idProof${i}" name="idProof${i}">
 
-          <label for="emergencyContactName${i}">Emergency Contact Name:</label>
-          <input type="text" id="emergencyContactName${i}" name="emergencyContactName${i}" maxlength="30">
+            <label for="emergencyContactName${i}">Emergency Contact Name:</label>
+            <input type="text" id="emergencyContactName${i}" name="emergencyContactName${i}" maxlength="30">
 
-          <label for="emergencyContactNumber${i}">Emergency Contact Number:</label>
-          <input type="tel" id="emergencyContactNumber${i}" name="emergencyContactNumber${i}">
+            <label for="emergencyContactNumber${i}">Emergency Contact Number:</label>
+            <input type="tel" id="emergencyContactNumber${i}" name="emergencyContactNumber${i}">
 
-          <label class="foodChoice" for="foodChoice${i}">What Food do you want to choose?</label>
-          <select class="foodChoice" id="foodChoice${i}" name="foodChoice${i}">
-            <option value="Veg">Veg</option>
-            <option value="Nonveg">Nonveg</option>
-            <option value="Only Egg">Only Egg</option>
-            <option value="NA">N/A</option>
-          </select>
+            <label class="foodChoice" for="foodChoice${i}">What Food do you want to choose?</label>
+            <select class="foodChoice" id="foodChoice${i}" name="foodChoice${i}">
+                <option value="Veg">Veg</option>
+                <option value="Nonveg">Nonveg</option>
+                <option value="Only Egg">Only Egg</option>
+                <option value="NA">N/A</option>
+            </select>
 
-          <label class="foodAllergy" for="foodAllergy${i}">Do you have any type of food allergies?</label>
-          <select class="foodAllergy" id="foodAllergy${i}" name="foodAllergy${i}">
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-            <option value="NA">N/A</option>
-          </select>
+            <label class="foodAllergy" for="foodAllergy${i}">Do you have any type of food allergies?</label>
+            <select class="foodAllergy" id="foodAllergy${i}" name="foodAllergy${i}">
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">N/A</option>
+            </select>
 
-          <label for="covidSymptoms${i}">Any type of Covid-19 Symptoms?</label>
-          <select id="covidSymptoms${i}" name="covidSymptoms${i}">
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-          </select>
+            <label for="covidSymptoms${i}">Any type of Covid-19 Symptoms?</label>
+            <select id="covidSymptoms${i}" name="covidSymptoms${i}">
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+            </select>
 
-          <label for="covidAffected${i}">Have you been affected with Covid-19 within the last 90 days?</label>
-          <select id="covidAffected${i}" name="covidAffected${i}">
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-          </select>
+            <label for="covidAffected${i}">Have you been affected with Covid-19 within the last 90 days?</label>
+            <select id="covidAffected${i}" name="covidAffected${i}">
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+            </select>
 
-          <label for="vaccineDose${i}">Have you taken any dose of Covid-19 Vaccine?</label>
-          <select id="vaccineDose${i}" name="vaccineDose${i}">
-            <option value="No">No</option>
-            <option value="Dose1">Dose 1</option>
-            <option value="Both Dose">Both Dose</option>
-          </select>
+            <label for="vaccineDose${i}">Have you taken any dose of Covid-19 Vaccine?</label>
+            <select id="vaccineDose${i}" name="vaccineDose${i}">
+                <option value="No">No</option>
+                <option value="Dose1">Dose 1</option>
+                <option value="Both Dose">Both Dose</option>
+            </select>
 
-          <label for="vaccineCertificate${i}">If yes, upload your vaccination certificate (Max 10mb):</label>
-          <input type="file" id="vaccineCertificate${i}" name="vaccineCertificate${i}">
+            <label for="vaccineCertificate${i}">If yes, upload your vaccination certificate (Max 10mb):</label>
+            <input type="file" id="vaccineCertificate${i}" name="vaccineCertificate${i}">
         </div>
-      `);
-    }
-  });
+    `);
+}
     // Trigger the change event manually
     $('#numberOfTravelers').change();
 
