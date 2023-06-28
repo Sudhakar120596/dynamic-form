@@ -193,6 +193,9 @@ $('#numberOfTravelers').change();
         console.log("Document written with ID: ", docRef.id);
         // Hide the form after successful submission
         $('#TripForm').hide();
+
+        // Show a success message
+        $('body').append('<p>Your form has been successfully submitted!</p>');
       })
       .catch((error) => {
           console.error("Error adding document: ", error);
