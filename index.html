@@ -174,31 +174,22 @@ $('#numberOfTravelers').change();
       var travelerData = []; // This will store all traveler data
       var data = $(this).serializeArray();
 
-      data = data.filter(function(item) {
-        if (item.name.startsWith('traveler')) {
-          travelerData.push(item);
-          return false;
-        }
-        return true;
-      });
-
-      // Append the traveler data as a URL-encoded string
-      var dataString = $.param(data) + "&travelers=" + encodeURIComponent(JSON.stringify(travelerData));
-
+      // Convert form data to an object
+      var dataObject = {};
+      for (var item of data) {
+        dataObject[item.name] = item.value;
+      }
+      
       // Adding document to Firestore
-      db.collection("forms").add({
-        formData: dataString
-      })
-      .then((docRef) => {
-        console.log("Document written with ID: ", docRef.id);
-        // Hide the form after successful submission
-        $('#TripForm').hide();
-
-        // Show a success message
-        $('body').append('<p>Your form has been successfully submitted!</p>');
-      })
-      .catch((error) => {
+      db.collection("forms").add(dataObject)
+        .then((docRef) => {
+          console.log("Document written with ID: ", docRef.id);
+          $('#TripForm').hide();
+          $('body').append('<p>Your form has been successfully submitted!</p>');
+        })
+        .catch((error) => {
           console.error("Error adding document: ", error);
+        });
       });
     });
   });
