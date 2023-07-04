@@ -7,6 +7,7 @@
   <!-- Include the Firebase libraries -->
   <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-storage.js"></script>
 </head>
 <body>
   <h1>Dynamic Form</h1>
@@ -67,6 +68,7 @@
     // Initialize Firebase
     const app = firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore(app);
+    const storage = firebase.storage(app);
 
   // Update form fields when service type changes
   $('#serviceType').change(function() {
@@ -168,9 +170,9 @@
 // Trigger the change event manually
 $('#numberOfTravelers').change();
 // AJAX function to submit the form
-    $('#TripForm').submit(function(e) {
-      e.preventDefault();
-      
+$('#TripForm').submit(function(e) {
+  e.preventDefault();
+  
   // Get the form data
   var data = $(this).serializeArray();
 
@@ -180,13 +182,16 @@ $('#numberOfTravelers').change();
     formData[item.name] = item.value;
   });
 
-  // Get the traveler data
+  // Get the traveler data and files
   var travelerData = [];
   var numberOfTravelers = formData['numberOfTravelers'];
   for (var i = 0; i < numberOfTravelers; i++) {
     var traveler = {};
+
     traveler['travelerName'] = formData['travelerName' + i];
-    // Add all other traveler fields...
+    traveler['idProof'] = document.getElementById('idProof' + i).files[0];
+    traveler['vaccineCertificate'] = document.getElementById('vaccineCertificate' + i).files[0];
+
     travelerData.push(traveler);
   }
 
@@ -200,23 +205,46 @@ $('#numberOfTravelers').change();
   // Add the traveler data to the form data
   formData['travelers'] = travelerData;
 
-  // Adding document to Firestore
-  db.collection("forms").add({
-    formData: formData
-  })
-  .then((docRef) => {
-    console.log("Document written with ID: ", docRef.id);
-    // Hide the form after successful submission
-    $('#TripForm').hide();
+  // Upload files to Firebase Storage and get the download URLs
+  var uploadPromises = [];
+  formData['travelers'].forEach(function(traveler, index) {
+    ['idProof', 'vaccineCertificate'].forEach(function(field) {
+      if (traveler[field]) {
+        var uploadTask = storage.ref().child('files/' + traveler[field].name).put(traveler[field]);
+        uploadPromises.push(uploadTask);
+        uploadTask.on('state_changed', function(snapshot) {
+          // Handle the upload task state change events
+        }, function(error) {
+          // Handle unsuccessful uploads
+          console.error('Upload failed:', error);
+        }, function() {
+          // Handle successful uploads on complete
+          uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+            formData['travelers'][index][field + 'URL'] = downloadURL;
+          });
+        });
+      }
+    });
+  });
 
-    // Show a success message
-    $('body').append('<p>Your form has been successfully submitted!</p>');
-  })
-  .catch((error) => {
-    console.error("Error adding document: ", error);
+  // When all files are uploaded, add the form data to Firestore
+  Promise.all(uploadPromises).then(function() {
+    db.collection("forms").add({
+      formData: formData
+    })
+    .then((docRef) => {
+      console.log("Document written with ID: ", docRef.id);
+      // Hide the form after successful submission
+      $('#TripForm').hide();
+
+      // Show a success message
+      $('body').append('<p>Your form has been successfully submitted!</p>');
+    })
+    .catch((error) => {
+      console.error("Error adding document: ", error);
+    });
   });
 });
-  });
 </script>
 </body>
 </html>
