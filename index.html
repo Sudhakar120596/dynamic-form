@@ -170,81 +170,100 @@
 // Trigger the change event manually
 $('#numberOfTravelers').change();
 // AJAX function to submit the form
-$('#TripForm').submit(function(e) {
-  e.preventDefault();
-  
-  // Get the form data
-  var data = $(this).serializeArray();
+    $('#TripForm').submit(function(e) {
+      e.preventDefault();
 
-  // Convert the form data to an object
-  var formData = {};
-  data.forEach(function(item) {
-    formData[item.name] = item.value;
-  });
+      // Get the form data
+      var data = $(this).serializeArray();
 
-  // Get the traveler data and files
-  var travelerData = [];
-  var numberOfTravelers = formData['numberOfTravelers'];
-  for (var i = 0; i < numberOfTravelers; i++) {
-    var traveler = {};
+      // Convert the form data to an object
+      var formData = {};
+      data.forEach(function(item) {
+        formData[item.name] = item.value;
+      });
 
-    traveler['travelerName'] = formData['travelerName' + i];
-    traveler['idProof'] = document.getElementById('idProof' + i).files[0];
-    traveler['vaccineCertificate'] = document.getElementById('vaccineCertificate' + i).files[0];
+      // Get the traveler data
+      var travelerData = [];
+      var numberOfTravelers = formData['numberOfTravelers'];
+      for (var i = 0; i < numberOfTravelers; i++) {
+        var traveler = {};
+        traveler['travelerName'] = formData['travelerName' + i];
+        traveler['travelerAge'] = formData['travelerAge' + i];
+        traveler['travelerGender'] = formData['travelerGender' + i];
+        traveler['travelerEmail'] = formData['travelerEmail' + i];
+        traveler['travelerPhoneNumber'] = formData['travelerPhoneNumber' + i];
+        traveler['travelerEmergencyContactName'] = formData['travelerEmergencyContactName' + i];
+        traveler['travelerEmergencyContactNumber'] = formData['travelerEmergencyContactNumber' + i];
+        traveler['travelerFoodChoice'] = formData['travelerFoodChoice' + i];
+        traveler['travelerFoodAllergies'] = formData['travelerFoodAllergies' + i];
+        traveler['travelerCovidSymptoms'] = formData['travelerCovidSymptoms' + i];
+        traveler['travelerCovidAffected'] = formData['travelerCovidAffected' + i];
+        traveler['travelerVaccineDose'] = formData['travelerVaccineDose' + i];
+        travelerData.push(traveler);
+      }
 
-    travelerData.push(traveler);
-  }
+      // Remove the individual traveler fields from the form data
+      Object.keys(formData).forEach(function(key) {
+        if (key.startsWith('traveler')) {
+          delete formData[key];
+        }
+      });
 
-  // Remove the individual traveler fields from the form data
-  Object.keys(formData).forEach(function(key) {
-    if (key.startsWith('traveler')) {
-      delete formData[key];
-    }
-  });
+      // Add the traveler data to the form data
+      formData['travelers'] = travelerData;
 
-  // Add the traveler data to the form data
-  formData['travelers'] = travelerData;
+      // Create new document and get its ID
+      let newDocRef = db.collection("forms").doc();
 
-  // Upload files to Firebase Storage and get the download URLs
-  var uploadPromises = [];
-  formData['travelers'].forEach(function(traveler, index) {
-    ['idProof', 'vaccineCertificate'].forEach(function(field) {
-      if (traveler[field]) {
-        var uploadTask = storage.ref().child('files/' + traveler[field].name).put(traveler[field]);
-        uploadPromises.push(uploadTask);
-        uploadTask.on('state_changed', function(snapshot) {
-          // Handle the upload task state change events
-        }, function(error) {
-          // Handle unsuccessful uploads
-          console.error('Upload failed:', error);
-        }, function() {
-          // Handle successful uploads on complete
-          uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-            formData['travelers'][index][field + 'URL'] = downloadURL;
+      // Upload files to Firebase Storage using the document ID as the folder name
+      var promises = [];
+      for (var i = 0; i < numberOfTravelers; i++) {
+        var idProofFile = document.getElementById('idProof' + i).files[0];
+        var vaccineCertFile = document.getElementById('vaccineCertificate' + i).files[0];
+
+        var idProofRef = storage.ref(newDocRef.id + '/idProof' + i);
+        var vaccineCertRef = storage.ref(newDocRef.id + '/vaccineCertificate' + i);
+
+        promises.push(idProofRef.put(idProofFile));
+        promises.push(vaccineCertRef.put(vaccineCertFile));
+      }
+
+      // Once all files are uploaded, get download URLs and add to Firestore document
+      Promise.all(promises).then(() => {
+        var urlPromises = [];
+
+        for (var i = 0; i < numberOfTravelers; i++) {
+          var idProofRef = storage.ref(newDocRef.id + '/idProof' + i);
+          var vaccineCertRef = storage.ref(newDocRef.id + '/vaccineCertificate' + i);
+
+          urlPromises.push(idProofRef.getDownloadURL());
+          urlPromises.push(vaccineCertRef.getDownloadURL());
+        }
+
+        Promise.all(urlPromises).then((urls) => {
+          for (var i = 0; i < numberOfTravelers; i++) {
+            formData['travelers'][i]['idProofURL'] = urls[i * 2];
+            formData['travelers'][i]['vaccineCertificateURL'] = urls[i * 2 + 1];
+          }
+
+          // Add the form data to Firestore
+          newDocRef.set({
+              formData: formData
+          })
+          .then(() => {
+              console.log("Document written with ID: ", newDocRef.id);
+              // Hide the form after successful submission
+              $('#TripForm').hide();
+
+              // Show a success message
+              $('body').append('<p>Your form has been successfully submitted!</p>');
+          })
+          .catch((error) => {
+            console.error("Error adding document: ", error);
           });
         });
-      }
+      });
     });
-  });
-
-  // When all files are uploaded, add the form data to Firestore
-  Promise.all(uploadPromises).then(function() {
-    db.collection("forms").add({
-      formData: formData
-    })
-    .then((docRef) => {
-      console.log("Document written with ID: ", docRef.id);
-      // Hide the form after successful submission
-      $('#TripForm').hide();
-
-      // Show a success message
-      $('body').append('<p>Your form has been successfully submitted!</p>');
-    })
-    .catch((error) => {
-      console.error("Error adding document: ", error);
-    });
-  });
-});
-</script>
+  </script>
 </body>
 </html>
