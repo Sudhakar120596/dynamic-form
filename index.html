@@ -54,6 +54,11 @@
 
   <script>
   $(document).ready(function() {
+    $('#goToSection2').click(function() {
+      $('#section1').hide();
+      $('#section2').show();
+    });
+  
     const firebaseConfig = {
       apiKey: "AIzaSyDT1R0e9RHa6L9NWWV3Mk9SI6gYHIepe_0",
       authDomain: "customer-data-f1dd3.firebaseapp.com",
@@ -78,11 +83,6 @@
         $('.foodChoice').show();
         $('.foodAllergy').show();
       }
-    });
-    
-    $(document).on('click', '#goToSection2', function() {
-      $('#section1').hide();
-      $('#section2').show();
     });
     
     // Update traveler info fields when number of travelers changes
