@@ -7,10 +7,10 @@
   <!-- Include the Firebase libraries -->
   <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-storage.js"></script>
 </head>
 <body>
-  <h1>Customer Data</h1>
+  <h1>Dynamic Form</h1>
+  
   <form id="TripForm">
     <label for="serviceType">Type of Service:</label>
     <select id="serviceType" name="serviceType">
@@ -53,23 +53,22 @@
   </form>
 
   <script>
-    $(document).ready(function() {
-      const firebaseConfig = {
-        apiKey: "AIzaSyDT1R0e9RHa6L9NWWV3Mk9SI6gYHIepe_0",
-        authDomain: "customer-data-f1dd3.firebaseapp.com",
-        projectId: "customer-data-f1dd3",
-        storageBucket: "customer-data-f1dd3.appspot.com",
-        messagingSenderId: "789752762056",
-        appId: "1:789752762056:web:7d434ab157de5ede179ffd",
-        measurementId: "G-4C2QQE2XGX"
-      };
+   $(document).ready(function() {
+    const firebaseConfig = {
+      apiKey: "AIzaSyDT1R0e9RHa6L9NWWV3Mk9SI6gYHIepe_0",
+      authDomain: "customer-data-f1dd3.firebaseapp.com",
+      projectId: "customer-data-f1dd3",
+      storageBucket: "customer-data-f1dd3.appspot.com",
+      messagingSenderId: "789752762056",
+      appId: "1:789752762056:web:7d434ab157de5ede179ffd",
+      measurementId: "G-4C2QQE2XGX"
+    };
   
     // Initialize Firebase
-      const app = firebase.initializeApp(firebaseConfig);
-      const db = firebase.firestore(app);
-      const storage = firebase.storage(app);
-    
-    // Update form fields when service type changes
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore(app);
+
+  // Update form fields when service type changes
   $('#serviceType').change(function() {
     if ($(this).val() === 'CabRental') {
       $('.foodChoice').hide();
@@ -80,30 +79,27 @@
     }
   });
 
-
-  console.log("Next button clicked");
   $('#goToSection2').click(function() {
     $('#section1').hide();
     $('#section2').show();
   });
-  
+
   // Update traveler info fields when number of travelers changes
   $('#numberOfTravelers').change(function() {
     var numberOfTravelers = $(this).val();
-    
+
     // Clear the traveler info container
-    
     $('#travelerInfoContainer').empty();
-    
+
     // Add the traveler info fields for each traveler
     for (var i = 0; i < numberOfTravelers; i++) {
       $('#travelerInfoContainer').append(`
         <div class="travelerInfo">
           <h3>Traveler ${i + 1}</h3>
-          
+
           <label for="travelerName${i}">Your Name:</label>
           <input type="text" id="travelerName${i}" name="travelerName${i}" maxlength="20">
-          
+
           <label for="age${i}">Age:</label>
           <input type="number" id="age${i}" name="age${i}">
 
@@ -167,109 +163,60 @@
           <input type="file" id="vaccineCertificate${i}" name="vaccineCertificate${i}">
         </div>
       `);
-    });
-    
+    }
+  });
 // Trigger the change event manually
-
 $('#numberOfTravelers').change();
-
 // AJAX function to submit the form
-    
     $('#TripForm').submit(function(e) {
       e.preventDefault();
-
-      // Get the form data
-      var data = $(this).serializeArray();
-
-      // Convert the form data to an object
-      var formData = {};
-      data.forEach(function(item) {
-        formData[item.name] = item.value;
-      });
-
-      // Get the traveler data
-      var travelerData = [];
-      var numberOfTravelers = formData['numberOfTravelers'];
-      for (var i = 0; i < numberOfTravelers; i++) {
-        var traveler = {};
-        traveler['travelerName'] = formData['travelerName' + i];
-        traveler['age'] = formData['age' + i];
-        traveler['gender'] = formData['gender' + i];
-        traveler['email'] = formData['email' + i];
-        traveler['phone'] = formData['phone' + i];
-        traveler['emergencyContactName'] = formData['emergencyContactName' + i];
-        traveler['emergencyContactNumber'] = formData['emergencyContactNumber' + i];
-        traveler['foodChoice'] = formData['foodChoice' + i];
-        traveler['foodAllergy'] = formData['foodAllergy' + i];
-        traveler['covidSymptoms'] = formData['covidSymptoms' + i];
-        traveler['covidAffected'] = formData['covidAffected' + i];
-        traveler['vaccineDose'] = formData['vaccineDose' + i];
-        travelerData.push(traveler);
       
-      }
+  // Get the form data
+  var data = $(this).serializeArray();
 
-      // Remove the individual traveler fields from the form data
-      Object.keys(formData).forEach(function(key) {
-        if (key.startsWith('traveler')) {
-          delete formData[key];
-        }
-      });
+  // Convert the form data to an object
+  var formData = {};
+  data.forEach(function(item) {
+    formData[item.name] = item.value;
+  });
 
-      // Add the traveler data to the form data
-      formData['travelers'] = travelerData;
+  // Get the traveler data
+  var travelerData = [];
+  var numberOfTravelers = formData['numberOfTravelers'];
+  for (var i = 0; i < numberOfTravelers; i++) {
+    var traveler = {};
+    traveler['travelerName'] = formData['travelerName' + i];
+    // Add all other traveler fields...
+    travelerData.push(traveler);
+  }
 
-      // Create new document and get its ID
-      let newDocRef = db.collection("forms").doc();
+  // Remove the individual traveler fields from the form data
+  Object.keys(formData).forEach(function(key) {
+    if (key.startsWith('traveler')) {
+      delete formData[key];
+    }
+  });
 
-      // Upload files to Firebase Storage using the document ID as the folder name
-      var promises = [];
-      for (var i = 0; i < numberOfTravelers; i++) {
-        var idProofFile = document.getElementById('idProof' + i).files[0];
-        var vaccineCertFile = document.getElementById('vaccineCertificate' + i).files[0];
+  // Add the traveler data to the form data
+  formData['travelers'] = travelerData;
 
-        var idProofRef = storage.ref(newDocRef.id + '/idProof' + i);
-        var vaccineCertRef = storage.ref(newDocRef.id + '/vaccineCertificate' + i);
+  // Adding document to Firestore
+  db.collection("forms").add({
+    formData: formData
+  })
+  .then((docRef) => {
+    console.log("Document written with ID: ", docRef.id);
+    // Hide the form after successful submission
+    $('#TripForm').hide();
 
-        promises.push(idProofRef.put(idProofFile));
-        promises.push(vaccineCertRef.put(vaccineCertFile));
-      }
-
-      // Once all files are uploaded, get download URLs and add to Firestore document
-      Promise.all(promises).then(() => {
-        var urlPromises = [];
-
-        for (var i = 0; i < numberOfTravelers; i++) {
-          var idProofRef = storage.ref(newDocRef.id + '/idProof' + i);
-          var vaccineCertRef = storage.ref(newDocRef.id + '/vaccineCertificate' + i);
-
-          urlPromises.push(idProofRef.getDownloadURL());
-          urlPromises.push(vaccineCertRef.getDownloadURL());
-        }
-
-        Promise.all(urlPromises).then((urls) => {
-          for (var i = 0; i < numberOfTravelers; i++) {
-            formData['travelers'][i]['idProofURL'] = urls[i * 2];
-            formData['travelers'][i]['vaccineCertificateURL'] = urls[i * 2 + 1];
-          }
-
-          // Add the form data to Firestore
-          newDocRef.set({
-              formData: formData
-          })
-          .then(() => {
-              console.log("Document written with ID: ", newDocRef.id);
-              // Hide the form after successful submission
-              $('#TripForm').hide();
-
-              // Show a success message
-              $('body').append('<p>Your form has been successfully submitted!</p>');
-          })
-          .catch((error) => {
-            console.error("Error adding document: ", error);
-          });
-        });
-      });
-    });  
-  </script>
+    // Show a success message
+    $('body').append('<p>Your form has been successfully submitted!</p>');
+  })
+  .catch((error) => {
+    console.error("Error adding document: ", error);
+  });
+});
+  });
+</script>
 </body>
 </html>
