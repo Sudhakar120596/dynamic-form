@@ -48,54 +48,55 @@
       <div id="travelerInfoContainer">
         <!-- Traveler info will be added here -->
       </div>
+    </div>
 
     <input type="submit" value="Submit">
   </form>
 
   <script>
-  $(document).ready(function() {
-    $('#goToSection2').click(function() {
-      $('#section1').hide();
-      $('#section2').show();
-    });
-  
-    const firebaseConfig = {
-      apiKey: "AIzaSyDT1R0e9RHa6L9NWWV3Mk9SI6gYHIepe_0",
-      authDomain: "customer-data-f1dd3.firebaseapp.com",
-      projectId: "customer-data-f1dd3",
-      storageBucket: "customer-data-f1dd3.appspot.com",
-      messagingSenderId: "789752762056",
-      appId: "1:789752762056:web:7d434ab157de5ede179ffd",
-      measurementId: "G-4C2QQE2XGX"
-    };
+    $(document).ready(function() {
+      const firebaseConfig = {
+        apiKey: "AIzaSyDT1R0e9RHa6L9NWWV3Mk9SI6gYHIepe_0",
+        authDomain: "customer-data-f1dd3.firebaseapp.com",
+        projectId: "customer-data-f1dd3",
+        storageBucket: "customer-data-f1dd3.appspot.com",
+        messagingSenderId: "789752762056",
+        appId: "1:789752762056:web:7d434ab157de5ede179ffd",
+        measurementId: "G-4C2QQE2XGX"
+      };
   
     // Initialize Firebase
-    const app = firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore(app);
-    const storage = firebase.storage(app);
+      const app = firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore(app);
+      const storage = firebase.storage(app);
     
     // Update form fields when service type changes
-    $('#serviceType').change(function() {
-      if ($(this).val() === 'CabRental') {
-        $('.foodChoice').hide();
-        $('.foodAllergy').hide();
-      } else {
-        $('.foodChoice').show();
-        $('.foodAllergy').show();
-      }
-    });
+  $('#serviceType').change(function() {
+    if ($(this).val() === 'CabRental') {
+      $('.foodChoice').hide();
+      $('.foodAllergy').hide();
+    } else {
+      $('.foodChoice').show();
+      $('.foodAllergy').show();
+    }
+  });
     
-    // Update traveler info fields when number of travelers changes
-    $('#numberOfTravelers').change(function() {
-      var numberOfTravelers = $(this).val();
-      
-      // Clear the traveler info container
-      
-      $('#travelerInfoContainer').empty();
-      
-      // Add the traveler info fields for each traveler
-      for (var i = 0; i < numberOfTravelers; i++) {
-        $('#travelerInfoContainer').append(`
+  $('#goToSection2').click(function() {
+    $('#section1').hide();
+    $('#section2').show();
+  });
+  
+  // Update traveler info fields when number of travelers changes
+  $('#numberOfTravelers').change(function() {
+    var numberOfTravelers = $(this).val();
+    
+    // Clear the traveler info container
+    
+    $('#travelerInfoContainer').empty();
+    
+    // Add the traveler info fields for each traveler
+    for (var i = 0; i < numberOfTravelers; i++) {
+      $('#travelerInfoContainer').append(`
         <div class="travelerInfo">
           <h3>Traveler ${i + 1}</h3>
           
@@ -167,11 +168,11 @@
       `);
     });
     
-    // Trigger the change event manually
-    
-    $('#numberOfTravelers').change();
-    
-    // AJAX function to submit the form
+// Trigger the change event manually
+
+$('#numberOfTravelers').change();
+
+// AJAX function to submit the form
     
     $('#TripForm').submit(function(e) {
       e.preventDefault();
