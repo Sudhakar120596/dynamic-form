@@ -80,10 +80,10 @@
       }
     });
     
-$('#goToSection2').click(function() {
-  $('#section1').hide();
-  $('#section2').show();
-});
+    $(document).on('click', '#goToSection2', function() {
+      $('#section1').hide();
+      $('#section2').show();
+    });
     
     // Update traveler info fields when number of travelers changes
     $('#numberOfTravelers').change(function() {
