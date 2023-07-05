@@ -7,6 +7,7 @@
   <!-- Include the Firebase libraries -->
   <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
 </head>
 <body>
   <h1>Dynamic Form</h1>
@@ -84,12 +85,56 @@
     $('#section2').show();
   });
 
+  $("#TripForm").validate({
+  rules: {
+    // Use the names of your inputs here
+    serviceType: "required",
+    destination: "required",
+    tripStartDate: "required",
+    tripEndDate: "required",
+    bookingID: "required",
+    numberOfTravelers: "required"
+    // You will also need to dynamically add rules for your traveler fields when you create them
+  },
+  messages: {
+    // Custom messages for the inputs
+    serviceType: "Please select a service type",
+    destination: "Please enter your destination",
+    tripStartDate: "Please enter the trip start date",
+    tripEndDate: "Please enter the trip end date",
+    bookingID: "Please enter your booking ID",
+    numberOfTravelers: "Please enter number of travelers"
+  },
+  submitHandler: function(form) {
+    // The form is valid, so we can submit it now
+    form.submit();
+  }
+});
+
   // Update traveler info fields when number of travelers changes
   $('#numberOfTravelers').change(function() {
     var numberOfTravelers = $(this).val();
 
     // Clear the traveler info container
     $('#travelerInfoContainer').empty();
+
+      // Define the validation rules
+    var validationRules = [
+      { field: 'travelerName', message: 'Please enter your name' },
+      { field: 'dob', message: 'Please enter your date of birth' },
+      { field: 'gender', message: 'Please select your gender' },
+      { field: 'email', message: 'Please enter your email' },
+      { field: 'phone', message: 'Please enter your phone number' },
+      { field: 'idProof', message: 'Please upload your ID proof' },
+      { field: 'emergencyContactName', message: 'Please enter your emergency contact name' },
+      { field: 'emergencyContactNumber', message: 'Please enter your emergency contact number' },
+      { field: 'foodChoice', message: 'Please select your food choice' },
+      { field: 'foodAllergy', message: 'Please select your food allergy status' },
+      { field: 'covidSymptoms', message: 'Please select your COVID-19 symptoms status' },
+      { field: 'covidAffected', message: 'Please select your COVID-19 affected status' },
+      { field: 'vaccineDose', message: 'Please select your COVID-19 vaccine dose status' },
+      { field: 'vaccineCertificate', message: 'Please upload your vaccination certificate if applicable' }
+    ];
 
     // Add the traveler info fields for each traveler
     for (var i = 0; i < numberOfTravelers; i++) {
@@ -163,6 +208,16 @@
           <input type="file" id="vaccineCertificate${i}" name="vaccineCertificate${i}">
         </div>
       `);
+
+      // Add the validation rules to each field
+      validationRules.forEach(function(rule) {
+        $("#" + rule.field + i).rules("add", {
+          required: true,
+          messages: {
+            required: rule.message
+          }
+        });
+      });
     }
   });
 // Trigger the change event manually
