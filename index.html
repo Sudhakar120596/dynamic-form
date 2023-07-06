@@ -222,6 +222,32 @@
         });
       });
     }
+        // Then re-validate the form
+    $("#TripForm").validate({
+      rules: {
+        // Use the names of your inputs here
+        serviceType: "required",
+        destination: "required",
+        tripStartDate: "required",
+        tripEndDate: "required",
+        bookingID: "required",
+        numberOfTravelers: "required"
+        // You will also need to dynamically add rules for your traveler fields when you create them
+      },
+      messages: {
+        // Custom messages for the inputs
+        serviceType: "Please select a service type",
+        destination: "Please enter your destination",
+        tripStartDate: "Please enter the trip start date",
+        tripEndDate: "Please enter the trip end date",
+        bookingID: "Please enter your booking ID",
+        numberOfTravelers: "Please enter number of travelers"
+      },
+      submitHandler: function(form) {
+        // The form is valid, so we can submit it now
+        form.submit();
+      }
+    });
   });
 // Trigger the change event manually
 $('#numberOfTravelers').change();
