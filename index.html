@@ -211,10 +211,13 @@
 
       // Add the validation rules to each field
       validationRules.forEach(function(rule) {
-        $("#" + rule.field + i).rules("add", {
+        var fieldName = rule.field + i;
+        var message = rule.message;
+        
+        $('#' + fieldName).rules("add", {
           required: true,
           messages: {
-            required: rule.message
+            required: message
           }
         });
       });
