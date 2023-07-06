@@ -80,36 +80,44 @@
     }
   });
 
-  $('#goToSection2').click(function() {
-    $('#section1').hide();
-    $('#section2').show();
-  });
-
-  $("#TripForm").validate({
-  rules: {
-    // Use the names of your inputs here
+  var validationRulesSection1 = {
     serviceType: "required",
     destination: "required",
     tripStartDate: "required",
     tripEndDate: "required",
     bookingID: "required",
-    numberOfTravelers: "required"
-    // You will also need to dynamically add rules for your traveler fields when you create them
-  },
-  messages: {
-    // Custom messages for the inputs
+    numberOfTravelers: {
+      required: true,
+      min: 1
+    }
+  };  
+
+  var validationMessagesSection1 = {
     serviceType: "Please select a service type",
     destination: "Please enter your destination",
     tripStartDate: "Please enter the trip start date",
     tripEndDate: "Please enter the trip end date",
     bookingID: "Please enter your booking ID",
     numberOfTravelers: "Please enter number of travelers"
-  },
-  submitHandler: function(form) {
-    // The form is valid, so we can submit it now
-    form.submit();
-  }
-});
+  };
+     
+  $('#goToSection2').click(function(e) {
+    // Initialize a validator for Section 1 fields only
+    var validatorSection1 = $("#TripForm").validate({
+      rules: validationRulesSection1,
+      messages: validationMessagesSection1
+    });
+
+    // Test if Section 1 fields are valid
+    if (validatorSection1.form()) {
+      // If the Section 1 fields are valid, hide Section 1 and show Section 2
+      $('#section1').hide();
+      $('#section2').show();
+    } else {
+      // If the Section 1 fields are not valid, prevent moving to Section 2
+      e.preventDefault();
+    }
+  });
 
   // Update traveler info fields when number of travelers changes
   $('#numberOfTravelers').change(function() {
@@ -117,24 +125,6 @@
 
     // Clear the traveler info container
     $('#travelerInfoContainer').empty();
-
-      // Define the validation rules
-    var validationRules = [
-      { field: 'travelerName', message: 'Please enter your name' },
-      { field: 'dob', message: 'Please enter your date of birth' },
-      { field: 'gender', message: 'Please select your gender' },
-      { field: 'email', message: 'Please enter your email' },
-      { field: 'phone', message: 'Please enter your phone number' },
-      { field: 'idProof', message: 'Please upload your ID proof' },
-      { field: 'emergencyContactName', message: 'Please enter your emergency contact name' },
-      { field: 'emergencyContactNumber', message: 'Please enter your emergency contact number' },
-      { field: 'foodChoice', message: 'Please select your food choice' },
-      { field: 'foodAllergy', message: 'Please select your food allergy status' },
-      { field: 'covidSymptoms', message: 'Please select your COVID-19 symptoms status' },
-      { field: 'covidAffected', message: 'Please select your COVID-19 affected status' },
-      { field: 'vaccineDose', message: 'Please select your COVID-19 vaccine dose status' },
-      { field: 'vaccineCertificate', message: 'Please upload your vaccination certificate if applicable' }
-    ];
 
     // Add the traveler info fields for each traveler
     for (var i = 0; i < numberOfTravelers; i++) {
@@ -208,20 +198,51 @@
           <input type="file" id="vaccineCertificate${i}" name="vaccineCertificate${i}">
         </div>
       `);
+  // Add validation rules for each field for the current traveler
+  validationRules[`travelerName${i}`] = "required";
+  validationRules[`dob${i}`] = "required";
+  validationRules[`gender${i}`] = "required";
+  validationRules[`email${i}`] = {
+      required: true,
+      email: true
+  };
+  validationRules[`phone${i}`] = "required";
+  validationRules[`idProof${i}`] = "required";
+  validationRules[`emergencyContactName${i}`] = "required";
+  validationRules[`emergencyContactNumber${i}`] = "required";
+  validationRules[`foodChoice${i}`] = "required";
+  validationRules[`foodAllergy${i}`] = "required";
+  validationRules[`covidSymptoms${i}`] = "required";
+  validationRules[`covidAffected${i}`] = "required";
+  validationRules[`vaccineDose${i}`] = "required";
+  validationRules[`vaccineCertificate${i}`] = "required";
 
-      // Add the validation rules to each field
-      validationRules.forEach(function(rule) {
-        var fieldName = rule.field + i;
-        var message = rule.message;
-        
-        $('#' + fieldName).rules("add", {
-          required: true,
-          messages: {
-            required: message
-          }
-        });
+  // Add validation messages for each field for the current traveler
+  validationMessages[`travelerName${i}`] = "Please enter your name";
+  validationMessages[`dob${i}`] = "Please enter your date of birth";
+  validationMessages[`gender${i}`] = "Please select your gender";
+  validationMessages[`email${i}`] = "Please enter your valid email";
+  validationMessages[`phone${i}`] = "Please enter your phone number";
+  validationMessages[`idProof${i}`] = "Please upload your ID proof";
+  validationMessages[`emergencyContactName${i}`] = "Please enter your emergency contact name";
+  validationMessages[`emergencyContactNumber${i}`] = "Please enter your emergency contact number";
+  validationMessages[`foodChoice${i}`] = "Please select your food choice";
+  validationMessages[`foodAllergy${i}`] = "Please select your food allergy status";
+  validationMessages[`covidSymptoms${i}`] = "Please select your COVID-19 symptoms status";
+  validationMessages[`covidAffected${i}`] = "Please select your COVID-19 affected status";
+  validationMessages[`vaccineDose${i}`] = "Please select your COVID-19 vaccine dose status";
+  validationMessages[`vaccineCertificate${i}`] = "Please upload your vaccination certificate if applicable";
+}
+      // Form validation setup
+      $("#TripForm").validate({
+        rules: validationRules,
+        messages: validationMessages,
+        submitHandler: function(form) {
+          // The form is valid, so we can submit it now
+          form.submit();
+        }
       });
-    }
+    });
         // Then re-validate the form
     $("#TripForm").validate({
       rules: {
