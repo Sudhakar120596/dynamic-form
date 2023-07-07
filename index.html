@@ -7,7 +7,6 @@
   <!-- Include the Firebase libraries -->
   <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-storage.js"></script>
 </head>
 <body>
   <h1>Dynamic Form</h1>
@@ -68,7 +67,6 @@
     // Initialize Firebase
     const app = firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore(app);
-    const storage = firebase.storage(app);
 
   // Update form fields when service type changes
   $('#serviceType').change(function() {
@@ -171,72 +169,63 @@
   });
 // Trigger the change event manually
 $('#numberOfTravelers').change();
-
-    // Firebase storage function
-    function uploadFile(file) {
-      const fileName = new Date().getTime() + '-' + file.name;
-      const ref = storage.ref().child('files/' + fileName);
-      const uploadTask = ref.put(file);
-      return uploadTask.then(snapshot => snapshot.ref.getDownloadURL());
-    }
 // AJAX function to submit the form
-   // On form submit
-    $('#TripForm').on('submit', function(e) {
+    $('#TripForm').submit(function(e) {
       e.preventDefault();
+      
+  // Get the form data
+  var data = $(this).serializeArray();
 
-      const travelers = [];
+  // Convert the form data to an object
+  var formData = {};
+  data.forEach(function(item) {
+    formData[item.name] = item.value;
+  });
 
-      // For each traveler
-      for (let i = 0; i < $('#numberOfTravelers').val(); i++) {
-        const idProofFile = $('#idProof' + i)[0].files[0];
-        const vaccineCertificateFile = $('#vaccineCertificate' + i)[0].files[0];
+  // Get the traveler data
+  var travelerData = [];
+  var numberOfTravelers = formData['numberOfTravelers'];
+  for (var i = 0; i < numberOfTravelers; i++) {
+    var traveler = {};
+    traveler['travelerName'] = formData['travelerName' + i];
+    // Add all other traveler fields...
+    travelerData.push(traveler);
+  }
 
-        // Upload files to Firebase
-        const idProofUrlPromise = idProofFile ? uploadFile(idProofFile) : Promise.resolve(null);
-        const vaccineCertificateUrlPromise = vaccineCertificateFile ? uploadFile(vaccineCertificateFile) : Promise.resolve(null);
+  // Remove the individual traveler fields from the form data
+  Object.keys(formData).forEach(function(key) {
+    if (key.startsWith('traveler')) {
+      delete formData[key];
+    }
+  });
 
-        Promise.all([idProofUrlPromise, vaccineCertificateUrlPromise])
-          .then(([idProofUrl, vaccineCertificateUrl]) => {
-            const traveler = {
-              travelerName: $('#travelerName' + i).val(),
-              dob: $('#dob' + i).val(),
-              gender: $('#gender' + i).val(),
-              email: $('#email' + i).val(),
-              phone: $('#phone' + i).val(),
-              idProofUrl,
-              emergencyContactName: $('#emergencyContactName' + i).val(),
-              emergencyContactNumber: $('#emergencyContactNumber' + i).val(),
-              foodChoice: $('#foodChoice' + i).val(),
-              foodAllergy: $('#foodAllergy' + i).val(),
-              covidSymptoms: $('#covidSymptoms' + i).val(),
-              covidAffected: $('#covidAffected' + i).val(),
-              vaccineDose: $('#vaccineDose' + i).val(),
-              vaccineCertificateUrl
-            };
+  // Add the traveler data to the form data
+  formData['travelers'] = travelerData;
 
-            travelers.push(traveler);
-          })
-          .catch(error => console.log('Error uploading files', error));
-      }
 
-      // After all files are uploaded, add document to Firestore
-      db.collection('forms').add({
-        formData: $('#TripForm').serializeArray(),
-        travelers
-      })
-      .then((docRef) => {
-        console.log("Document written with ID: ", docRef.id);
-        $('#TripForm').hide();
-        $('body').append('<p>Your form has been successfully submitted!</p>');
-      })
-      .catch((error) => {
-        console.error("Error adding document: ", error);
-        alert('There was an error booking your trip. Please try again.');
-      });
-    });
+  // Validate form data...
+      if (!$(this).valid()) {
+        return;
+      }     
+  // Adding document to Firestore
+  db.collection("forms").add({
+    formData: formData
+  })
+  .then((docRef) => {
+    console.log("Document written with ID: ", docRef.id);
+    // Hide the form after successful submission
+    $('#TripForm').hide();
 
-    // Initialize the jQuery Validate plugin
-    $('#TripForm').validate();
+    // Show a success message
+    $('body').append('<p>Your form has been successfully submitted!</p>');
+  })
+  .catch((error) => {
+    console.error("Error adding document: ", error);
+    alert('There was an error booking your trip. Please try again.');
+  });
+});
+     // Initialize the jQuery Validate plugin
+      $('#TripForm').validate();
   });
 </script>
 </body>
