@@ -101,23 +101,80 @@
     numberOfTravelers: "Please enter number of travelers"
   };
      
-  $('#goToSection2').click(function(e) {
-    // Initialize a validator for Section 1 fields only
-    var validatorSection1 = $("#TripForm").validate({
-      rules: validationRulesSection1,
-      messages: validationMessagesSection1
-    });
+$('#goToSection2').click(function(e) {
+  e.preventDefault();
+  var validatorSection1 = $("#TripForm").validate({
+    rules: validationRulesSection1,
+    messages: validationMessagesSection1
+  });
 
-    // Test if Section 1 fields are valid
-    if (validatorSection1.form()) {
-      // If the Section 1 fields are valid, hide Section 1 and show Section 2
-      $('#section1').hide();
-      $('#section2').show();
-    } else {
-      // If the Section 1 fields are not valid, prevent moving to Section 2
-      e.preventDefault();
+  var isValid = true;
+  $('#section1 :input').each(function() {
+    if (!validatorSection1.element(this)) {
+      isValid = false;
     }
   });
+
+  if (isValid) {
+    $('#section1').hide();
+    $('#section2').show();
+  }
+});
+
+var validationRulesSection2 = {};
+var validationMessagesSection2 = {};
+
+for(var i = 1; i <= numberOfTravelers; i++){
+  validationRulesSection2[`travelerName${i}`] = "required";
+  validationRulesSection2[`dob${i}`] = "required";
+  validationRulesSection2[`gender${i}`] = "required";
+  validationRulesSection2[`email${i}`] = {
+      required: true,
+      email: true
+  };
+  validationRulesSection2[`phone${i}`] = "required";
+  validationRulesSection2[`idProof${i}`] = "required";
+  validationRulesSection2[`emergencyContactName${i}`] = "required";
+  validationRulesSection2[`emergencyContactNumber${i}`] = "required";
+  validationRulesSection2[`foodChoice${i}`] = "required";
+  validationRulesSection2[`foodAllergy${i}`] = "required";
+  validationRulesSection2[`covidSymptoms${i}`] = "required";
+  validationRulesSection2[`covidAffected${i}`] = "required";
+  validationRulesSection2[`vaccineDose${i}`] = "required";
+  validationRulesSection2[`vaccineCertificate${i}`] = "required";
+
+  validationMessagesSection2[`travelerName${i}`] = "Please enter your name";
+  validationMessagesSection2[`dob${i}`] = "Please enter your date of birth";
+  validationMessagesSection2[`gender${i}`] = "Please select your gender";
+  validationMessagesSection2[`email${i}`] = "Please enter your valid email";
+  validationMessagesSection2[`phone${i}`] = "Please enter your phone number";
+  validationMessagesSection2[`idProof${i}`] = "Please upload your ID proof";
+  validationMessagesSection2[`emergencyContactName${i}`] = "Please enter your emergency contact name";
+  validationMessagesSection2[`emergencyContactNumber${i}`] = "Please enter your emergency contact number";
+  validationMessagesSection2[`foodChoice${i}`] = "Please select your food choice";
+  validationMessagesSection2[`foodAllergy${i}`] = "Please select your food allergy status";
+  validationMessagesSection2[`covidSymptoms${i}`] = "Please select your COVID-19 symptoms status";
+  validationMessagesSection2[`covidAffected${i}`] = "Please select your COVID-19 affected status";
+  validationMessagesSection2[`vaccineDose${i}`] = "Please select your COVID-19 vaccine dose status";
+  validationMessagesSection2[`vaccineCertificate${i}`] = "Please upload your vaccination certificate if applicable";
+}
+
+  $("#TripForm").validate({
+  submitHandler: function(form) {
+    var isValid = true;
+    $('#section2 :input').each(function() {
+      if (!$(form).validate().element(this)) {
+        isValid = false;
+      }
+    });
+
+    if (isValid) {
+      form.submit();
+    }
+  },
+  rules: $.extend(validationRulesSection1, validationRulesSection2),
+  messages: $.extend(validationMessagesSection1, validationMessagesSection2)
+});
 
   // Update traveler info fields when number of travelers changes
   $('#numberOfTravelers').change(function() {
