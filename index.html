@@ -201,7 +201,12 @@ $('#numberOfTravelers').change();
 
   // Add the traveler data to the form data
   formData['travelers'] = travelerData;
-      
+
+
+  // Validate form data...
+      if (!$(this).valid()) {
+        return;
+      }     
   // Adding document to Firestore
   db.collection("forms").add({
     formData: formData
