@@ -7,6 +7,7 @@
   <!-- Include the Firebase libraries -->
   <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-storage.js"></script>
 </head>
 <body>
   <h1>Dynamic Form</h1>
@@ -169,10 +170,29 @@
   });
 // Trigger the change event manually
 $('#numberOfTravelers').change();
+
+  function uploadFileToStorage(file, path) {
+    return new Promise((resolve, reject) => {
+      var storageRef = firebase.storage().ref();
+      var uploadTask = storageRef.child(path).put(file);
+
+      uploadTask.on('state_changed', function(snapshot) {
+        // Handle progress...
+      }, function(error) {
+        // Handle unsuccessful uploads
+        reject(error);
+      }, function() {
+        // Handle successful uploads on complete
+        uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+          resolve(downloadURL);
+        });
+      });
+    });
+  }
 // AJAX function to submit the form
-    $('#TripForm').submit(function(e) {
-      e.preventDefault();
-      
+$('#TripForm').submit(async function(e) {
+  e.preventDefault();
+  
   // Get the form data
   var data = $(this).serializeArray();
 
@@ -187,8 +207,34 @@ $('#numberOfTravelers').change();
   var numberOfTravelers = formData['numberOfTravelers'];
   for (var i = 0; i < numberOfTravelers; i++) {
     var traveler = {};
-    traveler['travelerName'] = formData['travelerName' + i];
-    // Add all other traveler fields...
+    traveler['travelerName'] = formData['travelerName' + I];
+    traveler['dob'] = formData['dob' + I];
+    traveler['gender'] = formData['gender' + I];
+    traveler['email'] = formData['email' + I];
+    traveler['phone'] = formData['phone' + I];
+    traveler['idProof'] = formData['idProof' + I];
+    traveler['emergencyContactName'] = formData['emergencyContactName' + I];
+    traveler['emergencyContactNumber'] = formData['emergencyContactNumber' + I];
+    traveler['foodChoice'] = formData['foodChoice' + I];
+    traveler['foodAllergy'] = formData['foodAllergy' + I];
+    traveler['covidSymptoms'] = formData['covidSymptoms' + I];
+    traveler['covidAffected'] = formData['covidAffected' + I];
+    traveler['vaccineDose'] = formData['vaccineDose' + I];
+    traveler['vaccineCertificate'] = formData['vaccineCertificate' + i];
+        var idProofFile = $('#idProof' + i)[0].files[0];
+    if (idProofFile) {
+      var idProofPath = 'idProofs/' + idProofFile.name;
+      var idProofUrl = await uploadFileToStorage(idProofFile, idProofPath);
+      traveler['idProofUrl'] = idProofUrl;
+    }
+
+    var vaccineCertificateFile = $('#vaccineCertificate' + i)[0].files[0];
+    if (vaccineCertificateFile) {
+      var vaccineCertificatePath = 'vaccineCertificates/' + vaccineCertificateFile.name;
+      var vaccineCertificateUrl = await uploadFileToStorage(vaccineCertificateFile, vaccineCertificatePath);
+      traveler['vaccineCertificateUrl'] = vaccineCertificateUrl;
+    }
+
     travelerData.push(traveler);
   }
 
@@ -202,11 +248,11 @@ $('#numberOfTravelers').change();
   // Add the traveler data to the form data
   formData['travelers'] = travelerData;
 
-
   // Validate form data...
-      if (!$(this).valid()) {
-        return;
-      }     
+  if (!$(this).valid()) {
+    return;
+  }     
+
   // Adding document to Firestore
   db.collection("forms").add({
     formData: formData
@@ -223,7 +269,7 @@ $('#numberOfTravelers').change();
     console.error("Error adding document: ", error);
     alert('There was an error booking your trip. Please try again.');
   });
-});
+});   
      // Initialize the jQuery Validate plugin
       $('#TripForm').validate();
   });
