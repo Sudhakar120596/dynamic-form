@@ -13,7 +13,7 @@
   
   <form id="TripForm">
     <label for="serviceType">Type of Service:</label>
-    <select id="serviceType" name="serviceType">
+    <select id="serviceType" name="serviceType" required>
       <option value="">Select service</option>
       <option value="Trek">Trek</option>
       <option value="Tour/Homestay/WFM">Tour/Homestay/WFM</option>
@@ -24,19 +24,19 @@
     <div id="section1">
       <h2>Section 1</h2>
       <label for="destination">Destination:</label>
-      <input type="text" id="destination" name="destination" maxlength="20">
+      <input type="text" id="destination" name="destination" maxlength="20" required>
       
       <label for="tripStartDate">Trip Starting Date:</label>
-      <input type="date" id="tripStartDate" name="tripStartDate">
+      <input type="date" id="tripStartDate" name="tripStartDate" required>
       
       <label for="tripEndDate">Trip End Date:</label>
-      <input type="date" id="tripEndDate" name="tripEndDate">
+      <input type="date" id="tripEndDate" name="tripEndDate" required>
       
       <label for="bookingID">Booking ID:</label>
-      <input type="text" id="bookingID" name="bookingID" maxlength="20">
+      <input type="text" id="bookingID" name="bookingID" maxlength="20" required>
       
       <label for="numberOfTravelers">No. Of Travelers:</label>
-      <input type="number" id="numberOfTravelers" name="numberOfTravelers" min="1" value="1">
+      <input type="number" id="numberOfTravelers" name="numberOfTravelers" min="1" value="1" required>
 
       <button type="button" id="goToSection2">Next</button>
     </div>
@@ -80,8 +80,10 @@
   });
 
   $('#goToSection2').click(function() {
-    $('#section1').hide();
-    $('#section2').show();
+    if($('#TripForm').valid()){
+      $('#section1').hide();
+      $('#section2').show();
+    }
   });
 
   // Update traveler info fields when number of travelers changes
@@ -98,35 +100,35 @@
           <h3>Traveler ${i + 1}</h3>
 
           <label for="travelerName${i}">Your Name:</label>
-          <input type="text" id="travelerName${i}" name="travelerName${i}" maxlength="20">
+          <input type="text" id="travelerName${i}" name="travelerName${i}" maxlength="20" required>
 
           <label for="dob${i}">DOB:</label>
-          <input type="date" id="dob${i}" name="dob${i}">
+          <input type="date" id="dob${i}" name="dob${i}" required>
 
           <label for="gender${i}">Gender:</label>
-          <select id="gender${i}" name="gender${i}">
+          <select id="gender${i}" name="gender${i}" required>
             <option value="Male">Male</option>
             <option value="Female">Female</option>
             <option value="Other">Other</option>
           </select>
 
           <label for="email${i}">Email:</label>
-          <input type="email" id="email${i}" name="email${i}" maxlength="20">
+          <input type="email" id="email${i}" name="email${i}" maxlength="20" required>
 
           <label for="phone${i}">Phone Number:</label>
-          <input type="tel" id="phone${i}" name="phone${i}">
+          <input type="tel" id="phone${i}" name="phone${i}" required>
 
           <label for="idProof${i}">Voter/Aadhar Id proof (Max 10mb):</label>
           <input type="file" id="idProof${i}" name="idProof${i}">
 
           <label for="emergencyContactName${i}">Emergency Contact Name:</label>
-          <input type="text" id="emergencyContactName${i}" name="emergencyContactName${i}" maxlength="30">
+          <input type="text" id="emergencyContactName${i}" name="emergencyContactName${i}" maxlength="30" required>
 
           <label for="emergencyContactNumber${i}">Emergency Contact Number:</label>
-          <input type="tel" id="emergencyContactNumber${i}" name="emergencyContactNumber${i}">
+          <input type="tel" id="emergencyContactNumber${i}" name="emergencyContactNumber${i}" required>
 
           <label class="foodChoice" for="foodChoice${i}">What Food do you want to choose?</label>
-          <select class="foodChoice" id="foodChoice${i}" name="foodChoice${i}">
+          <select class="foodChoice" id="foodChoice${i}" name="foodChoice${i}" required>
             <option value="Veg">Veg</option>
             <option value="Nonveg">Nonveg</option>
             <option value="Only Egg">Only Egg</option>
@@ -134,26 +136,26 @@
           </select>
 
           <label class="foodAllergy" for="foodAllergy${i}">Do you have any type of food allergies?</label>
-          <select class="foodAllergy" id="foodAllergy${i}" name="foodAllergy${i}">
+          <select class="foodAllergy" id="foodAllergy${i}" name="foodAllergy${i}" required>
             <option value="Yes">Yes</option>
             <option value="No">No</option>
             <option value="NA">N/A</option>
           </select>
 
           <label for="covidSymptoms${i}">Any type of Covid-19 Symptoms?</label>
-          <select id="covidSymptoms${i}" name="covidSymptoms${i}">
+          <select id="covidSymptoms${i}" name="covidSymptoms${i}" required>
             <option value="Yes">Yes</option>
             <option value="No">No</option>
           </select>
 
           <label for="covidAffected${i}">Have you been affected with Covid-19 within the last 90 days?</label>
-          <select id="covidAffected${i}" name="covidAffected${i}">
+          <select id="covidAffected${i}" name="covidAffected${i}" required>
             <option value="Yes">Yes</option>
             <option value="No">No</option>
           </select>
 
           <label for="vaccineDose${i}">Have you taken any dose of Covid-19 Vaccine?</label>
-          <select id="vaccineDose${i}" name="vaccineDose${i}">
+          <select id="vaccineDose${i}" name="vaccineDose${i}" required>
             <option value="No">No</option>
             <option value="Dose1">Dose 1</option>
             <option value="Both Dose">Both Dose</option>
@@ -199,7 +201,7 @@ $('#numberOfTravelers').change();
 
   // Add the traveler data to the form data
   formData['travelers'] = travelerData;
-
+      
   // Adding document to Firestore
   db.collection("forms").add({
     formData: formData
@@ -214,8 +216,11 @@ $('#numberOfTravelers').change();
   })
   .catch((error) => {
     console.error("Error adding document: ", error);
+    alert('There was an error booking your trip. Please try again.');
   });
 });
+     // Initialize the jQuery Validate plugin
+      $('#TripForm').validate();
   });
 </script>
 </body>
