@@ -190,7 +190,7 @@ $('#numberOfTravelers').change();
     });
   }
 // AJAX function to submit the form
-$('#TripForm').submit(function(e) {
+$('#TripForm').submit(async function(e) {
   e.preventDefault();
   
   // Get the form data
