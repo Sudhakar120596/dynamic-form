@@ -7,6 +7,7 @@
   <!-- Include the Firebase libraries -->
   <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-storage.js"></script>
 </head>
 <body>
   <h1>Dynamic Form</h1>
@@ -189,6 +190,23 @@ $('#numberOfTravelers').change();
     var traveler = {};
     traveler['travelerName'] = formData['travelerName' + i];
     // Add all other traveler fields...
+
+          // Handle file uploads for each traveler
+      var idProofFile = document.getElementById('idProof' + i).files[0];
+      var vaccineCertFile = document.getElementById('vaccineCertificate' + i).files[0];
+      
+      var storageRef = firebase.storage().ref();
+      var idProofRef = storageRef.child('idProofs/' + formData['bookingID'] + '/traveler' + i);
+      var vaccineCertRef = storageRef.child('vaccineCertificates/' + formData['bookingID'] + '/traveler' + i);
+      
+      idProofRef.put(idProofFile).then((snapshot) => {
+        console.log('Uploaded ID proof for traveler ' + i);
+      });
+
+      vaccineCertRef.put(vaccineCertFile).then((snapshot) => {
+        console.log('Uploaded vaccine certificate for traveler ' + i);
+      });
+
     travelerData.push(traveler);
   }
 
