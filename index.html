@@ -69,6 +69,13 @@
     const app = firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore(app);
 
+
+  // Ensure that the trip end date is after the trip start date
+  $('#tripStartDate').change(function() {
+    var tripStartDate = $(this).val();
+    $('#tripEndDate').attr('min', tripStartDate);
+  });
+     
   // Update form fields when service type changes
   $('#serviceType').change(function() {
     if ($(this).val() === 'CabRental') {
@@ -120,7 +127,7 @@
           <input type="tel" id="phone${i}" name="phone${i}" required>
 
           <label for="idProof${i}">Voter/Aadhar Id proof (Max 10mb):</label>
-          <input type="file" id="idProof${i}" name="idProof${i}">
+          <input type="file" id="idProof${i}" name="idProof${i}" required>
 
           <label for="emergencyContactName${i}">Emergency Contact Name:</label>
           <input type="text" id="emergencyContactName${i}" name="emergencyContactName${i}" maxlength="30" required>
@@ -163,7 +170,7 @@
           </select>
 
           <label for="vaccineCertificate${i}">If yes, upload your vaccination certificate (Max 10mb):</label>
-          <input type="file" id="vaccineCertificate${i}" name="vaccineCertificate${i}">
+          <input type="file" id="vaccineCertificate${i}" name="vaccineCertificate${i}" required>
         </div>
       `);
     }
