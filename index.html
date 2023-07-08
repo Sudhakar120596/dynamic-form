@@ -201,6 +201,19 @@ $('#numberOfTravelers').change();
           // Handle file uploads for each traveler
       var idProofFile = document.getElementById('idProof' + i).files[0];
       var vaccineCertFile = document.getElementById('vaccineCertificate' + i).files[0];
+
+      var maxSizeInBytes = 10 * 1024 * 1024; // 10MB in bytes
+      // Check if the ID proof file size is less than 10MB
+      if(idProofFile.size > maxSizeInBytes) {
+        alert('The ID proof file for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
+        return;
+      }
+
+      // Check if the vaccine certificate file size is less than 10MB
+      if(vaccineCertFile.size > maxSizeInBytes) {
+        alert('The vaccine certificate file for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
+        return;
+      }
       
       var storageRef = firebase.storage().ref();
       var idProofRef = storageRef.child('idProofs/' + formData['bookingID'] + '/traveler' + i);
