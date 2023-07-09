@@ -9,22 +9,51 @@
   <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-storage.js"></script>
   <style>
-  label.error {
-    color: red; /* Changes the color of the error message text */
-    background-color: #f2dede; /* Changes the background color of the error message */
-    border-color: #ebccd1; /* Changes the border color of the error message */
-    padding: 5px; /* Adds some padding around the error message */
-  }
+    /* Existing Styles */
+    label.error {
+        color: red;
+        background-color: #f2dede;
+        border-color: #ebccd1;
+        padding: 5px;
+    }
 
-  .error {
-    border: 1px solid red !important; /* Changes the border color of the invalid input field */
-  }
+    .error {
+        border: 1px solid red !important;
+    }
 
-  /* New Styles */
+    /* New Styles */
+    .travelerInfo {
+        font-family: Arial, sans-serif;  /* Use your preferred font */
+        color: #333;  /* Dark gray for the text */
+        background-color: #f9f9f9;  /* Light gray for the background */
+        padding: 20px;  /* Space inside the container */
+        border-radius: 10px;  /* Rounded corners */
+    }
+
     .travelerInfo label,
     .travelerInfo input,
     .travelerInfo select {
-        margin-bottom: 10px; /* Adjust as needed */
+        display: block;
+        width: 100%;  /* Full-width fields */
+        padding: 10px;  /* Space inside the fields */
+        margin-bottom: 20px;  /* Space between the fields */
+        border: 1px solid #ccc;  /* Light gray border */
+        border-radius: 5px;  /* Slightly rounded corners */
+    }
+
+    .travelerInfo button {
+        background-color: #008CBA;  /* Blue background */
+        color: white;  /* White text */
+        border: none;  /* No border */
+        padding: 15px 32px;  /* Vertical and horizontal padding */
+        text-decoration: none;
+        margin: 4px 2px;
+        cursor: pointer;  /* Cursor style */
+        border-radius: 5px;  /* Slightly rounded corners */
+    }
+
+    .travelerInfo button:hover {
+        background-color: #007B9A;  /* Darker blue on hover */
     }
 </style>
 </head>
