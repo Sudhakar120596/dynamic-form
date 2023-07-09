@@ -161,6 +161,20 @@
     }
   });
 
+
+  $(document).on('change', '.foodAllergy', function() {
+    var index = $(this).attr('id').match(/\d+/)[0];  // Extract the index from the id
+    if ($(this).val() === 'Yes') {
+      // Show the input field for specifying food allergies
+      $('#foodAllergyDetails' + index).show();
+      $('label[for="foodAllergyDetails' + index + '"]').show();
+    } else {
+      // Hide the input field for specifying food allergies
+      $('#foodAllergyDetails' + index).hide();
+      $('label[for="foodAllergyDetails' + index + '"]').hide();
+    }
+  });
+
   // Update traveler info fields when number of travelers changes
   $('#numberOfTravelers').change(function() {
     var numberOfTravelers = $(this).val();
@@ -359,9 +373,11 @@ $('#numberOfTravelers').change();
     alert('There was an error booking your trip. Please try again.');
   });
 });
-     // Initialize the jQuery Validate plugin
-      $('#TripForm').validate();
-  });
+     // Re-initialize the jQuery Validate plugin
+    $('#TripForm').validate({
+      ignore: ":hidden"  // This will ignore validation for hidden fields
+        });
+    
 </script>
 </body>
 </html>
