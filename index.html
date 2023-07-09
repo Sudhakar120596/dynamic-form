@@ -217,6 +217,10 @@
             <option value="NA">N/A</option>
           </select>
 
+          <!-- Add a new field to specify the food allergies -->
+          <label class="foodAllergyDetails" for="foodAllergyDetails${i}" style="display: none;">Please specify your food allergies:</label>
+          <input type="text" class="foodAllergyDetails" id="foodAllergyDetails${i}" name="foodAllergyDetails${i}" style="display: none;">
+
           <label for="covidSymptoms${i}">Any type of Covid-19 Symptoms?</label>
           <select id="covidSymptoms${i}" name="covidSymptoms${i}" required>
             <option value="Yes">Yes</option>
@@ -243,6 +247,18 @@
           <input class="declarationFile" type="file" id="declarationFile${i}" name="declarationFile${i}" required>
         </div>
       `);
+
+      // Listen for changes to the food allergy selection
+      $(`#foodAllergy${i}`).change(function() {
+        // Show the food allergy details field if 'Yes' is selected
+        if ($(this).val() === 'Yes') {
+          $(`#foodAllergyDetails${i}`).show();
+          $(`label[for='foodAllergyDetails${i}']`).show();
+        } else {
+          $(`#foodAllergyDetails${i}`).hide();
+          $(`label[for='foodAllergyDetails${i}']`).hide();
+        }
+      });
     }
 
     
