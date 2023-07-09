@@ -158,7 +158,17 @@
   });
 
   $('#goToSection2').click(function() {
-    if($('#TripForm').valid()){
+    var isValid = true;
+    // Check if all required fields in section 1 are filled
+    $('#section1 :input[required]').each(function() {
+      if (!$(this).val()) {
+        isValid = false;
+        $(this).addClass('error');
+      } else {
+        $(this).removeClass('error');
+      }
+    });
+    if(isValid){
       $('#section1').hide();
       $('#section2').show();
     }
