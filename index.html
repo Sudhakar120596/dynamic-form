@@ -254,9 +254,11 @@
         if ($(this).val() === 'Yes') {
           $(`#foodAllergyDetails${i}`).show();
           $(`label[for='foodAllergyDetails${i}']`).show();
+          $(`#foodAllergyDetails${i}`).prop('required',true);
         } else {
           $(`#foodAllergyDetails${i}`).hide();
           $(`label[for='foodAllergyDetails${i}']`).hide();
+          $(`#foodAllergyDetails${i}`).prop('required',false);
         }
       });
     }
