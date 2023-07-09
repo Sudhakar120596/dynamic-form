@@ -143,6 +143,7 @@
       $('.foodChoice').hide();
       $('.foodAllergy').hide();
       $('.declarationFile').hide();
+      $('.foodAllergySpecific').hide();
     } else {
       $('.foodChoice').show();
       $('.foodAllergy').show();
@@ -150,6 +151,8 @@
         $('.declarationFile').show();
       } else {
         $('.declarationFile').hide();
+        if ($('#foodAllergy' + i).val() === 'Yes') {
+          $('.foodAllergySpecific').show();
       }
     }
   });
@@ -217,6 +220,9 @@
             <option value="NA">N/A</option>
           </select>
 
+          <label class="foodAllergySpecific" for="foodAllergySpecific${i}" style="display: none;">Specify your food allergies:</label>
+          <input type="text" id="foodAllergySpecific${i}" name="foodAllergySpecific${i}" required>
+
           <label for="covidSymptoms${i}">Any type of Covid-19 Symptoms?</label>
           <select id="covidSymptoms${i}" name="covidSymptoms${i}" required>
             <option value="Yes">Yes</option>
@@ -243,6 +249,15 @@
           <input class="declarationFile" type="file" id="declarationFile${i}" name="declarationFile${i}" required>
         </div>
       `);
+      
+      // Add the change listener to the food allergy select
+      $('#foodAllergy' + i).change(function() {
+        if ($(this).val() === 'Yes') {
+          $('.foodAllergySpecific').show();
+        } else {
+          $('.foodAllergySpecific').hide();
+        }
+      });
     }
 
     
