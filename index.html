@@ -113,6 +113,8 @@
     // Clear the traveler info container
     $('#travelerInfoContainer').empty();
 
+    var serviceType = $('#serviceType').val(); // Retrieve the service type
+
     // Add the traveler info fields for each traveler
     for (var i = 0; i < numberOfTravelers; i++) {
       $('#travelerInfoContainer').append(`
@@ -183,6 +185,11 @@
 
           <label for="vaccineCertificate${i}">If yes, upload your vaccination certificate (Max 10mb):</label>
           <input type="file" id="vaccineCertificate${i}" name="vaccineCertificate${i}" required>
+
+          ${serviceType === 'Trek' ? `
+            <label for="declaration${i}">Declaration (Max 10mb):</label>
+            <input type="file" id="declaration${i}" name="declaration${i}" required>
+          ` : ''}
         </div>
       `);
     }
@@ -242,6 +249,22 @@ $('#numberOfTravelers').change();
       vaccineCertRef.put(vaccineCertFile).then((snapshot) => {
         console.log('Uploaded vaccine certificate for traveler ' + i);
       });
+
+    if(serviceType === 'Trek'){
+  var declaration = document.getElementById('declaration' + i).files[0];
+
+  // Check if the declaration file size is less than 10MB
+  if(declaration.size > maxSizeInBytes) {
+    alert('The declaration for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
+    return;
+  }
+
+  var declarationRef = storageRef.child('declaration/' + formData['bookingID'] + '/traveler' + i);
+
+  declarationRef.put(declaration).then((snapshot) => {
+    console.log('Uploaded declaration for traveler ' + i);
+  });
+}
 
     travelerData.push(traveler);
   }
