@@ -48,19 +48,19 @@
       font-size: 12px;  /* Adjust this value as needed */
     }
 
-    .travelerInfo button {
-        background-color: #008CBA;  /* Blue background */
-        color: white;  /* White text */
-        border: none;  /* No border */
-        padding: 15px 32px;  /* Vertical and horizontal padding */
-        text-decoration: none;
-        margin: 4px 2px;
-        cursor: pointer;  /* Cursor style */
-        border-radius: 5px;  /* Slightly rounded corners */
+    .travelerInfo button[type="submit"] {
+      font-size: 20px;  /* Larger font size */
+      padding: 15px 30px;  /* More padding */
+      background-color: #4CAF50;  /* Green background */
+      color: white;  /* White text color */
+      border: none;  /* No border */
+      border-radius: 5px;  /* Rounded corners */
+      cursor: pointer;  /* Cursor changes to hand when hovering */
+      transition: background-color 0.3s ease;  /* Smooth transition */
     }
-
-    .travelerInfo button:hover {
-        background-color: #007B9A;  /* Darker blue on hover */
+    
+    .travelerInfo button[type="submit"]:hover {
+      background-color: #45a049;  /* Darken background on hover */
     }
 </style>
 </head>
