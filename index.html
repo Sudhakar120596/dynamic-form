@@ -161,20 +161,6 @@
     }
   });
 
-
-  $(document).on('change', '.foodAllergy', function() {
-    var index = $(this).attr('id').match(/\d+/)[0];  // Extract the index from the id
-    if ($(this).val() === 'Yes') {
-      // Show the input field for specifying food allergies
-      $('#foodAllergyDetails' + index).show();
-      $('label[for="foodAllergyDetails' + index + '"]').show();
-    } else {
-      // Hide the input field for specifying food allergies
-      $('#foodAllergyDetails' + index).hide();
-      $('label[for="foodAllergyDetails' + index + '"]').hide();
-    }
-  });
-
   // Update traveler info fields when number of travelers changes
   $('#numberOfTravelers').change(function() {
     var numberOfTravelers = $(this).val();
@@ -231,10 +217,6 @@
             <option value="NA">N/A</option>
           </select>
 
-          <!-- new field for food allergy details -->
-          <label class="foodAllergyDetails" for="foodAllergyDetails${i}" style="display: none;">If yes, please specify:</label>
-          <input class="foodAllergyDetails" type="text" id="foodAllergyDetails${i}" name="foodAllergyDetails${i}" style="display: none;">
-
           <label for="covidSymptoms${i}">Any type of Covid-19 Symptoms?</label>
           <select id="covidSymptoms${i}" name="covidSymptoms${i}" required>
             <option value="Yes">Yes</option>
@@ -261,14 +243,6 @@
           <input class="declarationFile" type="file" id="declarationFile${i}" name="declarationFile${i}" required>
         </div>
       `);
-      // Add change event for the new field
-      $('#foodAllergy' + i).change(function() {
-        if ($(this).val() === 'Yes') {
-          $('.foodAllergyDetails').show();
-        } else {
-          $('.foodAllergyDetails').hide();
-        }
-      });
     }
 
     
@@ -373,11 +347,9 @@ $('#numberOfTravelers').change();
     alert('There was an error booking your trip. Please try again.');
   });
 });
-     // Re-initialize the jQuery Validate plugin
-    $('#TripForm').validate({
-      ignore: ":hidden"  // This will ignore validation for hidden fields
-        });
-    
+     // Initialize the jQuery Validate plugin
+      $('#TripForm').validate();
+  });
 </script>
 </body>
 </html>
