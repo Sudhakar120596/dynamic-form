@@ -176,6 +176,8 @@
   $('#goToSection2').click(function() {
     if($('#TripForm').valid()){
       $('#section1').hide();
+      $('#serviceType').hide(); // Hide the "Type of Service:" select element
+      $('label[for="serviceType"]').hide(); // Hide the "Type of Service:" label
       $('#section2').show();
     }
   });
