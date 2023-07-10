@@ -223,7 +223,7 @@
           <input type="file" id="idProof${i}" name="idProof${i}" required>
 
           <label for="emergencyContactName${i}">Emergency Contact Name:</label>
-          <input type="text" id="emergencyContactName${i}" name="emergencyContactName${i}" maxlength="30" required>
+          <input type="text" id="emergencyContactName${i}" name="emergencyContactName${i}" maxlength="20" required>
 
           <div class="emergencyContact-input">
               <label for="emergencyContactPhone${i}">Phone:</label>
@@ -281,11 +281,11 @@
         </div>
       `);
 
-      let iti = window.intlTelInput(document.querySelector(`#phone${i}`), {
+      let itiPhone = window.intlTelInput(document.querySelector(`#phone${i}`), {
         utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
       });
 
-      let iti = window.intlTelInput(document.querySelector(`#emergencyContactPhone${i}`), {
+      let itiEmergencyContactPhone  = window.intlTelInput(document.querySelector(`#emergencyContactPhone${i}`), {
         utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
       });
 
