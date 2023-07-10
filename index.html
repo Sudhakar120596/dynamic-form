@@ -8,6 +8,8 @@
   <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-storage.js"></script>
+  <link rel="stylesheet" href="path/to/intlTelInput.css">
+  <script src="path/to/intlTelInput.js"></script>
   <style>
     /* New Styles */
     .travelerInfo {
@@ -221,8 +223,10 @@
           <label for="emergencyContactName${i}">Emergency Contact Name:</label>
           <input type="text" id="emergencyContactName${i}" name="emergencyContactName${i}" maxlength="30" required>
 
-          <label for="emergencyContactNumber${i}">Emergency Contact Number:</label>
-          <input type="tel" id="emergencyContactNumber${i}" name="emergencyContactNumber${i}" required>
+          <div class="phone-input">
+              <label for="emergencyContactPhone${i}">Phone:</label>
+              <input type="tel" id="emergencyContactPhone${i}" name="emergencyContactPhone${i}" required>
+          </div>
 
           <label class="foodChoice" for="foodChoice${i}" style="display: ${$('#serviceType').val() === 'CabRental' ? 'none' : 'inline-block'};">What Food do you want to choose?</label>
           <select class="foodChoice" id="foodChoice${i}" name="foodChoice${i}" required style="display: ${$('#serviceType').val() === 'CabRental' ? 'none' : 'inline-block'};" required>
@@ -274,6 +278,10 @@
           <input class="declarationFile" type="file" id="declarationFile${i}" name="declarationFile${i}" required>
         </div>
       `);
+
+      // Now initialize the phone number input
+      var input = document.querySelector("#emergencyContactPhone" + I);
+      window.intlTelInput(input);
 
       // Add the change event listener for foodAllergy${i}
       addFoodAllergyChangeListener(i);
