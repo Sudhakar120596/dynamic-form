@@ -261,6 +261,9 @@
           $(`#foodAllergyDetails${i}`).prop('required',false);
         }
       });
+
+      // Trigger the change event manually to ensure the correct state
+      $(`#foodAllergy${i}`).change();
     }
 
     
