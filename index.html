@@ -210,7 +210,7 @@
           </select>
 
           <label for="email${i}">Email:</label>
-          <input type="email" id="email${i}" name="email${i}" maxlength="20" required>
+          <input type="email" id="email${i}" name="email${i}" required>
 
           <label for="phone${i}">Phone Number:</label>
           <input type="tel" id="phone${i}" name="phone${i}" required>
@@ -224,8 +224,8 @@
           <label for="emergencyContactNumber${i}">Emergency Contact Number:</label>
           <input type="tel" id="emergencyContactNumber${i}" name="emergencyContactNumber${i}" required>
 
-          <label class="foodChoice" for="foodChoice${i}">What Food do you want to choose?</label>
-          <select class="foodChoice" id="foodChoice${i}" name="foodChoice${i}" required>
+          <label class="foodChoice" for="foodChoice${i}" style="display: ${$('#serviceType').val() === 'CabRental' ? 'none' : 'inline-block'};">What Food do you want to choose?</label>
+          <select class="foodChoice" id="foodChoice${i}" name="foodChoice${i}" required style="display: ${$('#serviceType').val() === 'CabRental' ? 'none' : 'inline-block'};" required>
             <option value=""></option>
             <option value="Veg">Veg</option>
             <option value="Nonveg">Nonveg</option>
@@ -233,8 +233,8 @@
             <option value="NA">N/A</option>
           </select>
 
-          <label class="foodAllergy" for="foodAllergy${i}">Do you have any type of food allergies?</label>
-          <select class="foodAllergy" id="foodAllergy${i}" name="foodAllergy${i}" required>
+          <label class="foodAllergy" for="foodAllergy${i}" style="display: ${$('#serviceType').val() === 'CabRental' ? 'none' : 'inline-block'};">Do you have any type of food allergies?</label>
+          <select class="foodAllergy" id="foodAllergy${i}" name="foodAllergy${i}" required style="display: ${$('#serviceType').val() === 'CabRental' ? 'none' : 'inline-block'};" required>
             <option value=""></option>
             <option value="Yes">Yes</option>
             <option value="No">No</option>
