@@ -214,8 +214,10 @@
           <label for="email${i}">Email:</label>
           <input type="email" id="email${i}" name="email${i}" required>
 
-          <label for="phone${i}">Phone Number:</label>
-          <input type="tel" id="phone${i}" name="phone${i}" required>
+          <div class="phone-input">
+              <label for="phone${i}">Phone Number:</label>
+              <input type="tel" style="width:300px;" id="phone${i}" name="phone${i}" value="10" required>
+          </div>
 
           <label for="idProof${i}">Voter/Aadhar Id proof (Max 10mb):</label>
           <input type="file" id="idProof${i}" name="idProof${i}" required>
@@ -225,7 +227,7 @@
 
           <div class="phone-input">
               <label for="emergencyContactPhone${i}">Phone:</label>
-              <input type="tel" style="width:200px;" id="emergencyContactPhone${i}" name="emergencyContactPhone${i}" required>
+              <input type="tel" style="width:300px;" id="emergencyContactPhone${i}" name="emergencyContactPhone${i}" value="10" required>
           </div>
 
           <label class="foodChoice" for="foodChoice${i}" style="display: ${$('#serviceType').val() === 'CabRental' ? 'none' : 'inline-block'};">What Food do you want to choose?</label>
@@ -278,6 +280,10 @@
           <input class="declarationFile" type="file" id="declarationFile${i}" name="declarationFile${i}" required>
         </div>
       `);
+
+      let iti = window.intlTelInput(document.querySelector(`#phone${i}`), {
+        utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+      });
 
       let iti = window.intlTelInput(document.querySelector(`#emergencyContactPhone${i}`), {
         utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
