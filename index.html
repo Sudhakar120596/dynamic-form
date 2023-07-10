@@ -216,7 +216,7 @@
 
           <div class="phone-input">
               <label for="phone${i}">Phone Number:</label>
-              <input type="tel" style="width:300px;" id="phone${i}" name="phone${i}" value="10" required>
+              <input type="tel" style="width:300px;" id="phone${i}" name="phone${i}" minlength="10" maxlength="10" required>
           </div>
 
           <label for="idProof${i}">Voter/Aadhar Id proof (Max 10mb):</label>
@@ -225,9 +225,9 @@
           <label for="emergencyContactName${i}">Emergency Contact Name:</label>
           <input type="text" id="emergencyContactName${i}" name="emergencyContactName${i}" maxlength="30" required>
 
-          <div class="phone-input">
+          <div class="emergencyContact-input">
               <label for="emergencyContactPhone${i}">Phone:</label>
-              <input type="tel" style="width:300px;" id="emergencyContactPhone${i}" name="emergencyContactPhone${i}" value="10" required>
+              <input type="tel" style="width:300px;" id="emergencyContactPhone${i}" name="emergencyContactPhone${i}" minlength="10" maxlength="10" required>
           </div>
 
           <label class="foodChoice" for="foodChoice${i}" style="display: ${$('#serviceType').val() === 'CabRental' ? 'none' : 'inline-block'};">What Food do you want to choose?</label>
