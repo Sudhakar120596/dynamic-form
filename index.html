@@ -269,6 +269,7 @@
           $(`#foodAllergyDetails${i}`).hide();
           $(`label[for='foodAllergyDetails${i}']`).hide();
           $(`#foodAllergyDetails${i}`).prop('required',false);
+          $(`#foodAllergyDetails${i}`).val('');  // Clear the input value
         }
       });
 
