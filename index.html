@@ -115,6 +115,25 @@
   </form>
 
   <script>
+    function addFoodAllergyChangeListener(i) {
+      $(`#foodAllergy${i}`).change(function() {
+        // Show the food allergy details field if 'Yes' is selected
+        if ($(this).val() === 'Yes') {
+          $(`#foodAllergyDetails${i}`).show();
+          $(`label[for='foodAllergyDetails${i}']`).show();
+          $(`#foodAllergyDetails${i}`).prop('required',true);
+        } else {
+          $(`#foodAllergyDetails${i}`).hide();
+          $(`label[for='foodAllergyDetails${i}']`).hide();
+          $(`#foodAllergyDetails${i}`).prop('required',false);
+        }
+      });
+      
+      // Trigger the change event manually to ensure the correct state
+      $(`#foodAllergy${i}`).change();
+    }
+
+    
    $(document).ready(function() {
     const firebaseConfig = {
       apiKey: "AIzaSyDT1R0e9RHa6L9NWWV3Mk9SI6gYHIepe_0",
@@ -254,30 +273,10 @@
         </div>
       `);
 
-      // Hide the food allergy details field and its label by default
-      $(`#foodAllergyDetails${i}`).hide();
-      $(`label[for='foodAllergyDetails${i}']`).hide();
-    
-      // Listen for changes to the food allergy selection
-      $(`#foodAllergy${i}`).change(function() {
-        // Show the food allergy details field if 'Yes' is selected
-        if ($(this).val() === 'Yes') {
-          $(`#foodAllergyDetails${i}`).show();
-          $(`label[for='foodAllergyDetails${i}']`).show();
-          $(`#foodAllergyDetails${i}`).prop('required',true);
-        } else {
-          $(`#foodAllergyDetails${i}`).hide();
-          $(`label[for='foodAllergyDetails${i}']`).hide();
-          $(`#foodAllergyDetails${i}`).prop('required',false);
-          $(`#foodAllergyDetails${i}`).val('');  // Clear the input value
-        }
-      });
-
-      // Trigger the change event manually to ensure the correct state
-      $(`#foodAllergy${i}`).change();
+      // Add the change event listener for foodAllergy${i}
+      addFoodAllergyChangeListener(i);
     }
 
-    
     // Re-initialize the jQuery Validate plugin
     $('#TripForm').validate();
   });
