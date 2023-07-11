@@ -395,9 +395,27 @@ $('#numberOfTravelers').change();
     // Hide the form after successful submission
     $('#TripForm').hide();
 
-    // Show a success message
-    $('body').append('<p>Your form has been successfully submitted!</p>');
-  })
+$('body').append(`
+  <div style="
+    margin: 1em auto;
+    padding: 1em;
+    background-color: #dff0d8;
+    border: 1px solid #d6e9c6;
+    border-radius: 4px;
+    width: fit-content;
+    text-align: center;
+  ">
+    <p style="font-size: 1.2em;">
+      🎉 Your form has been successfully submitted!🎉
+    </p>
+    <p style="font-size: 1.2em;">
+      ❤️Welcome to the Banzaras Family.❤️
+    </p>
+    <p style="font-size: 1.2em;">
+      😃Best wishes for your journey and enjoy your trip fully.😃
+    </p>
+  </div>
+`);
   .catch((error) => {
     console.error("Error adding document: ", error);
     alert('There was an error booking your trip. Please try again.');
