@@ -281,13 +281,20 @@
         </div>
       `);
 
-      let itiPhone = window.intlTelInput(document.querySelector(`#phone${i}`), {
+      let input = document.querySelector(`#phone${i}`);
+      input.setAttribute('autocomplete', 'off');
+      
+      let itiPhone = window.intlTelInput(input, {
         utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
       });
 
-      let itiEmergencyContactPhone  = window.intlTelInput(document.querySelector(`#emergencyContactPhone${i}`), {
+      let input1 = document.querySelector(`#emergencyContactPhone${i}`);
+      input.setAttribute('autocomplete', 'off');
+      
+      let itiPhone = window.intlTelInput(input1, {
         utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
       });
+      
 
       // Add the change event listener for foodAllergy${i}
       addFoodAllergyChangeListener(i);
