@@ -360,7 +360,7 @@
          var storageRef = firebase.storage().ref();
          var idProofRef = storageRef.child('idProofs/' + formData['bookingID'] + '/traveler' + i);
          var vaccineCertRef = storageRef.child('vaccineCertificates/' + formData['bookingID'] + '/traveler' + i);
-         var declarationRef = storageRef.child('declarationDocuments/' + formData['bookingID'] + '/traveler' + I);
+         var declarationRef = storageRef.child('declarationDocuments/' + formData['bookingID'] + '/traveler' + i);
          
          uploadPromises.push(idProofRef.put(idProofFile).then(() => {
            console.log('Uploaded ID proof for traveler ' + i);
