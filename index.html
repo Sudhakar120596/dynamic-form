@@ -323,6 +323,8 @@ $('#numberOfTravelers').change();
   // Get the traveler data
   var travelerData = [];
   var numberOfTravelers = formData['numberOfTravelers'];
+
+  var uploadPromises = [];
   for (var i = 0; i < numberOfTravelers; i++) {
     var traveler = {};
     traveler['travelerName'] = formData['travelerName' + i];
@@ -356,17 +358,17 @@ $('#numberOfTravelers').change();
       var vaccineCertRef = storageRef.child('vaccineCertificates/' + formData['bookingID'] + '/traveler' + i);
       var declarationRef = storageRef.child('declarationDocuments/' + formData['bookingID'] + '/traveler' + i);
       
-      idProofRef.put(idProofFile).then((snapshot) => {
+      uploadPromises.push(idProofRef.put(idProofFile).then(() => {
         console.log('Uploaded ID proof for traveler ' + i);
-      });
+      }));
 
-      vaccineCertRef.put(vaccineCertFile).then((snapshot) => {
+      uploadPromises.push(vaccineCertRef.put(vaccineCertFile).then(() => {
         console.log('Uploaded vaccine certificate for traveler ' + i);
-      });
+      }));
 
-      declarationRef.put(declarationFile).then((snapshot) => {
+      uploadPromises.push(declarationRef.put(declarationFile).then(() => {
         console.log('Uploaded declaration document for traveler ' + i);
-      });
+      }));
 
     travelerData.push(traveler);
   }
@@ -387,12 +389,14 @@ $('#numberOfTravelers').change();
         return;
       }     
   // Adding document to Firestore
-  db.collection("forms").add({
-    formData: formData
-  })
-  .then((docRef) => {
-    console.log("Document written with ID: ", docRef.id);
-    // Hide the form after successful submission
+  Promise.all(uploadPromises)
+  .then(() => {
+    db.collection("forms").add({
+      formData: formData
+    })
+    .then((docRef) => {
+      console.log("Document written with ID: ", docRef.id);
+      // Hide the form after successful submission
     $('#TripForm').hide();
 
 
@@ -403,6 +407,10 @@ $('#numberOfTravelers').change();
     console.error("Error adding document: ", error);
     alert('There was an error booking your trip. Please try again.');
   });
+})
+.catch((error) => {
+  console.error("Error uploading files: ", error);
+  alert('There was an error uploading your files. Please try again.');
 });
      // Initialize the jQuery Validate plugin
       $('#TripForm').validate();
