@@ -306,9 +306,11 @@
     // Re-initialize the jQuery Validate plugin
     $('#TripForm').validate();
   });
-// Trigger the change event manually
-$('#numberOfTravelers').change();
-// AJAX function to submit the form
+     
+     // Trigger the change event manually
+     $('#numberOfTravelers').change();
+     
+     // AJAX function to submit the form
      $('#TripForm').submit(function(e) {
       e.preventDefault();
       // Get the form data
