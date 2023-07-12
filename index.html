@@ -220,7 +220,8 @@
           </div>
 
           <label for="idProof${i}">Voter/Aadhar Id proof (Max 10mb):</label>
-          <input type="file" id="idProof${i}" name="idProof${i}" required>
+          <input type="file" id="idProof${i}" name="idProof${i}" required
+          <div id="idProofProgressBar${i}" class="progress-bar"></div>
 
           <label for="emergencyContactName${i}">Emergency Contact Name:</label>
           <input type="text" id="emergencyContactName${i}" name="emergencyContactName${i}" maxlength="20" required>
@@ -275,9 +276,11 @@
 
           <label for="vaccineCertificate${i}">If yes, upload your vaccination certificate (Max 10mb):</label>
           <input type="file" id="vaccineCertificate${i}" name="vaccineCertificate${i}" required>
+          <div id="vaccineCertificateProgressBar${i}" class="progress-bar"></div>
 
           <label class="declarationFile" for="declarationFile${i}">Declaration Document (Max 10mb):</label>
           <input class="declarationFile" type="file" id="declarationFile${i}" name="declarationFile${i}" required>
+          <div id="declarationFileProgressBar${i}" class="progress-bar"></div>
         </div>
       `);
 
@@ -367,17 +370,20 @@ $('#numberOfTravelers').change();
       // Attach an observer to monitor the status of the upload
       uploadTask1.on('state_changed', function(snapshot){
         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log('ID Proof Upload is ' + progress + '% done for traveler ' + i);
+        console.log('Upload is ' + progress + '% done');
+        document.getElementById('progressBar1').style.width = progress + '%';
       });
 
       uploadTask2.on('state_changed', function(snapshot){
         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log('Vaccine Certificate Upload is ' + progress + '% done for traveler ' + i);
+        console.log('Upload is ' + progress + '% done');
+        document.getElementById('progressBar2').style.width = progress + '%';
       });
 
       uploadTask3.on('state_changed', function(snapshot){
         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log('Declaration Document Upload is ' + progress + '% done for traveler ' + i);
+        console.log('Upload is ' + progress + '% done');
+        document.getElementById('progressBar3').style.width = progress + '%';
       });
     
       uploadPromises.push(uploadPromise1, uploadPromise2, uploadPromise3);
