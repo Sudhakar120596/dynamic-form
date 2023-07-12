@@ -150,6 +150,7 @@
     // Initialize Firebase
     const app = firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore(app);
+    const storage = firebase.storage(app); 
 
 
   // Ensure that the trip end date is after the trip start date
