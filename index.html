@@ -150,7 +150,6 @@
     // Initialize Firebase
     const app = firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore(app);
-    const storage = firebase.storage(app); 
 
 
   // Ensure that the trip end date is after the trip start date
@@ -306,128 +305,108 @@
     // Re-initialize the jQuery Validate plugin
     $('#TripForm').validate();
   });
-     
-     // Trigger the change event manually
-     $('#numberOfTravelers').change();
-     
-     // AJAX function to submit the form
-     $('#TripForm').submit(function(e) {
+// Trigger the change event manually
+$('#numberOfTravelers').change();
+// AJAX function to submit the form
+    $('#TripForm').submit(function(e) {
       e.preventDefault();
-      // Get the form data
-       var data = $(this).serializeArray();
-       
-       // Convert the form data to an object
-       var formData = {};
-       data.forEach(function(item) {
-         formData[item.name] = item.value;
-       });
-       
-       // Get the traveler data
-       var travelerData = [];
-       var numberOfTravelers = formData['numberOfTravelers'];
+      
+  // Get the form data
+  var data = $(this).serializeArray();
 
-       // Handle file uploads for each traveler
-       var uploadPromises = [];
-       
-       for (var i = 0; i < numberOfTravelers; i++) {
-         var traveler = {};
-         traveler['travelerName'] = formData['travelerName' + i];
-         // Add all other traveler fields...
-         
-         var idProofFile = document.getElementById('idProof' + i).files[0];
-         var vaccineCertFile = document.getElementById('vaccineCertificate' + i).files[0];
-         var declarationFile = document.getElementById('declarationFile' + i).files[0];
-         
-         var maxSizeInBytes = 10 * 1024 * 1024; // 10MB in bytes
-         
-         // Check if the ID proof file size is less than 10MB
-         if(idProofFile.size > maxSizeInBytes) {
-           alert('The ID proof file for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
-           return;
-         }
-         
-         // Check if the vaccine certificate file size is less than 10MB
-         if(vaccineCertFile.size > maxSizeInBytes) {
-           alert('The vaccine certificate file for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
-           return;
-         }
-         
-         if(declarationFile.size > maxSizeInBytes) {
-           alert('The Declaration file for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
-           return;
-         }
-         
-         var storageRef = firebase.storage().ref();
-         var idProofRef = storageRef.child('idProofs/' + formData['bookingID'] + '/traveler' + i);
-         var vaccineCertRef = storageRef.child('vaccineCertificates/' + formData['bookingID'] + '/traveler' + i);
-         var declarationRef = storageRef.child('declarationDocuments/' + formData['bookingID'] + '/traveler' + i);
-         
-         uploadPromises.push(idProofRef.put(idProofFile).then(() => {
-           console.log('Uploaded ID proof for traveler ' + i);
-         }));
-         
-         uploadPromises.push(vaccineCertRef.put(vaccineCertFile).then(() => {
-           console.log('Uploaded vaccine certificate for traveler ' + i);
-         }));
-         
-         uploadPromises.push(declarationRef.put(declarationFile).then(() => {
-           console.log('Uploaded declaration document for traveler ' + i);
-         }));
-         
-         travelerData.push(traveler);
-       }
-       
-       // Remove the individual traveler fields from the form data
-       
-       Object.keys(formData).forEach(function(key) {
-        if (key.startsWith('traveler')) {
-          delete formData[key];
-        }
+  // Convert the form data to an object
+  var formData = {};
+  data.forEach(function(item) {
+    formData[item.name] = item.value;
+  });
+
+  // Get the traveler data
+  var travelerData = [];
+  var numberOfTravelers = formData['numberOfTravelers'];
+  for (var i = 0; i < numberOfTravelers; i++) {
+    var traveler = {};
+    traveler['travelerName'] = formData['travelerName' + i];
+    // Add all other traveler fields...
+
+          // Handle file uploads for each traveler
+      var idProofFile = document.getElementById('idProof' + i).files[0];
+      var vaccineCertFile = document.getElementById('vaccineCertificate' + i).files[0];
+      var declarationFile = document.getElementById('declarationFile' + i).files[0];
+
+      var maxSizeInBytes = 10 * 1024 * 1024; // 10MB in bytes
+      // Check if the ID proof file size is less than 10MB
+      if(idProofFile.size > maxSizeInBytes) {
+        alert('The ID proof file for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
+        return;
+      }
+
+      // Check if the vaccine certificate file size is less than 10MB
+      if(vaccineCertFile.size > maxSizeInBytes) {
+        alert('The vaccine certificate file for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
+        return;
+      }
+
+      if(declarationFile.size > maxSizeInBytes) {
+        alert('The Declaration file for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
+        return;
+      }
+    
+      var storageRef = firebase.storage().ref();
+      var idProofRef = storageRef.child('idProofs/' + formData['bookingID'] + '/traveler' + i);
+      var vaccineCertRef = storageRef.child('vaccineCertificates/' + formData['bookingID'] + '/traveler' + i);
+      var declarationRef = storageRef.child('declarationDocuments/' + formData['bookingID'] + '/traveler' + i);
+      
+      idProofRef.put(idProofFile).then((snapshot) => {
+        console.log('Uploaded ID proof for traveler ' + i);
       });
-      
-      // Add the traveler data to the form data
-      formData['travelers'] = travelerData;
+
+      vaccineCertRef.put(vaccineCertFile).then((snapshot) => {
+        console.log('Uploaded vaccine certificate for traveler ' + i);
+      });
+
+      declarationRef.put(declarationFile).then((snapshot) => {
+        console.log('Uploaded declaration document for traveler ' + i);
+      });
+
+    travelerData.push(traveler);
+  }
+
+  // Remove the individual traveler fields from the form data
+  Object.keys(formData).forEach(function(key) {
+    if (key.startsWith('traveler')) {
+      delete formData[key];
+    }
+  });
+
+  // Add the traveler data to the form data
+  formData['travelers'] = travelerData;
 
 
-      // Assuming '#TripForm' is your form
-      var $form = $('#TripForm'); 
-      
-      
-      // Validate form data...
-      if (!$form.valid()) {
+  // Validate form data...
+      if (!$(this).valid()) {
         return;
       }     
-      
-      Promise.all(uploadPromises) // Wait for all file uploads to complete
-      .then(() => {
-        // All file uploads have completed, add Firestore document
-        if (!$form.valid()) {
-          return;
-        } 
-        db.collection("forms").add({
-          formData: formData
-        })
-          .then((docRef) => {
-            console.log("Document written with ID: ", docRef.id);
-            // Hide the form after successful submission
-            $('#TripForm').hide();
-            
-            // Show a success message
-            $('body').append('<p> 🎉 Your form has been successfully submitted!🎉</p><p>❤️Welcome to the Banzaras Family.❤️</p><p>😃Best wishes for your journey and enjoy your trip fully.😃</p>');
-          })
-          .catch((error) => {
-            console.error("Error adding document: ", error);
-            alert('There was an error booking your trip. Please try again.');
-          });
-      })
-        .catch((error) => {
-          console.error("Error uploading files: ", error);
-          alert('There was an error uploading your files. Please try again.');
-        });
-      
-      // Initialize the jQuery Validate plugin
+  // Adding document to Firestore
+  db.collection("forms").add({
+    formData: formData
+  })
+  .then((docRef) => {
+    console.log("Document written with ID: ", docRef.id);
+    // Hide the form after successful submission
+    $('#TripForm').hide();
+
+
+    // Show a success message
+    $('body').append('<p> 🎉 Your form has been successfully submitted!🎉</p><p>❤️Welcome to the Banzaras Family.❤️</p><p>😃Best wishes for your journey and enjoy your trip fully.😃</p>');
+  })
+  .catch((error) => {
+    console.error("Error adding document: ", error);
+    alert('There was an error booking your trip. Please try again.');
+  });
+});
+     // Initialize the jQuery Validate plugin
       $('#TripForm').validate();
-    });
+  });
 </script>
 </body>
 </html>
