@@ -359,21 +359,29 @@ $('#numberOfTravelers').change();
       var vaccineCertRef = storageRef.child('vaccineCertificates/' + formData['bookingID'] + '/traveler' + i);
       var declarationRef = storageRef.child('declarationDocuments/' + formData['bookingID'] + '/traveler' + i);
       
-      // Upload files and push promises to the array
-      var uploadPromise1 = idProofRef.put(idProofFile).then(() => {
-        console.log('Uploaded ID proof for traveler ' + i);
-      });
-      
-      var uploadPromise2 = vaccineCertRef.put(vaccineCertFile).then(() => {
-        console.log('Uploaded vaccine certificate for traveler ' + i);
+      // Create a new upload task for each file
+      var uploadTask1 = idProofRef.put(idProofFile);
+      var uploadTask2 = vaccineCertRef.put(vaccineCertFile);
+      var uploadTask3 = declarationRef.put(declarationFile);
+
+      // Attach an observer to monitor the status of the upload
+      uploadTask1.on('state_changed', function(snapshot){
+        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log('ID Proof Upload is ' + progress + '% done for traveler ' + i);
       });
 
-      var uploadPromise3 = declarationRef.put(declarationFile).then(() => {
-        console.log('Uploaded declaration document for traveler ' + i);
+      uploadTask2.on('state_changed', function(snapshot){
+        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log('Vaccine Certificate Upload is ' + progress + '% done for traveler ' + i);
       });
 
-    uploadPromises.push(uploadPromise1, uploadPromise2, uploadPromise3);
-    travelerData.push(traveler);
+      uploadTask3.on('state_changed', function(snapshot){
+        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log('Declaration Document Upload is ' + progress + '% done for traveler ' + i);
+      });
+    
+      uploadPromises.push(uploadPromise1, uploadPromise2, uploadPromise3);
+      travelerData.push(traveler);
   }
 
   // Remove the individual traveler fields from the form data
