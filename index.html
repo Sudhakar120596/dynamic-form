@@ -56,15 +56,6 @@
         border: 1px solid red !important;
     }
 
-    .progress-bar {
-      width: 0;
-      height: 20px;
-      background-color: #4CAF50;
-      text-align: center; 
-      line-height: 30px;
-      color: white;
-    }
-
     .travelerInfo button[type="submit"] {
       font-size: 20px !important;  /* Larger font size */
       padding: 15px 30px;  /* More padding */
@@ -230,7 +221,6 @@
 
           <label for="idProof${i}">Voter/Aadhar Id proof (Max 10mb):</label>
           <input type="file" id="idProof${i}" name="idProof${i}" required>
-          <div id="idProofProgressBar${i}" class="progress-bar"></div>
 
           <label for="emergencyContactName${i}">Emergency Contact Name:</label>
           <input type="text" id="emergencyContactName${i}" name="emergencyContactName${i}" maxlength="20" required>
@@ -285,11 +275,9 @@
 
           <label for="vaccineCertificate${i}">If yes, upload your vaccination certificate (Max 10mb):</label>
           <input type="file" id="vaccineCertificate${i}" name="vaccineCertificate${i}" required>
-          <div id="vaccineCertificateProgressBar${i}" class="progress-bar"></div>
 
           <label class="declarationFile" for="declarationFile${i}">Declaration Document (Max 10mb):</label>
           <input class="declarationFile" type="file" id="declarationFile${i}" name="declarationFile${i}" required>
-          <div id="declarationFileProgressBar${i}" class="progress-bar"></div>
         </div>
       `);
 
@@ -371,32 +359,24 @@ $('#numberOfTravelers').change();
       var vaccineCertRef = storageRef.child('vaccineCertificates/' + formData['bookingID'] + '/traveler' + i);
       var declarationRef = storageRef.child('declarationDocuments/' + formData['bookingID'] + '/traveler' + i);
       
-      // Create a new upload task for each file
-      var uploadTask1 = idProofRef.put(idProofFile);
-      var uploadTask2 = vaccineCertRef.put(vaccineCertFile);
-      var uploadTask3 = declarationRef.put(declarationFile);
+      // Upload files and push promises to the array
+      var uploadPromise1 = idProofRef.put(idProofFile).then(() => {
+        console.log('Uploaded ID proof for traveler ' + i);
+      })
+      .catch((error) => console.error(error));
+      
+      var uploadPromise2 = vaccineCertRef.put(vaccineCertFile).then(() => {
+        console.log('Uploaded vaccine certificate for traveler ' + i);
+      })
+      .catch((error) => console.error(error));
 
-      // Attach an observer to monitor the status of the upload
-      uploadTask1.on('state_changed', function(snapshot){
-        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log('Upload is ' + progress + '% done');
-        document.getElementById('idProofProgressBar${i}').style.width = progress + '%';
-      });
+      var uploadPromise3 = declarationRef.put(declarationFile).then(() => {
+        console.log('Uploaded declaration document for traveler ' + i);
+      })
+      .catch((error) => console.error(error));
 
-      uploadTask2.on('state_changed', function(snapshot){
-        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log('Upload is ' + progress + '% done');
-        document.getElementById('vaccineCertificateProgressBar${i}').style.width = progress + '%';
-      });
-
-      uploadTask3.on('state_changed', function(snapshot){
-        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log('Upload is ' + progress + '% done');
-        document.getElementById('declarationFileProgressBar${i}').style.width = progress + '%';
-      });
-    
-      uploadPromises.push(uploadTask1, uploadTask2, uploadTask3);
-      travelerData.push(traveler);
+    uploadPromises.push(uploadPromise1, uploadPromise2, uploadPromise3);
+    travelerData.push(traveler);
   }
 
   // Remove the individual traveler fields from the form data
@@ -428,7 +408,7 @@ $('#numberOfTravelers').change();
     $('#TripForm').hide();
 
     // Show a success message
-    $('body').append('<p> 🎉 Your form has been successfully submitted!🎉</p><p>❤️Welcome to the Banzaras Family.❤️</p><p>😃Best wishes for your journey and enjoy your trip fully.😃</p>');
+    $('body').append('<p> ?? Your form has been successfully submitted!??</p><p>??Welcome to the Banzaras Family.??</p><p>??Best wishes for your journey and enjoy your trip fully.??</p>');
   })
   .catch((error) => {
     console.error("Error: ", error);
