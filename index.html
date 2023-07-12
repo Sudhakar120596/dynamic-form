@@ -309,74 +309,75 @@
 // Trigger the change event manually
 $('#numberOfTravelers').change();
 // AJAX function to submit the form
-    $('#TripForm').submit(function(e) {
+     $('#TripForm').submit(function(e) {
       e.preventDefault();
-      
-  // Get the form data
-  var data = $(this).serializeArray();
+      // Get the form data
+       var data = $(this).serializeArray();
+       
+       // Convert the form data to an object
+       var formData = {};
+       data.forEach(function(item) {
+         formData[item.name] = item.value;
+       });
+       
+       // Get the traveler data
+       var travelerData = [];
+       var numberOfTravelers = formData['numberOfTravelers'];
 
-  // Convert the form data to an object
-  var formData = {};
-  data.forEach(function(item) {
-    formData[item.name] = item.value;
-  });
-
-  // Get the traveler data
-  var travelerData = [];
-  var numberOfTravelers = formData['numberOfTravelers'];
-  for (var i = 0; i < numberOfTravelers; i++) {
-    var traveler = {};
-    traveler['travelerName'] = formData['travelerName' + i];
-    // Add all other traveler fields...
-
-      // Handle file uploads for each traveler
-      var uploadPromises = []; // Array to hold all upload promises
-      
-      var idProofFile = document.getElementById('idProof' + i).files[0];
-      var vaccineCertFile = document.getElementById('vaccineCertificate' + i).files[0];
-      var declarationFile = document.getElementById('declarationFile' + i).files[0];
-
-      var maxSizeInBytes = 10 * 1024 * 1024; // 10MB in bytes
-      // Check if the ID proof file size is less than 10MB
-      if(idProofFile.size > maxSizeInBytes) {
-        alert('The ID proof file for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
-        return;
-      }
-
-      // Check if the vaccine certificate file size is less than 10MB
-      if(vaccineCertFile.size > maxSizeInBytes) {
-        alert('The vaccine certificate file for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
-        return;
-      }
-
-      if(declarationFile.size > maxSizeInBytes) {
-        alert('The Declaration file for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
-        return;
-      }
-    
-      var storageRef = firebase.storage().ref();
-      var idProofRef = storageRef.child('idProofs/' + formData['bookingID'] + '/traveler' + i);
-      var vaccineCertRef = storageRef.child('vaccineCertificates/' + formData['bookingID'] + '/traveler' + i);
-      var declarationRef = storageRef.child('declarationDocuments/' + formData['bookingID'] + '/traveler' + i);
-
-      uploadPromises.push(idProofRef.put(idProofFile).then(() => {
-        console.log('Uploaded ID proof for traveler ' + i);
-      }));
-    
-      uploadPromises.push(vaccineCertRef.put(vaccineCertFile).then(() => {
-        console.log('Uploaded vaccine certificate for traveler ' + i);
-      }));
-    
-      uploadPromises.push(declarationRef.put(declarationFile).then(() => {
-        console.log('Uploaded declaration document for traveler ' + i);
-      }));
-    
-    travelerData.push(traveler);
-  }
-      
-      // Remove the individual traveler fields from the form data
-      
-      Object.keys(formData).forEach(function(key) {
+       // Handle file uploads for each traveler
+       var uploadPromises = [];
+       
+       for (var i = 0; i < numberOfTravelers; i++) {
+         var traveler = {};
+         traveler['travelerName'] = formData['travelerName' + i];
+         // Add all other traveler fields...
+         
+         var idProofFile = document.getElementById('idProof' + i).files[0];
+         var vaccineCertFile = document.getElementById('vaccineCertificate' + i).files[0];
+         var declarationFile = document.getElementById('declarationFile' + i).files[0];
+         
+         var maxSizeInBytes = 10 * 1024 * 1024; // 10MB in bytes
+         
+         // Check if the ID proof file size is less than 10MB
+         if(idProofFile.size > maxSizeInBytes) {
+           alert('The ID proof file for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
+           return;
+         }
+         
+         // Check if the vaccine certificate file size is less than 10MB
+         if(vaccineCertFile.size > maxSizeInBytes) {
+           alert('The vaccine certificate file for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
+           return;
+         }
+         
+         if(declarationFile.size > maxSizeInBytes) {
+           alert('The Declaration file for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
+           return;
+         }
+         
+         var storageRef = firebase.storage().ref();
+         var idProofRef = storageRef.child('idProofs/' + formData['bookingID'] + '/traveler' + i);
+         var vaccineCertRef = storageRef.child('vaccineCertificates/' + formData['bookingID'] + '/traveler' + i);
+         var declarationRef = storageRef.child('declarationDocuments/' + formData['bookingID'] + '/traveler' + I);
+         
+         uploadPromises.push(idProofRef.put(idProofFile).then(() => {
+           console.log('Uploaded ID proof for traveler ' + i);
+         }));
+         
+         uploadPromises.push(vaccineCertRef.put(vaccineCertFile).then(() => {
+           console.log('Uploaded vaccine certificate for traveler ' + i);
+         }));
+         
+         uploadPromises.push(declarationRef.put(declarationFile).then(() => {
+           console.log('Uploaded declaration document for traveler ' + i);
+         }));
+         
+         travelerData.push(traveler);
+       }
+       
+       // Remove the individual traveler fields from the form data
+       
+       Object.keys(formData).forEach(function(key) {
         if (key.startsWith('traveler')) {
           delete formData[key];
         }
