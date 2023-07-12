@@ -324,6 +324,7 @@ $('#numberOfTravelers').change();
   var travelerData = [];
   var numberOfTravelers = formData['numberOfTravelers'];
 
+  // Handle file uploads for each traveler
   var uploadPromises = [];
   for (var i = 0; i < numberOfTravelers; i++) {
     var traveler = {};
@@ -366,9 +367,9 @@ $('#numberOfTravelers').change();
         console.log('Uploaded vaccine certificate for traveler ' + i);
       }));
 
-      uploadPromises.push(declarationRef.put(declarationFile).then(() => {
-        console.log('Uploaded declaration document for traveler ' + i);
-      }));
+       uploadPromises.push(declarationRef.put(declarationFile).then(() => {
+         console.log('Uploaded declaration document for traveler ' + i);
+       }));
 
     travelerData.push(traveler);
   }
@@ -389,14 +390,12 @@ $('#numberOfTravelers').change();
         return;
       }     
   // Adding document to Firestore
-  Promise.all(uploadPromises)
-  .then(() => {
-    db.collection("forms").add({
-      formData: formData
-    })
-    .then((docRef) => {
-      console.log("Document written with ID: ", docRef.id);
-      // Hide the form after successful submission
+  db.collection("forms").add({
+    formData: formData
+  })
+  .then((docRef) => {
+    console.log("Document written with ID: ", docRef.id);
+    // Hide the form after successful submission
     $('#TripForm').hide();
 
 
@@ -407,10 +406,6 @@ $('#numberOfTravelers').change();
     console.error("Error adding document: ", error);
     alert('There was an error booking your trip. Please try again.');
   });
-})
-.catch((error) => {
-  console.error("Error uploading files: ", error);
-  alert('There was an error uploading your files. Please try again.');
 });
      // Initialize the jQuery Validate plugin
       $('#TripForm').validate();
