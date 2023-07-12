@@ -329,7 +329,7 @@ $('#numberOfTravelers').change();
     traveler['travelerName'] = formData['travelerName' + i];
     // Add all other traveler fields...
 
-          // Handle file uploads for each traveler
+      // Handle file uploads for each traveler
       var uploadPromises = []; // Array to hold all upload promises
       
       var idProofFile = document.getElementById('idProof' + i).files[0];
@@ -391,14 +391,14 @@ $('#numberOfTravelers').change();
       
       
       // Validate form data...
-      if (!$(this).valid()) {
+      if (!$form.valid()) {
         return;
       }     
       
       Promise.all(uploadPromises) // Wait for all file uploads to complete
       .then(() => {
         // All file uploads have completed, add Firestore document
-        if (!$(this).valid()) {
+        if (!$form.valid()) {
           return;
         } 
         db.collection("forms").add({
@@ -425,6 +425,6 @@ $('#numberOfTravelers').change();
       // Initialize the jQuery Validate plugin
       $('#TripForm').validate();
     });
-     </script>
+</script>
 </body>
 </html>
