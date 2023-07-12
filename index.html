@@ -330,6 +330,8 @@ $('#numberOfTravelers').change();
     // Add all other traveler fields...
 
           // Handle file uploads for each traveler
+      var uploadPromises = []; // Array to hold all upload promises
+      
       var idProofFile = document.getElementById('idProof' + i).files[0];
       var vaccineCertFile = document.getElementById('vaccineCertificate' + i).files[0];
       var declarationFile = document.getElementById('declarationFile' + i).files[0];
@@ -356,19 +358,19 @@ $('#numberOfTravelers').change();
       var idProofRef = storageRef.child('idProofs/' + formData['bookingID'] + '/traveler' + i);
       var vaccineCertRef = storageRef.child('vaccineCertificates/' + formData['bookingID'] + '/traveler' + i);
       var declarationRef = storageRef.child('declarationDocuments/' + formData['bookingID'] + '/traveler' + i);
-      
-      idProofRef.put(idProofFile).then((snapshot) => {
+
+      uploadPromises.push(idProofRef.put(idProofFile).then(() => {
         console.log('Uploaded ID proof for traveler ' + i);
-      });
-
-      vaccineCertRef.put(vaccineCertFile).then((snapshot) => {
+      }));
+    
+      uploadPromises.push(vaccineCertRef.put(vaccineCertFile).then(() => {
         console.log('Uploaded vaccine certificate for traveler ' + i);
-      });
-
-      declarationRef.put(declarationFile).then((snapshot) => {
+      }));
+    
+      uploadPromises.push(declarationRef.put(declarationFile).then(() => {
         console.log('Uploaded declaration document for traveler ' + i);
-      });
-
+      }));
+      
     travelerData.push(traveler);
   }
 
@@ -387,26 +389,35 @@ $('#numberOfTravelers').change();
       if (!$(this).valid()) {
         return;
       }     
-  // Adding document to Firestore
-  db.collection("forms").add({
-    formData: formData
-  })
-  .then((docRef) => {
-    console.log("Document written with ID: ", docRef.id);
-    // Hide the form after successful submission
-    $('#TripForm').hide();
+Promise.all(uploadPromises) // Wait for all file uploads to complete
+  .then(() => {
+    // All file uploads have completed, add Firestore document
+    if (!$(this).valid()) {
+      return;
+    } 
+    db.collection("forms").add({
+      formData: formData
+    })
+    .then((docRef) => {
+      console.log("Document written with ID: ", docRef.id);
+      // Hide the form after successful submission
+      $('#TripForm').hide();
 
-
-    // Show a success message
-    $('body').append('<p> 🎉 Your form has been successfully submitted!🎉</p><p>❤️Welcome to the Banzaras Family.❤️</p><p>😃Best wishes for your journey and enjoy your trip fully.😃</p>');
+      // Show a success message
+      $('body').append('<p> 🎉 Your form has been successfully submitted!🎉</p><p>❤️Welcome to the Banzaras Family.❤️</p><p>😃Best wishes for your journey and enjoy your trip fully.😃</p>');
+    })
+    .catch((error) => {
+      console.error("Error adding document: ", error);
+      alert('There was an error booking your trip. Please try again.');
+    });
   })
   .catch((error) => {
-    console.error("Error adding document: ", error);
-    alert('There was an error booking your trip. Please try again.');
+    console.error("Error uploading files: ", error);
+    alert('There was an error uploading your files. Please try again.');
   });
-});
-     // Initialize the jQuery Validate plugin
-      $('#TripForm').validate();
+
+// Initialize the jQuery Validate plugin
+$('#TripForm').validate();
   });
 </script>
 </body>
