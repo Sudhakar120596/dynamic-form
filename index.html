@@ -339,21 +339,25 @@ $('#numberOfTravelers').change();
       var maxSizeInBytes = 10 * 1024 * 1024; // 10MB in bytes
       
       // Check if the ID proof file exists and its size is less than 10MB
-      if (idProofFile && idProofFile.size > maxSizeInBytes) {
-        alert('The ID proof file for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
-        return;
+      if (idProofFile) {
+        if (idProofFile.size > maxSizeInBytes) {
+          alert('The ID proof file for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
+          return;
+        }
       }
 
-      // Check if the vaccine certificate file exists and its size is less than 10MB
-      if (vaccineCertFile && vaccineCertFile.size > maxSizeInBytes) {
-        alert('The vaccine certificate file for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
-        return;
+      if (vaccineCertFile) {
+        if (vaccineCertFile.size > maxSizeInBytes) {
+          alert('The vaccine certificate file for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
+          return;
+        }
       }
 
-      // Check if the declaration file exists and its size is less than 10MB
-      if (declarationFile && declarationFile.size > maxSizeInBytes) {
-        alert('The Declaration file for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
-        return;
+      if (declarationFile) {
+        if (declarationFile.size > maxSizeInBytes) {
+          alert('The Declaration file for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
+          return;
+        }
       }
     
       var storageRef = firebase.storage().ref();
