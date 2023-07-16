@@ -10,108 +10,6 @@
   <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-storage.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"/>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
-  <style>
-    /* New Styles */
-    .travelerInfo {
-        font-family: Arial, sans-serif;  /* Use your preferred font */
-        color: #333;  /* Dark gray for the text */
-        background-color: #f9f9f9;  /* Light gray for the background */
-        padding: 10px;  /* Space inside the container */
-        border-radius: 10px;  /* Rounded corners */
-    }
-
-    .travelerInfo label,
-    .travelerInfo input,
-    .travelerInfo select {
-        display: inline-block;  /* Show fields side by side */
-        width: 35%;  
-        padding: 10px;
-        margin: 0.5%;  /* Space between fields */
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        font-size: 12px;
-    }
-    
-    label.error {
-      display: inline-block;
-    }
-    
-    .travelerInfo label {
-      width: 30%;  /* Full width for labels */
-      display: inline-block;  /* Display on their own line */
-      font-size: 12px;  /* Adjust this value as needed */
-    }
-
-    /* Existing Styles */
-    label.error {
-        display: inline-block;  /* Show fields side by side */
-        width: 15%;
-        color: red;
-        background-color: #f2dede;
-        border-color: #ebccd1;
-        padding: 1px;
-    }
-
-    .error {
-        border: 1px solid red !important;
-    }
-
-    .travelerInfo button[type="submit"] {
-      font-size: 20px !important;  /* Larger font size */
-      padding: 15px 30px;  /* More padding */
-      background-color: #4CAF50;  /* Green background */
-      color: white;  /* White text color */
-      border: none;  /* No border */
-      border-radius: 5px;  /* Rounded corners */
-      cursor: pointer;  /* Cursor changes to hand when hovering */
-      transition: background-color 0.3s ease;  /* Smooth transition */
-    }
-    
-    .travelerInfo button[type="submit"]:hover {
-      background-color: #45a049;  /* Darken background on hover */
-    }
-
-    .childInfo {
-        font-family: Arial, sans-serif;  /* Use your preferred font */
-        color: #333;  /* Dark gray for the text */
-        background-color: #f9f9f9;  /* Light gray for the background */
-        padding: 10px;  /* Space inside the container */
-        border-radius: 10px;  /* Rounded corners */
-    }
-
-    .childInfo label,
-    .childInfo input,
-    .childInfo select {
-        display: inline-block;  /* Show fields side by side */
-        width: 35%;  
-        padding: 10px;
-        margin: 0.5%;  /* Space between fields */
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        font-size: 12px;
-    }
-    
-    .childInfo label {
-      width: 30%;  /* Full width for labels */
-      display: inline-block;  /* Display on their own line */
-      font-size: 12px;  /* Adjust this value as needed */
-    }
-
-    .childInfo button[type="submit"] {
-      font-size: 20px !important;  /* Larger font size */
-      padding: 15px 30px;  /* More padding */
-      background-color: #4CAF50;  /* Green background */
-      color: white;  /* White text color */
-      border: none;  /* No border */
-      border-radius: 5px;  /* Rounded corners */
-      cursor: pointer;  /* Cursor changes to hand when hovering */
-      transition: background-color 0.3s ease;  /* Smooth transition */
-    }
-    
-    .childInfo button[type="submit"]:hover {
-      background-color: #45a049;  /* Darken background on hover */
-    }
-</style>
 </head>
 <body>
   <h1>Fill Up all the details below</h1>
@@ -121,213 +19,28 @@
     <select id="serviceType" name="serviceType" required>
       <option value="">Select service</option>
       <option value="Trek">Trek</option>
-      <option value="Tour/Homestay/WFM">Tour/Homestay/WFM</option>
+      <option value="WorkFromMountains">Work From Mountains</option>
+      <option value="BanzarasHomes">Banzaras Homes</option>
+      <option value="WeekendGetaways">Weekend Getaways</option>
+      <option value="WeeklongGetaways">Weeklong Getaways</option>
       <option value="CabRental">Cab Rental</option>
+      
     </select>
-
-    <!-- Section 1 -->
-    <div id="section1">
-      <h2>Section 1</h2>
-      <label for="destination">Destination:</label>
-      <input type="text" id="destination" name="destination" maxlength="20" required>
-      
-      <label for="tripStartDate">Trip Starting Date:</label>
-      <input type="date" id="tripStartDate" name="tripStartDate" required>
-      
-      <label for="tripEndDate">Trip End Date:</label>
-      <input type="date" id="tripEndDate" name="tripEndDate" required>
-      
-      <label for="bookingID">Booking ID:</label>
-      <input type="text" id="bookingID" name="bookingID" minlength="18" maxlength="20" required>
-      
-      <label for="numberOfTravelers">No. Of Travelers:</label>
-      <input type="number" id="numberOfTravelers" name="numberOfTravelers" min="1" value="1" required>
-
-      <label for="numberOfChildren">No. of Child Below 5yr:</label>
-      <input type="number" id="numberOfChildren" name="numberOfChildren" min="0" value="0">
-
-      <button type="button" id="goToSection2">Next</button>
+    <div id="destinationLabel" style="display: none;">
+        <label for="destination">Destination:</label>
+        <input type="text" id="destination" name="destination" required>
     </div>
-
-    <div id="section2" style="display: none;">
-      <!-- Section 2 -->
-      <h2>Section 2</h2>
-      <!-- Your form fields here -->
-      <div id="travelerInfoContainer">
-        <!-- Traveler info will be added here -->
-      </div>
-      <div id="childInfoContainer">
-        <!-- Child info will be added here -->
-      </div>
-
-    <input type="submit" value="Submit">
-  </form>
-
-  <script>
-    function addFoodAllergyChangeListener(i) {
-      $(`#foodAllergy${i}`).change(function() {
-        // Show the food allergy details field if 'Yes' is selected
-        if ($(this).val() === 'Yes') {
-          $(`#foodAllergyDetails${i}`).show();
-          $(`label[for='foodAllergyDetails${i}']`).show();
-          $(`#foodAllergyDetails${i}`).prop('required',true);
-        } else {
-          $(`#foodAllergyDetails${i}`).hide();
-          $(`label[for='foodAllergyDetails${i}']`).hide();
-          $(`#foodAllergyDetails${i}`).prop('required',false);
-        }
-      });
-      
-      // Trigger the change event manually to ensure the correct state
-      $(`#foodAllergy${i}`).change();
-    }
-
     
-   $(document).ready(function() {
-    const firebaseConfig = {
-      apiKey: "AIzaSyDT1R0e9RHa6L9NWWV3Mk9SI6gYHIepe_0",
-      authDomain: "customer-data-f1dd3.firebaseapp.com",
-      projectId: "customer-data-f1dd3",
-      storageBucket: "customer-data-f1dd3.appspot.com",
-      messagingSenderId: "789752762056",
-      appId: "1:789752762056:web:7d434ab157de5ede179ffd",
-      measurementId: "G-4C2QQE2XGX"
-    };
-  
-    // Initialize Firebase
-    const app = firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore(app);
-
-
-  // Ensure that the trip end date is after the trip start date
-  $('#tripStartDate').change(function() {
-    var tripStartDate = $(this).val();
-    $('#tripEndDate').attr('min', tripStartDate);
-  });
-     
-  // Update form fields when service type changes
-  $('#serviceType').change(function() {
-    if ($(this).val() === 'CabRental') {
-      $('.foodChoice').hide();
-      $('.foodAllergy').hide();
-      $('.declarationFile').hide();
-    } else {
-      $('.foodChoice').show();
-      $('.foodAllergy').show();
-      if ($(this).val() === 'Trek') {
-        $('.declarationFile').show();
-      } else {
-        $('.declarationFile').hide();
-      }
-    }
-  });
-
-  $('#goToSection2').click(function() {
-    if($('#TripForm').valid()){
-      $('#section1').hide();
-      $('#serviceType').hide(); // Hide the "Type of Service:" select element
-      $('label[for="serviceType"]').hide(); // Hide the "Type of Service:" label
-      $('#section2').show();
-    }
-  });
-
-  // Update traveler info fields when number of travelers changes
-  $('#numberOfTravelers').change(function() {
-    var numberOfTravelers = $(this).val();
-
-    // Clear the traveler info container
-    $('#travelerInfoContainer').empty();
-
-    // Add the traveler info fields for each traveler
-    for (var i = 0; i < numberOfTravelers; i++) {
-      $('#travelerInfoContainer').append(`
-        <div class="travelerInfo">
-          <h3>Traveler ${i + 1}</h3>
-
-          <label for="travelerName${i}">Your Name:</label>
-          <input type="text" id="travelerName${i}" name="travelerName${i}" maxlength="20" required>
-
-          <label for="dob${i}">DOB:</label>
-          <input type="date" id="dob${i}" name="dob${i}" required>
-
-          <label for="gender${i}">Gender:</label>
-          <select id="gender${i}" name="gender${i}" required>
-            <option value="">Select gender</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-            <option value="Other">Other</option>
-          </select>
-
-          <label for="email${i}">Email:</label>
-          <input type="email" id="email${i}" name="email${i}" required>
-
-          <div class="phone-input">
-              <label for="phone${i}">Phone Number:</label>
-              <input type="tel" style="width:300px;" id="phone${i}" name="phone${i}" minlength="10" maxlength="10" required>
-          </div>
-
-          <label for="idProof${i}">Voter/Aadhar Id proof (Max 10mb):</label>
-          <input type="file" id="idProof${i}" name="idProof${i}" required>
-
-          <label for="emergencyContactName${i}">Emergency Contact Name:</label>
-          <input type="text" id="emergencyContactName${i}" name="emergencyContactName${i}" maxlength="20" required>
-
-          <div class="emergencyContact-input">
-              <label for="emergencyContactPhone${i}">Emergency Contact Number:</label>
-              <input type="tel" style="width:300px;" id="emergencyContactPhone${i}" name="emergencyContactPhone${i}" minlength="10" maxlength="10" required>
-          </div>
-
-          <label class="foodChoice" for="foodChoice${i}" style="display: ${$('#serviceType').val() === 'CabRental' ? 'none' : 'inline-block'};">What Food do you want to choose?</label>
-          <select class="foodChoice" id="foodChoice${i}" name="foodChoice${i}" required style="display: ${$('#serviceType').val() === 'CabRental' ? 'none' : 'inline-block'};" required>
-            <option value=""></option>
-            <option value="Veg">Veg</option>
-            <option value="Nonveg">Nonveg</option>
-            <option value="Only Egg">Only Egg</option>
-            <option value="NA">N/A</option>
-          </select>
-
-          <label class="foodAllergy" for="foodAllergy${i}" style="display: ${$('#serviceType').val() === 'CabRental' ? 'none' : 'inline-block'};">Do you have any type of food allergies?</label>
-          <select class="foodAllergy" id="foodAllergy${i}" name="foodAllergy${i}" required style="display: ${$('#serviceType').val() === 'CabRental' ? 'none' : 'inline-block'};" required>
-            <option value=""></option>
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-            <option value="NA">N/A</option>
-          </select>
-
-          <!-- Add a new field to specify the food allergies -->
-          <label class="foodAllergyDetails" for="foodAllergyDetails${i}" style="display: none;">Please specify your food allergies:</label>
-          <input type="text" class="foodAllergyDetails" id="foodAllergyDetails${i}" name="foodAllergyDetails${i}" style="display: none;">
-
-          <label for="covidSymptoms${i}">Any type of Covid-19 Symptoms?</label>
-          <select id="covidSymptoms${i}" name="covidSymptoms${i}" required>
-            <option value=""></option>
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-          </select>
-
-          <label for="covidAffected${i}">Have you been affected with Covid-19 within the last 90 days?</label>
-          <select id="covidAffected${i}" name="covidAffected${i}" required>
-            <option value=""></option>
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-          </select>
-
-          <label for="vaccineDose${i}">Have you taken any dose of Covid-19 Vaccine?</label>
-          <select id="vaccineDose${i}" name="vaccineDose${i}" required>
-            <option value=""></option>
-            <option value="No">No</option>
-            <option value="Dose1">Dose 1</option>
-            <option value="Both Dose">Both Dose</option>
-          </select>
-
-          <label for="vaccineCertificate${i}">If yes, upload your vaccination certificate (Max 10mb):</label>
-          <input type="file" id="vaccineCertificate${i}" name="vaccineCertificate${i}" required>
-
-          <label class="declarationFile" for="declarationFile${i}">Declaration Document (Max 10mb):</label>
-          <input class="declarationFile" type="file" id="declarationFile${i}" name="declarationFile${i}" required>
-        </div>
-      `);
-
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" maxlength="20" required>
+    
+    <label for="email${i}">Email:</label>
+    <input type="email" id="email${i}" name="email${i}" required>
+    
+    <div class="phone-input">
+      <label for="phone${i}">Phone Number:</label>
+      <input type="tel" style="width:300px;" id="phone${i}" name="phone${i}" minlength="10" maxlength="10" required>
+      
       let input = document.querySelector(`#phone${i}`);
       
       let itiPhone = window.intlTelInput(input, {
@@ -335,207 +48,201 @@
         initialCountry: "in",
         placeholderNumberType: "1"
       });
+    </div>
+    
+    <label for="tripStartDate">Trip Starting Date:</label>
+    <input type="date" id="tripStartDate" name="tripStartDate" required>
+    
+    <label for="tripEndDate">Trip End Date:</label>
+    <input type="date" id="tripEndDate" name="tripEndDate" required>
+    
+    <label for="numberOfTravelers">No. Of Travelers:</label>
+    <input type="number" id="numberOfTravelers" name="numberOfTravelers" min="1" value="1" required>
+    
+    <label for="numberOfChildren">No. of Child Below 5yr:</label>
+    <input type="number" id="numberOfChildren" name="numberOfChildren" min="0" value="0">
 
-      let input1 = document.querySelector(`#emergencyContactPhone${i}`);
+    <input type="submit" value="Submit">
+  </form>
+
+  <script>
+    function showDestinationLabel() {
+      var serviceType = document.getElementById("serviceType").value;
+      var destinationLabel = document.getElementById("destinationLabel");
       
-      let itiPhoneEmergency = window.intlTelInput(input1, {
-        utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
-        initialCountry: "in",
-        placeholderNumberType: "1"
+      if (serviceType === "Trek") {
+        var trekDestinations = [
+          "Sandakphu Trek, West Bengal",
+          "Sandakphu Trek, West Bengal",
+          "Sandakphu-Phalut Trek",
+          "Sabargram-Phalut Trek, West Bengal",
+          "Bajredara Trek, West Sikkim",
+          "Phokteydara Trek, West Sikkim",
+          "Singalila Pass Trek, West Sikkim",
+          "Barsey Gorkhey Rhododendron Delight Hiking, West Sikkim",
+          "Goechala Trek, West Sikkim",
+          "Lost Valley Hiking, West Bengal",
+          "Black Forest Hiking, West Bengal",
+          "Dhotrey Delight Hiking, West Bengal",
+          "Monal Top Trek, Uttarakhand",
+          "Brahmataal Trek, Uttarakhand",
+          "Valley of Flowers, Uttarakhand",
+          "Ali Bedini Bugyal Trek, Uttarakhand",
+          "Hampta Pass Trek, Himachal Pradesh",
+          "Kashmir Great Lakes Trek, Kashmir",
+          "Threesar/Silent Meadows Trek, Kashmir",
+          "Tarsar Marsar Trek, Kashmir",
+          "Hampta Pass Trek, Himachal Pradesh",
+          "Chandrakhani Pass Trek, Himachal Pradesh",
+          "Dzukou Valley Trek, Nagaland"
+        ];
+        createDestinationSelect(trekDestinations);
+      } else if (serviceType === "WorkFromMountains") {
+        var wfmDestinations = [
+          "WFM Kalimpong Home 01, West Bengal",
+          "WFM Darjeeling Home 01, West Bengal",
+          "WFM Kurseong Home 01, West Bengal",
+          "WFM Pelling Home 01, Pelling, West Sikkim",
+          "WFM offbeat Samthar Home 01, Kalimpong, West Bengal",
+          "WFM Gangtok Home 01, Gangtok, East Sikkim"
+        ];
+        createDestinationSelect(wfmDestinations);
+      } else if (serviceType === "BanzarasHomes") {
+        var homesDestinations = [
+          "Riverview Homestay, Kurseong",
+          "Banzara Home: The Basnett Croft, Gangtok",
+          "Palash Bitan Eco Resort, Muruguma, Purulia, West Bengal",
+          "Kaffer Home, Kaffergaon, near Loleygaon, North Bengal",
+          "New Singalila Home, Srikhola, Darjeeling",
+          "Rayena's Home, Darjeeling",
+          "Vajra Kunj Home, Darjeeling",
+          "Hotel Peak to Peaks, Darjeeling",
+          "Pritam Home, Sepi village, Darjeeling",
+          "Kanchan View Home, Dhotrey, Darjeeling",
+          "Bethel Home, Lepchajagat",
+          "Samther the nest Farm Stay, Samther",
+          "Shanti Home, Gorkhey",
+          "Charkhole Home, Charkhole",
+          "Mayal Paradise Home, Rinchenpong, West Sikkim",
+          "Kanchan View Home, Dhotrey, Darjeeling",
+          "Banzara Makai Ghar Home, Dhotrey, Darjeeling",
+          "Benesefzo Farmstay, Mirik",
+          "Barsey Retreat Home, Okhrey, West Sikkim",
+          "Laliguras Homestay, Okhrey",
+          "Banzara Home: NayoNaitik Home, Samanden, Darjeeling",
+          "Phenasha Home, Bhareng, West Sikkim",
+          "Gurung Home, Sittong",
+          "Sikher Home, Kalimpong",
+          "Gurung Homestay, Tumling",
+          "Ahan's Home, Dawaipani, Darjeeling",
+          "Takto's Home, Mim, Darjeeling",
+          "The Nest Farmstay, Samthar, Kalimpong",
+          "Darjeeling Mountain Hidaway Home",
+          "Aahl Homestay, Sandakphu",
+          "Ranju Home, Majhidhura, Lepchajagat, Darjeeling"
+        ];
+        createDestinationSelect(homesDestinations);
+      } else if (serviceType === "WeekendGetaways") {
+        var getawayDestinations = [
+          "Kaffergaon, Kalimpong",
+           "Charkhole village, Kalimpong",
+          "Dhotrey Forest Village, Darjeeling",
+          "Srikhola, Darjeeling",
+          "Chatakpur, Darjeeling",
+          "Muruguma Dam, Purulia",
+          "Jhilimili, Bankura"
+        ];
+        createDestinationSelect(getawayDestinations);
+      } else if (serviceType === "WeeklongGetaways" || serviceType === "CabRental") {
+        var weeklongCabDestinations = [
+          "North Bengal Offbeat",
+          "Sandakphu Trip By car",
+          "North Sikkim",
+          "West & South Sikkim",
+          "East & West Sikkim",
+          "Offbeat West Sikkim",
+          "North & East Sikkim",
+          "Silk Route, East Sikkim",
+          "Enchanting Dooars",
+          "Exotic Ladakh",
+          "Jannat-e-Kashmir",
+          "Meghalaya",
+          "Arunachal Pradesh",
+          "Splendid Spiti Circuit"
+        ];
+        createDestinationSelect(weeklongCabDestinations);
+      } else {
+        // Hide the destination label if no service is selected
+        destinationLabel.innerHTML = "";
+        destinationLabel.style.display = "none";
+      }
+    }
+    
+    function createDestinationSelect(destinations) {
+      var destinationSelect = document.createElement("select");
+      destinationSelect.id = "destination";
+      destinationSelect.name = "destination";
+      destinationSelect.required = true;
+      
+      var defaultOption = document.createElement("option");
+      defaultOption.value = "";
+      defaultOption.text = "Select destination";
+      destinationSelect.appendChild(defaultOption);
+      
+      for (var i = 0; i < destinations.length; i++) {
+        var option = document.createElement("option");
+        option.value = destinations[i];
+        option.text = destinations[i];
+        destinationSelect.appendChild(option);
+      }
+      
+      var destinationLabel = document.getElementById("destinationLabel");
+      destinationLabel.innerHTML = ""; // Clear previous content
+      destinationLabel.appendChild(destinationSelect);
+      destinationLabel.style.display = "block";
+    }
+    
+    $(document).ready(function() {
+      const firebaseConfig = {
+        apiKey: "AIzaSyDT1R0e9RHa6L9NWWV3Mk9SI6gYHIepe_0",
+        authDomain: "customer-data-f1dd3.firebaseapp.com",
+        projectId: "customer-data-f1dd3",
+        storageBucket: "customer-data-f1dd3.appspot.com",
+        messagingSenderId: "789752762056",
+        appId: "1:789752762056:web:7d434ab157de5ede179ffd",
+        measurementId: "G-4C2QQE2XGX"
+      };
+      
+      // Initialize Firebase
+      const app = firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore(app);
+      
+      // Ensure that the trip end date is after the trip start date
+      $('#tripStartDate').change(function() {
+        var tripStartDate = $(this).val();
+        $('#tripEndDate').attr('min', tripStartDate);
       });
       
-
-      // Add the change event listener for foodAllergy${i}
-      addFoodAllergyChangeListener(i);
-    }
-
-    // Re-initialize the jQuery Validate plugin
-    $('#TripForm').validate();
-  });
-
-  $('#numberOfChildren').change(function() {
-  var numberOfChildren = $(this).val();
-
-  // Clear the child info container
-  $('#childInfoContainer').empty();
-
-  // Add the child info fields for each child
-  for (var i = 0; i < numberOfChildren; i++) {
-    $('#childInfoContainer').append(`
-      <div class="childInfo">
-        <h3>Child ${i + 1}</h3>
-        
-          <label for="childName${i}"> Name:</label>
-          <input type="text" id="childName${i}" name="childName${i}" maxlength="20" required>
-
-          <label for="childdob${i}">DOB:</label>
-          <input type="date" id="childdob${i}" name="childdob${i}" required>
-
-          <label for="childgender${i}">Gender:</label>
-          <select id="childgender${i}" name="childgender${i}" required>
-            <option value="">Select gender</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-            <option value="Other">Other</option>
-          </select>
-
-          <label for="childidProof${i}">Voter/Aadhar Id proof (Max 10mb):</label>
-          <input type="file" id="childidProof${i}" name="childidProof${i}" required>
-
-      </div>
-    `);
-  }
-});
-// Trigger the change event manually
-$('#numberOfTravelers').change();
-// AJAX function to submit the form
-    $('#TripForm').submit(function(e) {
-      e.preventDefault();
-
-  // Disable the submit button
-  var submitButton = $(this).find(':submit');
-  submitButton.prop('disabled', true);
-
-  
-  // Get the form data
-  var data = $(this).serializeArray();
-
-  // Convert the form data to an object
-  var formData = {};
-  data.forEach(function(item) {
-    formData[item.name] = item.value;
-  });
-
-  // Get the traveler data
-  var travelerData = [];
-  var numberOfTravelers = formData['numberOfTravelers'];
-  var numberOfChildren = formData['numberOfChildren'];
-
-  // Handle file uploads for each traveler
-  var uploadPromises = [];
-  for (var i = 0; i < numberOfTravelers; i++) {
-    var traveler = {};
-    traveler['travelerName'] = formData['travelerName' + i];
-    // Add all other traveler fields...
-
-          // Handle file uploads for each traveler
-      var serviceType = formData['serviceType'];
-      var idProofFile = document.getElementById('idProof' + i).files[0];
-      var vaccineCertFile = document.getElementById('vaccineCertificate' + i).files[0];
-      var declarationFile = document.getElementById('declarationFile' + i).files[0];
-      var childidProofFile = document.getElementById('childidProof' + i).files[0];
-
-      var maxSizeInBytes = 10 * 1024 * 1024; // 10MB in bytes
-    
-      var storageRef = firebase.storage().ref();
-      var idProofRef = storageRef.child('idProofs/' + formData['bookingID'] + '/traveler' + i);
-      var vaccineCertRef = storageRef.child('vaccineCertificates/' + formData['bookingID'] + '/traveler' + i);
-      var declarationRef = storageRef.child('declarationDocuments/' + formData['bookingID'] + '/traveler' + i);
-      
-      
-      if (idProofFile) {
-        if (idProofFile.size > maxSizeInBytes) {
-           alert('The ID proof file for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
-           return;
-        } else {
-          var uploadPromise1 = idProofRef.put(idProofFile).then(() => {
-             console.log('Uploaded ID proof for traveler ' + i);
-          })
-          .catch((error) => console.error(error));
-          uploadPromises.push(uploadPromise1);
-        }
-      }
-
-      if (vaccineCertFile) {
-        if (vaccineCertFile.size > maxSizeInBytes) {
-          alert('The vaccine certificate file for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
-          return;
-        } else {
-          var uploadPromise2 = vaccineCertRef.put(vaccineCertFile).then(() => {
-            console.log('Uploaded vaccine certificate for traveler ' + i);
-         })
-         .catch((error) => console.error(error));
-         uploadPromises.push(uploadPromise2);
-        }
-      }
-
-      if (serviceType === 'Trek')
-        if(declarationFile) {
-          if (declarationFile.size > maxSizeInBytes) {
-            alert('The Declaration file for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
-            return;
-          } else {
-            var uploadPromise3 = declarationRef.put(declarationFile).then(() => {
-              console.log('Uploaded declaration document for traveler ' + i);
-            })
-            .catch((error) => console.error(error));
-            uploadPromises.push(uploadPromise3);
-          }
-        }
-        // Now we handle the children if there are any
-        for (var j = 0; j < numberOfChildren; j++) {
-          var childIdProofFile = document.getElementById('childidProof' + j).files[0];
-          var childIdProofRef = storageRef.child('childIdProofs/' + formData['bookingID'] + '/child' + j);
+        // Re-initialize the jQuery Validate plugin
+      $('#TripForm').validate({
+        submitHandler: function(form) {
+          // Disable the submit button
+          var submitButton = $(form).find(':submit');
+          submitButton.prop('disabled', true);
           
-          if (childIdProofFile) {
-            if (childIdProofFile.size > maxSizeInBytes) {
-              alert('The ID proof file for child ' + (j+1) + ' is too large. Please upload a file less than 10MB.');
-              return;
-            } else {
-              var uploadPromiseChild = childIdProofRef.put(childIdProofFile).then(() => {
-                console.log('Uploaded ID proof for child ' + j);
-              })
-                .catch((error) => console.error(error));
-              uploadPromises.push(uploadPromiseChild);
-            }
-          }
+          // Show a success message
+          $('body').append('<p> 🎉Your form has been successfully submitted!🎉</p><p>❤️Welcome to the Banzaras Family.❤️</p><p>😃Best wishes for your journey and enjoy your trip fully.😃</p>');
+          
+          // Clear the form after submission
+          form.reset();
+          
+          // Enable the submit button again after a delay
+          setTimeout(function() {
+            submitButton.prop('disabled', false);
+          }, 3000);
         }
-    travelerData.push(traveler);
-  }
-
-  // Remove the individual traveler fields from the form data
-  Object.keys(formData).forEach(function(key) {
-    if (key.startsWith('traveler')) {
-      delete formData[key];
-    }
-  });
-
-  // Add the traveler data to the form data
-  formData['travelers'] = travelerData;
-
-
-  // Validate form data...
-      if (!$(this).valid()) {
-        return;
-      }     
-  // Adding document to Firestore
-    Promise.all(uploadPromises)
-  .then(() => {
-    // Then add the document to Firestore
-    return db.collection("forms").add({
-      formData: formData
+      });
     });
-  })
-  .then((docRef) => {
-    console.log("Document written with ID: ", docRef.id);
-    // Hide the form after successful submission
-    $('#TripForm').hide();
-
-    // Show a success message
-    $('body').append('<p> 🎉Your form has been successfully submitted!🎉</p><p>❤️Welcome to the Banzaras Family.❤️</p><p>😃Best wishes for your journey and enjoy your trip fully.😃</p>');
-  })
-  .catch((error) => {
-    console.error("Error: ", error);
-    alert('There was an error. Please try again.');
-  })
-  .finally(() => {
-    // Enable the submit button again in the finally block so that it gets enabled whether the promise is fulfilled or rejected
-    submitButton.prop('disabled', false);
-  });
-});
-     // Initialize the jQuery Validate plugin
-      $('#TripForm').validate();
-  });
-</script>
+  </script>
 </body>
 </html>
