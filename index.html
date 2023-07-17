@@ -352,32 +352,47 @@
         $('#tripEndDate').attr('min', tripStartDate);
       });
       
-      // Re-initialize the jQuery Validate plugin
-      $('#TripForm').validate({
-        rules: {
-          email: {
-            required: true,
-            email: true
-          }
-        },
-        submitHandler: function(form) {
-          // Disable the submit button
-          var submitButton = $(form).find(':submit');
-          submitButton.prop('disabled', true);
-          
-          // Show a success message
-          $('body').append('<p> 🎉Your form has been successfully submitted!🎉</p><p>❤️Welcome to the Banzaras Family.❤️</p><p>😃Best wishes for your journey and enjoy your trip fully.😃</p>');
-          
-          // Clear the form after submission
-          form.reset();
-          
-          // Enable the submit button again after a delay
-          setTimeout(function() {
-            submitButton.prop('disabled', false);
-          }, 3000);
-        }
-      });
+      // Trigger the change event manually
+      $('#numberOfTravelers').change();
+      
+      // AJAX function to submit the form
+      $('#TripForm').submit(function(e) {
+        e.preventDefault();
+        
+        // Get the form data
+        var data = $(this).serializeArray();
+        
+        // Convert the form data to an object
+        var formData = {};
+        data.forEach(function(item) {
+          formData[item.name] = item.value;
+        });
+        
+        // Validate form data...
+        if (!$(this).valid()) {
+          return;
+        }     
+        .then((docRef) => {
+        console.log("Document written with ID: ", docRef.id);
+        
+        // Hide the form after successful submission
+        $('#TripForm').hide();
+        
+        // Show a success message
+        $('body').append('<p> 🎉Your form has been successfully submitted!🎉</p><p>❤️Welcome to the Banzaras Family.❤️</p><p>😃Best wishes for your journey and enjoy your trip fully.😃</p>');
+      })
+                            .catch((error) => {
+                              console.error("Error: ", error);
+                              alert('There was an error. Please try again.');
+                            })
+                            .finally(() => {
+                              // Enable the submit button again in the finally block so that it gets enabled whether the promise is fulfilled or rejected
+                              submitButton.prop('disabled', false);
+                            });
     });
-  </script>
+    // Initialize the jQuery Validate plugin
+    $('#TripForm').validate();
+    });
+    </script>
 </body>
 </html>
