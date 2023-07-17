@@ -370,6 +370,15 @@
           return;
         }
         
+        // Check if trip end date is greater than or equal to trip start date
+        var tripStartDate = new Date($('#tripStartDate').val());
+        var tripEndDate = new Date($('#tripEndDate').val());
+        
+        if (tripEndDate < tripStartDate) {
+          alert('Trip end date must be greater than or equal to the trip start date.');
+          return;
+        }
+        
         // Disable the submit button
         var submitButton = $(this).find(':submit');
         submitButton.prop('disabled', true);
