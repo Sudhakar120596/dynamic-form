@@ -127,7 +127,13 @@
     var itiPhone = window.intlTelInput(input, {
       utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
       initialCountry: "in",
-      placeholderNumberType: "1"
+      placeholderNumberType: "1",
+      separateDialCode: true,  // Enables separate dial code display
+      formatOnDisplay: true,  // Formats the phone number as the user types
+      onCountryChange: function () {
+        var selectedCountry = itiPhone.getSelectedCountryData();
+        phoneCodeElement.textContent = '+' + selectedCountry.dialCode;
+      }
     });
     
     // Set the country code in the phoneCode span element
