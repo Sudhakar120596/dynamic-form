@@ -99,7 +99,10 @@
     <input type="email" id="email${i}" name="email${i}" required>
     
     <div class="phone-input">
-      <label for="phone${i}">Phone Number:</label>
+      <label for="phone${i}">
+        Phone Number:
+        <span id="phoneCode"></span>
+      </label>
       <input type="tel" style="width:300px;" id="phone${i}" name="phone${i}" minlength="10" maxlength="10" required>
     </div>
     
@@ -126,6 +129,9 @@
       initialCountry: "in",
       placeholderNumberType: "MOBILE"
     });
+    
+    // Set the country code in the phoneCode span element
+    document.getElementById("phoneCode").textContent = '+' + itiPhone.getSelectedCountryData().dialCode;
 
     
     function showDestinationLabel() {
