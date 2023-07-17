@@ -380,7 +380,7 @@
           }
           
           // Upload the data to Firebase
-            db.collection("trips").add(formData)
+            db.collection("tripData").add(formData)
               .then((docRef) => {
                 console.log("Document written with ID: ", docRef.id);
                 
