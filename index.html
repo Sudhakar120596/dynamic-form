@@ -148,7 +148,9 @@
     </select>
     <div id="destinationLabel" style="display: none;">
         <label for="destination">Destination:</label>
-        <input type="text" id="destination" name="destination" required>
+        <select id="destination" name="destination" required>
+          <option value="">Select destination</option>
+        </select>
     </div>
     
     <label for="name">Name:</label>
@@ -351,9 +353,6 @@
         var tripStartDate = $(this).val();
         $('#tripEndDate').attr('min', tripStartDate);
       });
-      
-      // Trigger the change event manually
-      $('#numberOfTravelers').change();
       
       // AJAX function to submit the form
       $('#TripForm').submit(function(e) {
