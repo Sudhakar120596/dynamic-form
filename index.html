@@ -77,7 +77,7 @@
   
   <form id="TripForm">
     <label for="serviceType">Type of Service:</label>
-    <select id="serviceType" name="serviceType" required>
+    <select id="serviceType" name="serviceType" required onchange="showDestinationLabel()">
       <option value="">Select service</option>
       <option value="Trek">Trek</option>
       <option value="WorkFromMountains">Work From Mountains</option>
