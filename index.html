@@ -353,13 +353,14 @@
       });
       
       // Re-initialize the jQuery Validate plugin
-      $('#TripForm').validate({
-        rules: {
-          email: {
-            required: true,
-            email: true
-          }
-        },
+      $('#TripForm').validate({ 
+        submitHandler: function(form) {
+          rules: {
+            email: {
+              required: true,
+                email: true
+            }
+          },
         submitHandler: function(form) {
           // Disable the submit button
           var submitButton = $(form).find(':submit');
@@ -401,6 +402,7 @@
         }
       });
       });
-    </script>
+    });
+  </script>
 </body>
 </html>
