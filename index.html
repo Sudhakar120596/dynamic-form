@@ -352,8 +352,14 @@
         $('#tripEndDate').attr('min', tripStartDate);
       });
       
-        // Re-initialize the jQuery Validate plugin
+      // Re-initialize the jQuery Validate plugin
       $('#TripForm').validate({
+        rules: {
+          email: {
+            required: true,
+            email: true
+          }
+        },
         submitHandler: function(form) {
           // Disable the submit button
           var submitButton = $(form).find(':submit');
