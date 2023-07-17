@@ -365,17 +365,17 @@
           formData[item.name] = item.value;
         });
         
-        // Validate form data...
-        if (!$(this).valid()) {
-          return;
-        }
-        
         // Check if trip end date is greater than or equal to trip start date
         var tripStartDate = new Date($('#tripStartDate').val());
         var tripEndDate = new Date($('#tripEndDate').val());
         
         if (tripEndDate < tripStartDate) {
           alert('Trip end date must be greater than or equal to the trip start date.');
+          return;
+        }
+
+        // Validate form data...
+        if (!$(this).valid()) {
           return;
         }
         
