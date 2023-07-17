@@ -377,7 +377,7 @@
         // Then add the document to Firestore
         return db.collection("forms").add({
           formData: formData
-        });
+        })
         .then((docRef) => {
           console.log("Document written with ID: ", docRef.id);
           // Hide the form after successful submission
