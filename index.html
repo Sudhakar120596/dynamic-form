@@ -383,6 +383,12 @@
         if (!$(this).valid()) {
           return;
         }
+
+        // Add the country code to the phone number
+        var phoneNumber = '+' + itiPhone.getSelectedCountryData().dialCode + formData.phone;
+        
+        // Update the formData object with the modified phone number
+        formData.phone = phoneNumber;
         
         // Disable the submit button
         var submitButton = $(this).find(':submit');
