@@ -366,7 +366,6 @@
         $('#tripEndDate').attr('min', tripStartDate);
       });
       
-      // AJAX function to submit the form
       $('#TripForm').submit(function(e) {
         e.preventDefault();
         
@@ -378,7 +377,7 @@
         data.forEach(function(item) {
           formData[item.name] = item.value;
         });
-
+        
         // Validate the email address with domain format
         var email = formData.email;
         var emailRegex = /^[A-Za-z0-9._%+-]+@(?:[A-Za-z0-9-]+\.)+(?:com|in)$/;
@@ -386,46 +385,46 @@
           alert("Please enter a valid email address with a valid domain (e.g., username@domain.com or username@domain.in)");
           return;
         }
-
-        // Validate form data...
-        if (!$(this).valid()) {
-          return;
-        }
-
-        // Add the country code to the phone number
-        var phoneNumber = '+' + itiPhone.getSelectedCountryData().dialCode + formData.phone;
-        
-        // Update the formData object with the modified phone number
-        formData.phone = phoneNumber;
         
         // Disable the submit button
         var submitButton = $(this).find(':submit');
         submitButton.prop('disabled', true);
         
-        // Then add the document to Firestore
-        return db.collection("forms").add({
-          formData: formData
-        })
-        .then((docRef) => {
-          console.log("Document written with ID: ", docRef.id);
-          // Hide the form after successful submission
-          $('#TripForm').hide();
+        // Initialize the jQuery Validate plugin
+        var form = $(this);
+        form.validate();
+        
+        // Check if the form is valid
+        if (form.valid()) {
+          // Add the country code to the phone number
+          var phoneNumber = '+' + itiPhone.getSelectedCountryData().dialCode + formData.phone;
           
-          // Show a success message
-          $('body').append('<p> 🎉Your form has been successfully submitted!🎉</p><p>❤️Welcome to the Banzaras Family.❤️</p><p>😃Best wishes for your journey and enjoy your trip fully.😃</p>');
-        })
-        .catch((error) => {
-          console.error("Error: ", error);
-          alert('There was an error. Please try again.');
-        })
-        .finally(() => {
-          // Enable the submit button again in the finally block so that it gets enabled whether the promise is fulfilled or rejected
-          submitButton.prop('disabled', false);
-        });
-    });
-    // Initialize the jQuery Validate plugin
-    $('#TripForm').validate();
-    });
-  </script>
+          // Update the formData object with the modified phone number
+          formData.phone = phoneNumber;
+          
+          // Then add the document to Firestore
+          return db.collection("forms").add({
+            formData: formData
+          })
+            .then((docRef) => {
+              console.log("Document written with ID: ", docRef.id);
+              
+              // Hide the form after successful submission
+              form.hide();
+              
+              // Show a success message
+              $('body').append('<p> 🎉Your form has been successfully submitted!🎉</p><p>❤️Welcome to the Banzaras Family.❤️</p><p>😃Best wishes for your journey and enjoy your trip fully.😃</p>');
+            })
+            .catch((error) => {
+              console.error("Error: ", error);
+              alert('There was an error. Please try again.');
+            })
+            .finally(() => {
+              // Enable the submit button again in the finally block so that it gets enabled whether the promise is fulfilled or rejected
+              submitButton.prop('disabled', false);
+            });
+        }
+      });
+      </script>
 </body>
 </html>
