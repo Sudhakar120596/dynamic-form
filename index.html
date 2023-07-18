@@ -186,15 +186,7 @@
       placeholderNumberType: "1",
       separateDialCode: true,  // Enables separate dial code display
       formatOnDisplay: true,  // Formats the phone number as the user types
-      onCountryChange: function () {
-        var selectedCountry = itiPhone.getSelectedCountryData();
-        phoneCodeElement.textContent = '+' + selectedCountry.dialCode;
-      }
     });
-    
-    // Set the country code in the phoneCode span element
-    document.getElementById("phoneCode").textContent = '+' + itiPhone.getSelectedCountryData().dialCode;
-
     
     function showDestinationLabel() {
       var serviceType = document.getElementById("serviceType").value;
@@ -364,15 +356,6 @@
         data.forEach(function(item) {
           formData[item.name] = item.value;
         });
-        
-        // Check if trip end date is greater than or equal to trip start date
-        var tripStartDate = new Date($('#tripStartDate').val());
-        var tripEndDate = new Date($('#tripEndDate').val());
-        
-        if (tripEndDate < tripStartDate) {
-          alert('Trip end date must be greater than or equal to the trip start date.');
-          return;
-        }
 
         // Validate form data...
         if (!$(this).valid()) {
