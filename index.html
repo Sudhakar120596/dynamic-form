@@ -397,6 +397,9 @@
         
         // Update the formData object with the modified phone number
         formData.phone = phoneNumber;
+
+        // Add the timestamp to the formData object
+        formData.timestamp = firebase.firestore.FieldValue.serverTimestamp();
         
         // Disable the submit button
         var submitButton = $(this).find(':submit');
