@@ -557,7 +557,7 @@
           
           // Add the country code to the phone number and emergency contact number
           var phoneNumber = '+' + itiPhone.getSelectedCountryData().dialCode + formData['phone' + i];
-          var emergencyContactPhone = '+' + itiPhone.getSelectedCountryData().dialCode + formData['emergencyContactPhone' + i];
+          var emergencyContactPhone = '+' + itiPhoneEmergency.getSelectedCountryData().dialCode + formData['emergencyContactPhone' + i];
           
           // Update the traveler object with the modified phone number and emergency contact number
           traveler['phone'] = phoneNumber;
