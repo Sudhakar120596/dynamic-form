@@ -242,7 +242,7 @@
       <option value="Tour/Homestay/WFM">Tour/Homestay/WFM</option>
       <option value="CabRental">Cab Rental</option>
     </select>
-
+    
     <!-- Section 1 -->
     <div id="section1">
       <h2>Section 1</h2>
@@ -282,6 +282,7 @@
   </form>
 
   <script>
+    
     function addFoodAllergyChangeListener(i) {
       $(`#foodAllergy${i}`).change(function() {
         // Show the food allergy details field if 'Yes' is selected
@@ -299,69 +300,67 @@
       // Trigger the change event manually to ensure the correct state
       $(`#foodAllergy${i}`).change();
     }
-
     
-   $(document).ready(function() {
-    const firebaseConfig = {
-      apiKey: "AIzaSyDT1R0e9RHa6L9NWWV3Mk9SI6gYHIepe_0",
-      authDomain: "customer-data-f1dd3.firebaseapp.com",
-      projectId: "customer-data-f1dd3",
-      storageBucket: "customer-data-f1dd3.appspot.com",
-      messagingSenderId: "789752762056",
-      appId: "1:789752762056:web:7d434ab157de5ede179ffd",
-      measurementId: "G-4C2QQE2XGX"
-    };
-  
-    // Initialize Firebase
-    const app = firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore(app);
-
-
-  // Ensure that the trip end date is after the trip start date
-  $('#tripStartDate').change(function() {
-    var tripStartDate = $(this).val();
-    $('#tripEndDate').attr('min', tripStartDate);
-  });
-     
-  // Update form fields when service type changes
-  $('#serviceType').change(function() {
-    if ($(this).val() === 'CabRental') {
-      $('.foodChoice').hide();
-      $('.foodAllergy').hide();
-      $('.declarationFile').hide();
-    } else {
-      $('.foodChoice').show();
-      $('.foodAllergy').show();
-      if ($(this).val() === 'Trek') {
-        $('.declarationFile').show();
-      } else {
-        $('.declarationFile').hide();
-      }
-    }
-  });
-
-  $('#goToSection2').click(function() {
-    if($('#TripForm').valid()){
-      $('#section1').hide();
-      $('#serviceType').hide(); // Hide the "Type of Service:" select element
-      $('label[for="serviceType"]').hide(); // Hide the "Type of Service:" label
-      $('#section2').show();
-    }
-  });
-
-  // Update traveler info fields when number of travelers changes
-  $('#numberOfTravelers').change(function() {
-    var numberOfTravelers = $(this).val();
-
-    // Clear the traveler info container
-    $('#travelerInfoContainer').empty();
-
-    // Add the traveler info fields for each traveler
-    for (var i = 0; i < numberOfTravelers; i++) {
-      $('#travelerInfoContainer').append(`
-        <div class="travelerInfo">
+    $(document).ready(function() {
+      const firebaseConfig = {
+        apiKey: "AIzaSyDT1R0e9RHa6L9NWWV3Mk9SI6gYHIepe_0",
+        authDomain: "customer-data-f1dd3.firebaseapp.com",
+        projectId: "customer-data-f1dd3",
+        storageBucket: "customer-data-f1dd3.appspot.com",
+        messagingSenderId: "789752762056",
+        appId: "1:789752762056:web:7d434ab157de5ede179ffd",
+        measurementId: "G-4C2QQE2XGX"
+      };
+      
+      // Initialize Firebase
+      const app = firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore(app);
+      
+      // Ensure that the trip end date is after the trip start date
+      $('#tripStartDate').change(function() {
+        var tripStartDate = $(this).val();
+        $('#tripEndDate').attr('min', tripStartDate);
+      });
+      
+      // Update form fields when service type changes
+      $('#serviceType').change(function() {
+        if ($(this).val() === 'CabRental') {
+          $('.foodChoice').hide();
+          $('.foodAllergy').hide();
+          $('.declarationFile').hide();
+        } else {
+          $('.foodChoice').show();
+          $('.foodAllergy').show();
+          if ($(this).val() === 'Trek') {
+            $('.declarationFile').show();
+          } else {
+            $('.declarationFile').hide();
+          }
+        }
+      });
+      
+      $('#goToSection2').click(function() {
+        if($('#TripForm').valid()){
+          $('#section1').hide();
+          $('#serviceType').hide(); // Hide the "Type of Service:" select element
+          $('label[for="serviceType"]').hide(); // Hide the "Type of Service:" label
+          $('#section2').show();
+        }
+      });
+      
+      // Update traveler info fields when number of travelers changes
+      $('#numberOfTravelers').change(function() {
+        var numberOfTravelers = $(this).val();
+        
+        // Clear the traveler info container
+        $('#travelerInfoContainer').empty();
+        
+        // Add the traveler info fields for each traveler
+        for (var i = 0; i < numberOfTravelers; i++) {
+          $('#travelerInfoContainer').append(`
+          <div class="travelerInfo">
           <h3>Traveler ${i + 1}</h3>
-
+          
           <label for="travelerName${i}">Your Name:</label>
           <input type="text" id="travelerName${i}" name="travelerName${i}" maxlength="20" required>
 
@@ -444,44 +443,43 @@
           <label class="declarationFile" for="declarationFile${i}">Declaration Document (Max 10mb):</label>
           <input class="declarationFile" type="file" id="declarationFile${i}" name="declarationFile${i}" required>
         </div>
-      `);
-
-      let input = document.querySelector(`#phone${i}`);
-      
-      let itiPhone = window.intlTelInput(input, {
-        utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
-        initialCountry: "in",
-        placeholderNumberType: "1"
+        `);
+          
+          let input = document.querySelector(`#phone${i}`);
+          
+          let itiPhone = window.intlTelInput(input, {
+            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+            initialCountry: "in",
+            placeholderNumberType: "1"
+          });
+          
+          let input1 = document.querySelector(`#emergencyContactPhone${i}`);
+          
+          let itiPhoneEmergency = window.intlTelInput(input1, {
+            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+            initialCountry: "in",
+            placeholderNumberType: "1"
+          });
+          
+          // Add the change event listener for foodAllergy${i}
+          addFoodAllergyChangeListener(i);
+        }
+        
+        // Re-initialize the jQuery Validate plugin
+        $('#TripForm').validate();
       });
-
-      let input1 = document.querySelector(`#emergencyContactPhone${i}`);
       
-      let itiPhoneEmergency = window.intlTelInput(input1, {
-        utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
-        initialCountry: "in",
-        placeholderNumberType: "1"
-      });
-      
-
-      // Add the change event listener for foodAllergy${i}
-      addFoodAllergyChangeListener(i);
-    }
-
-    // Re-initialize the jQuery Validate plugin
-    $('#TripForm').validate();
-  });
-
-  $('#numberOfChildren').change(function() {
-  var numberOfChildren = $(this).val();
-
-  // Clear the child info container
-  $('#childInfoContainer').empty();
-
-  // Add the child info fields for each child
-  for (var i = 0; i < numberOfChildren; i++) {
-    $('#childInfoContainer').append(`
-      <div class="childInfo">
-        <h3>Child ${i + 1}</h3>
+      $('#numberOfChildren').change(function() {
+        var numberOfChildren = $(this).val();
+        
+        // Clear the child info container
+        $('#childInfoContainer').empty();
+        
+        // Add the child info fields for each child
+        for (var i = 0; i < numberOfChildren; i++) {
+          $('#childInfoContainer').append(`
+          <div class="childInfo">
+          <h3>Child ${i + 1}</h3>
         
           <label for="childName${i}"> Name:</label>
           <input type="text" id="childName${i}" name="childName${i}" maxlength="20" required>
@@ -497,163 +495,164 @@
             <option value="Other">Other</option>
           </select>
 
-          <label for="childidProof${i}">Voter/Aadhar Id proof (Max 10mb):</label>
+          <label for="childidProof${i}">Date of Birth Certificate (Max 10mb):</label>
           <input type="file" id="childidProof${i}" name="childidProof${i}" required>
-
-      </div>
-    `);
-  }
-});
-// Trigger the change event manually
-$('#numberOfTravelers').change();
-// AJAX function to submit the form
-    $('#TripForm').submit(function(e) {
-      e.preventDefault();
-
-  // Disable the submit button
-  var submitButton = $(this).find(':submit');
-  submitButton.prop('disabled', true);
-
-  
-  // Get the form data
-  var data = $(this).serializeArray();
-
-  // Convert the form data to an object
-  var formData = {};
-  data.forEach(function(item) {
-    formData[item.name] = item.value;
-  });
-
-  // Get the traveler data
-  var travelerData = [];
-  var numberOfTravelers = formData['numberOfTravelers'];
-  var numberOfChildren = formData['numberOfChildren'];
-
-  // Handle file uploads for each traveler
-  var uploadPromises = [];
-  for (var i = 0; i < numberOfTravelers; i++) {
-    var traveler = {};
-    traveler['travelerName'] = formData['travelerName' + i];
-    // Add all other traveler fields...
+          
+          </div>
+          `);
+        }
+      });
+      
+      // Trigger the change event manually
+      $('#numberOfTravelers').change();
+      
+      // AJAX function to submit the form
+      $('#TripForm').submit(function(e) {
+        e.preventDefault();
+        
+        // Disable the submit button
+        var submitButton = $(this).find(':submit');
+        submitButton.prop('disabled', true);
+        
+        // Get the form data
+        var data = $(this).serializeArray();
+        
+        // Convert the form data to an object
+        var formData = {};
+        data.forEach(function(item) {
+          formData[item.name] = item.value;
+        });
+        
+        // Get the traveler data
+        var travelerData = [];
+        var numberOfTravelers = formData['numberOfTravelers'];
+        var numberOfChildren = formData['numberOfChildren'];
+        
+        // Handle file uploads for each traveler
+        var uploadPromises = [];
+        for (var i = 0; i < numberOfTravelers; i++) {
+          var traveler = {};
+          traveler['travelerName'] = formData['travelerName' + i];
+          // Add all other traveler fields...
 
           // Handle file uploads for each traveler
-      var serviceType = formData['serviceType'];
-      var idProofFile = document.getElementById('idProof' + i).files[0];
-      var vaccineCertFile = document.getElementById('vaccineCertificate' + i).files[0];
-      var declarationFile = document.getElementById('declarationFile' + i).files[0];
-      var childidProofFile = document.getElementById('childidProof' + i).files[0];
-
-      var maxSizeInBytes = 10 * 1024 * 1024; // 10MB in bytes
-    
-      var storageRef = firebase.storage().ref();
-      var idProofRef = storageRef.child('idProofs/' + formData['bookingID'] + '/traveler' + i);
-      var vaccineCertRef = storageRef.child('vaccineCertificates/' + formData['bookingID'] + '/traveler' + i);
-      var declarationRef = storageRef.child('declarationDocuments/' + formData['bookingID'] + '/traveler' + i);
-      
-      
-      if (idProofFile) {
-        if (idProofFile.size > maxSizeInBytes) {
-           alert('The ID proof file for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
-           return;
-        } else {
-          var uploadPromise1 = idProofRef.put(idProofFile).then(() => {
-             console.log('Uploaded ID proof for traveler ' + i);
-          })
-          .catch((error) => console.error(error));
-          uploadPromises.push(uploadPromise1);
-        }
-      }
-
-      if (vaccineCertFile) {
-        if (vaccineCertFile.size > maxSizeInBytes) {
-          alert('The vaccine certificate file for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
-          return;
-        } else {
-          var uploadPromise2 = vaccineCertRef.put(vaccineCertFile).then(() => {
-            console.log('Uploaded vaccine certificate for traveler ' + i);
-         })
-         .catch((error) => console.error(error));
-         uploadPromises.push(uploadPromise2);
-        }
-      }
-
-      if (serviceType === 'Trek')
-        if(declarationFile) {
-          if (declarationFile.size > maxSizeInBytes) {
-            alert('The Declaration file for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
-            return;
-          } else {
-            var uploadPromise3 = declarationRef.put(declarationFile).then(() => {
-              console.log('Uploaded declaration document for traveler ' + i);
-            })
-            .catch((error) => console.error(error));
-            uploadPromises.push(uploadPromise3);
-          }
-        }
-        // Now we handle the children if there are any
-        for (var j = 0; j < numberOfChildren; j++) {
-          var childIdProofFile = document.getElementById('childidProof' + j).files[0];
-          var childIdProofRef = storageRef.child('childIdProofs/' + formData['bookingID'] + '/child' + j);
+          var serviceType = formData['serviceType'];
+          var idProofFile = document.getElementById('idProof' + i).files[0];
+          var vaccineCertFile = document.getElementById('vaccineCertificate' + i).files[0];
+          var declarationFile = document.getElementById('declarationFile' + i).files[0];
+          var maxSizeInBytes = 10 * 1024 * 1024; // 10MB in bytes
           
-          if (childIdProofFile) {
-            if (childIdProofFile.size > maxSizeInBytes) {
-              alert('The ID proof file for child ' + (j+1) + ' is too large. Please upload a file less than 10MB.');
+          var storageRef = firebase.storage().ref();
+          var idProofRef = storageRef.child('idProofs/' + formData['bookingID'] + '/traveler' + i);
+          var vaccineCertRef = storageRef.child('vaccineCertificates/' + formData['bookingID'] + '/traveler' + i);
+          var declarationRef = storageRef.child('declarationDocuments/' + formData['bookingID'] + '/traveler' + i);
+          
+          if (idProofFile) {
+            if (idProofFile.size > maxSizeInBytes) {
+              alert('The ID proof file for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
               return;
             } else {
-              var uploadPromiseChild = childIdProofRef.put(childIdProofFile).then(() => {
-                console.log('Uploaded ID proof for child ' + j);
+              var uploadPromise1 = idProofRef.put(idProofFile).then(() => {
+                console.log('Uploaded ID proof for traveler ' + i);
               })
                 .catch((error) => console.error(error));
-              uploadPromises.push(uploadPromiseChild);
+              uploadPromises.push(uploadPromise1);
             }
           }
+          
+          if (vaccineCertFile) {
+            if (vaccineCertFile.size > maxSizeInBytes) {
+              alert('The vaccine certificate file for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
+              return;
+            } else {
+              var uploadPromise2 = vaccineCertRef.put(vaccineCertFile).then(() => {
+                console.log('Uploaded vaccine certificate for traveler ' + i);
+              })
+                .catch((error) => console.error(error));
+              uploadPromises.push(uploadPromise2);
+            }
+          }
+          
+          if (serviceType === 'Trek')
+            if(declarationFile) {
+              if (declarationFile.size > maxSizeInBytes) {
+                alert('The Declaration file for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
+                return;
+              } else {
+                var uploadPromise3 = declarationRef.put(declarationFile).then(() => {
+                  console.log('Uploaded declaration document for traveler ' + i);
+                })
+                  .catch((error) => console.error(error));
+                uploadPromises.push(uploadPromise3);
+              }
+            }
+          
+          // Skip the children handling if numberOfChildren is 0
+          if (numberOfChildren > 0) {
+            for (var j = 0; j < numberOfChildren; j++) {
+              var childIdProofFile = document.getElementById('childidProof' + j).files[0];
+              var childIdProofRef = storageRef.child('childIdProofs/' + formData['bookingID'] + '/child' + j);
+              
+              if (childIdProofFile) {
+                if (childIdProofFile.size > maxSizeInBytes) {
+                  alert('The ID proof file for child ' + (j+1) + ' is too large. Please upload a file less than 10MB.');
+                  return;
+                } else {
+                  var uploadPromiseChild = childIdProofRef.put(childIdProofFile).then(() => {
+                    console.log('Uploaded ID proof for child ' + j);
+                  })
+                    .catch((error) => console.error(error));
+                  uploadPromises.push(uploadPromiseChild);
+                }
+              }
+            }
+          }
+          travelerData.push(traveler);
         }
-    travelerData.push(traveler);
-  }
-
-  // Remove the individual traveler fields from the form data
-  Object.keys(formData).forEach(function(key) {
-    if (key.startsWith('traveler')) {
-      delete formData[key];
-    }
-  });
-
-  // Add the traveler data to the form data
-  formData['travelers'] = travelerData;
-
-
-  // Validate form data...
-      if (!$(this).valid()) {
-        return;
-      }     
-  // Adding document to Firestore
-    Promise.all(uploadPromises)
-  .then(() => {
-    // Then add the document to Firestore
-    return db.collection("forms").add({
-      formData: formData
-    });
-  })
-  .then((docRef) => {
-    console.log("Document written with ID: ", docRef.id);
-    // Hide the form after successful submission
-    $('#TripForm').hide();
-
-    // Show a success message
-    $('body').append('<p> 🎉Your form has been successfully submitted!🎉</p><p>❤️Welcome to the Banzaras Family.❤️</p><p>😃Best wishes for your journey and enjoy your trip fully.😃</p>');
-  })
-  .catch((error) => {
-    console.error("Error: ", error);
-    alert('There was an error. Please try again.');
-  })
-  .finally(() => {
-    // Enable the submit button again in the finally block so that it gets enabled whether the promise is fulfilled or rejected
-    submitButton.prop('disabled', false);
-  });
-});
-     // Initialize the jQuery Validate plugin
+        
+        // Remove the individual traveler fields from the form data
+        Object.keys(formData).forEach(function(key) {
+          if (key.startsWith('traveler')) {
+            delete formData[key];
+          }
+        });
+        
+        // Add the traveler data to the form data
+        formData['travelers'] = travelerData;
+        
+        // Validate form data...
+        if (!$(this).valid()) {
+          return;
+        }     
+        
+        // Adding document to Firestore
+          Promise.all(uploadPromises)
+            .then(() => {
+              // Then add the document to Firestore
+              return db.collection("forms").add({
+                formData: formData
+              });
+            })
+            .then((docRef) => {
+              console.log("Document written with ID: ", docRef.id);
+              // Hide the form after successful submission
+              $('#TripForm').hide();
+              
+              // Show a success message
+              $('body').append('<p> 🎉Your form has been successfully submitted!🎉</p><p>❤️Welcome to the Banzaras Family.❤️</p><p>😃Best wishes for your journey and enjoy your trip fully.😃</p>');
+            })
+            .catch((error) => {
+              console.error("Error: ", error);
+              alert('There was an error. Please try again.');
+            })
+            .finally(() => {
+              // Enable the submit button again in the finally block so that it gets enabled whether the promise is fulfilled or rejected
+              submitButton.prop('disabled', false);
+            });
+      });
+      // Initialize the jQuery Validate plugin
       $('#TripForm').validate();
-  });
-</script>
+    });
+  </script>
 </body>
 </html>
