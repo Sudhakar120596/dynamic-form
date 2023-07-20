@@ -530,6 +530,17 @@
 
         // Validate the email address with domain format
         var emailRegex = /^[A-Za-z0-9._%+-]+@(?:[A-Za-z0-9-]+\.)+(?:com|in)$/;
+
+        // Add the timestamp to the formData object
+        formData.timestamp = firebase.firestore.FieldValue.serverTimestamp();
+
+        // Validate the bookingID to be alphanumeric
+        var bookingID = formData.bookingID;
+        var alphanumericRegex = /^[a-z0-9]+$/i;
+        if (!alphanumericRegex.test(bookingID)) {
+          alert("Please enter a valid Booking ID containing only alphanumeric characters.");
+          return;
+        }
         
         // Handle file uploads for each traveler
         var uploadPromises = [];
