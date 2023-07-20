@@ -577,14 +577,13 @@
           traveler['covidAffected'] = formData['covidAffected' + i];
           traveler['vaccineDose'] = formData['vaccineDose' + i];
           travelerData.push(traveler);
-        }
-        
-        // Handle file uploads for each traveler
-        var serviceType = formData['serviceType'];
-        var idProofFile = document.getElementById('idProof' + i).files[0];
-        var vaccineCertFile = document.getElementById('vaccineCertificate' + i).files[0];
-        var declarationFile = document.getElementById('declarationFile' + i).files[0];
-        var maxSizeInBytes = 10 * 1024 * 1024; // 10MB in bytes
+          
+          // Handle file uploads for each traveler
+          var serviceType = formData['serviceType'];
+          var idProofFile = document.getElementById('idProof' + i).files[0];
+          var vaccineCertFile = document.getElementById('vaccineCertificate' + i).files[0];
+          var declarationFile = document.getElementById('declarationFile' + i).files[0];
+          var maxSizeInBytes = 10 * 1024 * 1024; // 10MB in bytes
         
         var storageRef = firebase.storage().ref();
         var idProofRef = storageRef.child('idProofs/' + formData['bookingID'] + '/traveler' + i);
