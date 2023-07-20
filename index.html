@@ -522,8 +522,6 @@
       // Trigger the change event manually
       $('#numberOfTravelers').change();
       
-      var travelerData = [];
-      
       // AJAX function to submit the form
       $('#TripForm').submit(function(e) {
         e.preventDefault();
@@ -538,6 +536,7 @@
         });
         
         // Get the traveler data
+        var travelerData = [];
         var numberOfTravelers = formData['numberOfTravelers'];
         var numberOfChildren = formData['numberOfChildren'];
 
@@ -551,6 +550,7 @@
         var uploadPromises = [];
         for (var i = 0; i < numberOfTravelers; i++) {
           var traveler = {};
+          traveler['travelerName'] = formData['travelerName' + i];
 
           // Validate the email address
           var email = formData['email' + i];
@@ -564,20 +564,9 @@
           var emergencyContactPhone = '+' + itiPhoneEmergency.getSelectedCountryData().dialCode + formData['emergencyContactPhone' + i];
           
           // Update the traveler object with the modified phone number and emergency contact number
-          traveler['travelerName'] = formData['travelerName' + i];
-          traveler['dob'] = formData['dob' + i];
-          traveler['gender'] = formData['gender' + i];
-          traveler['email'] = email;
           traveler['phone'] = phoneNumber;
-          traveler['emergencyContactName'] = formData['emergencyContactName' + i];
           traveler['emergencyContactPhone'] = emergencyContactPhone;
-          traveler['foodAllergy'] = formData['foodAllergy' + i];
-          traveler['foodAllergyDetails'] = formData['foodAllergyDetails' + i];
-          traveler['covidSymptoms'] = formData['covidSymptoms' + i];
-          traveler['covidAffected'] = formData['covidAffected' + i];
-          traveler['vaccineDose'] = formData['vaccineDose' + i];
-          travelerData.push(traveler);
-          
+
           // Handle file uploads for each traveler
           var serviceType = formData['serviceType'];
           var idProofFile = document.getElementById('idProof' + i).files[0];
@@ -602,39 +591,40 @@
               uploadPromises.push(uploadPromise1);
             }
           }
-        
-        if (vaccineCertFile) {
-          if (vaccineCertFile.size > maxSizeInBytes) {
-            alert('The vaccine certificate file for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
-            return;
-          } else {
-            var uploadPromise2 = vaccineCertRef.put(vaccineCertFile).then(() => {
-              console.log('Uploaded vaccine certificate for traveler ' + i);
-            })
-              .catch((error) => console.error(error));
-            uploadPromises.push(uploadPromise2);
-          }
-        }
-        
-        if (serviceType === 'Trek')
-          if(declarationFile) {
-            if (declarationFile.size > maxSizeInBytes) {
-              alert('The Declaration file for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
+          
+          if (vaccineCertFile) {
+            if (vaccineCertFile.size > maxSizeInBytes) {
+              alert('The vaccine certificate file for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
               return;
             } else {
-              var uploadPromise3 = declarationRef.put(declarationFile).then(() => {
-                console.log('Uploaded declaration document for traveler ' + i);
+              var uploadPromise2 = vaccineCertRef.put(vaccineCertFile).then(() => {
+                console.log('Uploaded vaccine certificate for traveler ' + i);
               })
                 .catch((error) => console.error(error));
-              uploadPromises.push(uploadPromise3);
+              uploadPromises.push(uploadPromise2);
             }
           }
+          
+          if (serviceType === 'Trek')
+            if(declarationFile) {
+              if (declarationFile.size > maxSizeInBytes) {
+                alert('The Declaration file for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
+                return;
+              } else {
+                var uploadPromise3 = declarationRef.put(declarationFile).then(() => {
+                  console.log('Uploaded declaration document for traveler ' + i);
+                })
+                  .catch((error) => console.error(error));
+                uploadPromises.push(uploadPromise3);
+              }
+            }
           
           // Skip the children handling if numberOfChildren is 0
           if (numberOfChildren > 0) {
             for (var j = 0; j < numberOfChildren; j++) {
               var childIdProofFile = document.getElementById('childidProof' + j).files[0];
               var childIdProofRef = storageRef.child('childIdProofs/' + formData['bookingID'] + '/child' + j);
+              
               if (childIdProofFile) {
                 if (childIdProofFile.size > maxSizeInBytes) {
                   alert('The ID proof file for child ' + (j+1) + ' is too large. Please upload a file less than 10MB.');
@@ -648,7 +638,8 @@
                 }
               }
             }
-          } 
+          }
+          travelerData.push(traveler);
         }
         
         // Remove the individual traveler fields from the form data
@@ -657,6 +648,7 @@
             delete formData[key];
           }
         });
+        
         // Add the traveler data to the form data
         formData['travelers'] = travelerData;
         
@@ -672,34 +664,35 @@
         console.log("Button should now be disabled");
         
         // Adding document to Firestore
-        Promise.all(uploadPromises)
-          .then(() => {
-            // Then add the document to Firestore
-            return db.collection("forms").add({
-              formData: formData
+          Promise.all(uploadPromises)
+            .then(() => {
+              // Then add the document to Firestore
+              return db.collection("forms").add({
+                formData: formData
+              });
+            })
+            .then((docRef) => {
+              console.log("Document written with ID: ", docRef.id);
+              // Hide the form after successful submission
+              $('#TripForm').hide();
+              
+              // Show a success message
+              $('body').append('<p> 🎉Your form has been successfully submitted!🎉</p><p>❤️Welcome to the Banzaras Family.❤️</p><p>😃Best wishes for your journey and enjoy your trip fully.😃</p>');
+            })
+            .catch((error) => {
+              console.error("Error: ", error);
+              alert('There was an error. Please try again.');
+            })
+            .finally(() => {
+              console.log("About to enable the button");
+              var freshSubmitButton = $('#TripForm').find(':submit');
+              freshSubmitButton.prop('disabled', false);
+              console.log("Button should now be enabled");
             });
-          })
-          .then((docRef) => {
-            console.log("Document written with ID: ", docRef.id);
-            // Hide the form after successful submission
-            $('#TripForm').hide();
-            
-            // Show a success message
-            $('body').append('<p> 🎉Your form has been successfully submitted!🎉</p><p>❤️Welcome to the Banzaras Family.❤️</p><p>😃Best wishes for your journey and enjoy your trip fully.😃</p>');
-          })
-          .catch((error) => {
-            console.error("Error: ", error);
-            alert('There was an error. Please try again.');
-          })
-          .finally(() => {
-            console.log("About to enable the button");
-            var freshSubmitButton = $('#TripForm').find(':submit');
-            freshSubmitButton.prop('disabled', false);
-            console.log("Button should now be enabled");
-          });
-        // Initialize the jQuery Validate plugin
-        $('#TripForm').validate();
       });
-      </script>
+      // Initialize the jQuery Validate plugin
+      $('#TripForm').validate();
+    });
+  </script>
 </body>
 </html>
