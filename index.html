@@ -648,10 +648,10 @@
               alert('There was an error. Please try again.');
             })
             .finally(() => {
-              // Enable the submit button again in the finally block so that it gets enabled whether the promise is fulfilled or rejected
-              console.log("Button should now be disabled");
-              submitButton.prop('disabled', false);
-              console.log("Button should now be disabled");
+              console.log("About to enable the button");
+              var freshSubmitButton = $('#TripForm').find(':submit');
+              freshSubmitButton.prop('disabled', false);
+              console.log("Button should now be enabled");
             });
       });
       // Initialize the jQuery Validate plugin
