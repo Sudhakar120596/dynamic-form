@@ -522,6 +522,8 @@
       // Trigger the change event manually
       $('#numberOfTravelers').change();
       
+      var travelerData = [];
+      
       // AJAX function to submit the form
       $('#TripForm').submit(function(e) {
         e.preventDefault();
@@ -536,7 +538,6 @@
         });
         
         // Get the traveler data
-        var travelerData = [];
         var numberOfTravelers = formData['numberOfTravelers'];
         var numberOfChildren = formData['numberOfChildren'];
 
