@@ -510,10 +510,6 @@
       $('#TripForm').submit(function(e) {
         e.preventDefault();
         
-        // Disable the submit button
-        var submitButton = $(this).find(':submit');
-        submitButton.prop('disabled', true);
-        
         // Get the form data
         var data = $(this).serializeArray();
         
@@ -623,7 +619,11 @@
         // Validate form data...
         if (!$(this).valid()) {
           return;
-        }     
+        }
+        
+        // Disable the submit button
+        var submitButton = $(this).find(':submit');
+        submitButton.prop('disabled', true);
         
         // Adding document to Firestore
           Promise.all(uploadPromises)
