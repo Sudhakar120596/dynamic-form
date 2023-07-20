@@ -142,7 +142,7 @@
     .travelerInfo input,
     .travelerInfo select {
         display: inline-block;  /* Show fields side by side */
-        width: 50%;  
+        width: 45%;  
         padding: 10px;
         margin: 0.5%;  /* Space between fields */
         border: 1px solid #ccc;
@@ -340,6 +340,13 @@
       });
       
       $('#goToSection2').click(function() {
+        // Validate the bookingID to be alphanumeric
+        var bookingID = formData.bookingID;
+        var alphanumericRegex = /^[a-z0-9]+$/i;
+        if (!alphanumericRegex.test(bookingID)) {
+          alert("Please enter a valid Booking ID containing only alphanumeric characters.");
+          return;
+        }
         if($('#TripForm').valid()){
           $('#section1').hide();
           $('#serviceType').hide(); // Hide the "Type of Service:" select element
@@ -533,14 +540,6 @@
 
         // Add the timestamp to the formData object
         formData.timestamp = firebase.firestore.FieldValue.serverTimestamp();
-
-        // Validate the bookingID to be alphanumeric
-        var bookingID = formData.bookingID;
-        var alphanumericRegex = /^[a-z0-9]+$/i;
-        if (!alphanumericRegex.test(bookingID)) {
-          alert("Please enter a valid Booking ID containing only alphanumeric characters.");
-          return;
-        }
         
         // Handle file uploads for each traveler
         var uploadPromises = [];
