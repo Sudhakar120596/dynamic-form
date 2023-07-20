@@ -341,8 +341,9 @@
       
       $('#goToSection2').click(function() {
         // Validate the bookingID to be alphanumeric
-        var bookingID = formData.bookingID;
+        var bookingID = $('#bookingID').val();
         var alphanumericRegex = /^[a-z0-9]+$/i;
+        
         if (!alphanumericRegex.test(bookingID)) {
           alert("Please enter a valid Booking ID containing only alphanumeric characters.");
           return;
