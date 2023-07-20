@@ -450,15 +450,19 @@
           let itiPhone = window.intlTelInput(input, {
             utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
             initialCountry: "in",
-            placeholderNumberType: "1"
-          });
+            placeholderNumberType: "1",
+            separateDialCode: true,  // Enables separate dial code display
+            formatOnDisplay: true  // Formats the phone number as the user types
+            });
           
           let input1 = document.querySelector(`#emergencyContactPhone${i}`);
           
           let itiPhoneEmergency = window.intlTelInput(input1, {
             utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
             initialCountry: "in",
-            placeholderNumberType: "1"
+            placeholderNumberType: "1",
+            separateDialCode: true,  // Enables separate dial code display
+            formatOnDisplay: true  // Formats the phone number as the user types
           });
           
           // Add the change event listener for foodAllergy${i}
@@ -523,13 +527,30 @@
         var travelerData = [];
         var numberOfTravelers = formData['numberOfTravelers'];
         var numberOfChildren = formData['numberOfChildren'];
+
+        // Validate the email address with domain format
+        var emailRegex = /^[A-Za-z0-9._%+-]+@(?:[A-Za-z0-9-]+\.)+(?:com|in)$/;
         
         // Handle file uploads for each traveler
         var uploadPromises = [];
         for (var i = 0; i < numberOfTravelers; i++) {
           var traveler = {};
           traveler['travelerName'] = formData['travelerName' + i];
-          // Add all other traveler fields...
+
+          // Validate the email address
+          var email = formData['email' + i];
+          if (!emailRegex.test(email)) {
+            alert("Please enter a valid email address with a valid domain (e.g., username@domain.com or username@domain.in) for traveler " + (i+1));
+            return;
+          }
+          
+          // Add the country code to the phone number and emergency contact number
+          var phoneNumber = '+' + itiPhone.getSelectedCountryData().dialCode + formData['phone' + i];
+          var emergencyContactPhone = '+' + itiPhone.getSelectedCountryData().dialCode + formData['emergencyContactPhone' + i];
+          
+          // Update the traveler object with the modified phone number and emergency contact number
+          traveler['phone'] = phoneNumber;
+          traveler['emergencyContactPhone'] = emergencyContactPhone;
 
           // Handle file uploads for each traveler
           var serviceType = formData['serviceType'];
