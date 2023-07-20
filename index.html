@@ -567,6 +567,8 @@
           traveler['phone${i}'] = phoneNumber;
           traveler['emergencyContactPhone${i}'] = emergencyContactPhone;
 
+          travelersData.push(traveler);
+
           // Handle file uploads for each traveler
           var serviceType = formData['serviceType'];
           var idProofFile = document.getElementById('idProof' + i).files[0];
@@ -639,7 +641,6 @@
               }
             }
           }
-          travelerData.push(traveler);
         }
         
         // Remove the individual traveler fields from the form data
