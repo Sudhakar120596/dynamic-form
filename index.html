@@ -650,14 +650,13 @@
             }
           }
         }
-      }
+        
         // Remove the individual traveler fields from the form data
         Object.keys(formData).forEach(function(key) {
           if (key.startsWith('traveler')) {
             delete formData[key];
           }
         });
-        
         // Add the traveler data to the form data
         formData['travelers'] = travelerData;
         
@@ -673,31 +672,31 @@
         console.log("Button should now be disabled");
         
         // Adding document to Firestore
-          Promise.all(uploadPromises)
-            .then(() => {
-              // Then add the document to Firestore
-              return db.collection("forms").add({
-                formData: formData
-              });
-            })
-            .then((docRef) => {
-              console.log("Document written with ID: ", docRef.id);
-              // Hide the form after successful submission
-              $('#TripForm').hide();
-              
-              // Show a success message
-              $('body').append('<p> 🎉Your form has been successfully submitted!🎉</p><p>❤️Welcome to the Banzaras Family.❤️</p><p>😃Best wishes for your journey and enjoy your trip fully.😃</p>');
-            })
-            .catch((error) => {
-              console.error("Error: ", error);
-              alert('There was an error. Please try again.');
-            })
-            .finally(() => {
-              console.log("About to enable the button");
-              var freshSubmitButton = $('#TripForm').find(':submit');
-              freshSubmitButton.prop('disabled', false);
-              console.log("Button should now be enabled");
+        Promise.all(uploadPromises)
+          .then(() => {
+            // Then add the document to Firestore
+            return db.collection("forms").add({
+              formData: formData
             });
+          })
+          .then((docRef) => {
+            console.log("Document written with ID: ", docRef.id);
+            // Hide the form after successful submission
+            $('#TripForm').hide();
+            
+            // Show a success message
+            $('body').append('<p> 🎉Your form has been successfully submitted!🎉</p><p>❤️Welcome to the Banzaras Family.❤️</p><p>😃Best wishes for your journey and enjoy your trip fully.😃</p>');
+          })
+          .catch((error) => {
+            console.error("Error: ", error);
+            alert('There was an error. Please try again.');
+          })
+          .finally(() => {
+            console.log("About to enable the button");
+            var freshSubmitButton = $('#TripForm').find(':submit');
+            freshSubmitButton.prop('disabled', false);
+            console.log("Button should now be enabled");
+          });
       });
       // Initialize the jQuery Validate plugin
       $('#TripForm').validate();
