@@ -550,7 +550,6 @@
         var uploadPromises = [];
         for (var i = 0; i < numberOfTravelers; i++) {
           var traveler = {};
-          traveler['travelerName'] = formData['travelerName' + i];
 
           // Validate the email address
           var email = formData['email' + i];
@@ -564,9 +563,18 @@
           var emergencyContactPhone = '+' + itiPhoneEmergency.getSelectedCountryData().dialCode + formData['emergencyContactPhone' + i];
           
           // Update the traveler object with the modified phone number and emergency contact number
-          traveler['phone${i}'] = phoneNumber;
-          traveler['emergencyContactPhone${i}'] = emergencyContactPhone;
-
+          traveler['travelerName'] = formData['travelerName' + i];
+          traveler['dob'] = formData['dob' + i];
+          traveler['gender'] = formData['gender' + i];
+          traveler['email'] = formData['email' + I];
+          traveler['phone'] = phoneNumber;
+          traveler['emergencyContactName'] = formData['emergencyContactName' + i];
+          traveler['emergencyContactPhone'] = emergencyContactPhone;
+          traveler['foodAllergy'] = formData['foodAllergy' + i];
+          traveler['foodAllergyDetails'] = formData['foodAllergyDetails' + i];
+          traveler['covidSymptoms'] = formData['covidSymptoms' + i];
+          traveler['covidAffected'] = formData['covidAffected' + i];
+          traveler['vaccineDose'] = formData['vaccineDose' + i];
           travelersData.push(traveler);
 
           // Handle file uploads for each traveler
