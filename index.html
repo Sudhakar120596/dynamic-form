@@ -584,24 +584,24 @@
           var vaccineCertFile = document.getElementById('vaccineCertificate' + i).files[0];
           var declarationFile = document.getElementById('declarationFile' + i).files[0];
           var maxSizeInBytes = 10 * 1024 * 1024; // 10MB in bytes
-        
-        var storageRef = firebase.storage().ref();
-        var idProofRef = storageRef.child('idProofs/' + formData['bookingID'] + '/traveler' + i);
-        var vaccineCertRef = storageRef.child('vaccineCertificates/' + formData['bookingID'] + '/traveler' + i);
-        var declarationRef = storageRef.child('declarationDocuments/' + formData['bookingID'] + '/traveler' + i);
-        
-        if (idProofFile) {
-          if (idProofFile.size > maxSizeInBytes) {
-            alert('The ID proof file for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
-            return;
-          } else {
-            var uploadPromise1 = idProofRef.put(idProofFile).then(() => {
-              console.log('Uploaded ID proof for traveler ' + i);
-            })
-              .catch((error) => console.error(error));
-            uploadPromises.push(uploadPromise1);
+          
+          var storageRef = firebase.storage().ref();
+          var idProofRef = storageRef.child('idProofs/' + formData['bookingID'] + '/traveler' + i);
+          var vaccineCertRef = storageRef.child('vaccineCertificates/' + formData['bookingID'] + '/traveler' + i);
+          var declarationRef = storageRef.child('declarationDocuments/' + formData['bookingID'] + '/traveler' + i);
+          
+          if (idProofFile) {
+            if (idProofFile.size > maxSizeInBytes) {
+              alert('The ID proof file for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
+              return;
+            } else {
+              var uploadPromise1 = idProofRef.put(idProofFile).then(() => {
+                console.log('Uploaded ID proof for traveler ' + i);
+              })
+                .catch((error) => console.error(error));
+              uploadPromises.push(uploadPromise1);
+            }
           }
-        }
         
         if (vaccineCertFile) {
           if (vaccineCertFile.size > maxSizeInBytes) {
@@ -629,25 +629,26 @@
               uploadPromises.push(uploadPromise3);
             }
           }
-        
-        // Skip the children handling if numberOfChildren is 0
-        if (numberOfChildren > 0) {
-          for (var j = 0; j < numberOfChildren; j++) {
-            var childIdProofFile = document.getElementById('childidProof' + j).files[0];
-            var childIdProofRef = storageRef.child('childIdProofs/' + formData['bookingID'] + '/child' + j);
-            if (childIdProofFile) {
-              if (childIdProofFile.size > maxSizeInBytes) {
-                alert('The ID proof file for child ' + (j+1) + ' is too large. Please upload a file less than 10MB.');
-                return;
-              } else {
-                var uploadPromiseChild = childIdProofRef.put(childIdProofFile).then(() => {
-                  console.log('Uploaded ID proof for child ' + j);
-                })
-                  .catch((error) => console.error(error));
-                uploadPromises.push(uploadPromiseChild);
+          
+          // Skip the children handling if numberOfChildren is 0
+          if (numberOfChildren > 0) {
+            for (var j = 0; j < numberOfChildren; j++) {
+              var childIdProofFile = document.getElementById('childidProof' + j).files[0];
+              var childIdProofRef = storageRef.child('childIdProofs/' + formData['bookingID'] + '/child' + j);
+              if (childIdProofFile) {
+                if (childIdProofFile.size > maxSizeInBytes) {
+                  alert('The ID proof file for child ' + (j+1) + ' is too large. Please upload a file less than 10MB.');
+                  return;
+                } else {
+                  var uploadPromiseChild = childIdProofRef.put(childIdProofFile).then(() => {
+                    console.log('Uploaded ID proof for child ' + j);
+                  })
+                    .catch((error) => console.error(error));
+                  uploadPromises.push(uploadPromiseChild);
+                }
               }
             }
-          }
+          } 
         }
         
         // Remove the individual traveler fields from the form data
@@ -696,10 +697,9 @@
             freshSubmitButton.prop('disabled', false);
             console.log("Button should now be enabled");
           });
-        });
-      // Initialize the jQuery Validate plugin
-      $('#TripForm').validate();
-    });
-  </script>
+        // Initialize the jQuery Validate plugin
+        $('#TripForm').validate();
+      });
+      </script>
 </body>
 </html>
