@@ -576,7 +576,8 @@
           traveler['foodAllergyDetails'] = formData['foodAllergyDetails' + i];
           traveler['covidSymptoms'] = formData['covidSymptoms' + i];
           traveler['covidAffected'] = formData['covidAffected' + i];
-          traveler['vaccineDose'] = formData['vaccineDose' + i];
+          traveler['vaccineDose'] = formData['vaccineDose' + I];
+          travelerData.push(traveler);
           
           // Handle file uploads for each traveler
           var serviceType = formData['serviceType'];
@@ -650,7 +651,6 @@
               }
             }
           }
-          travelerData.push(traveler);
         }
         
         // Remove the individual traveler fields from the form data
