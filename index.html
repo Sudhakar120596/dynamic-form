@@ -577,6 +577,12 @@
           traveler['covidSymptoms'] = formData['covidSymptoms' + i];
           traveler['covidAffected'] = formData['covidAffected' + i];
           traveler['vaccineDose'] = formData['vaccineDose' + i];
+          // Remove the individual traveler fields from the form data
+          ['travelerName', 'dob', 'gender', 'email', 'phone', 'emergencyContactName', 
+           'emergencyContactPhone', 'foodAllergy', 'foodAllergyDetails', 
+           'covidSymptoms', 'covidAffected', 'vaccineDose'].forEach(function(field) {
+             delete formData[field + i];
+           });
           travelerData.push(traveler);
           
           // Handle file uploads for each traveler
