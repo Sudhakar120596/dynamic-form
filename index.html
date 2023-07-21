@@ -650,8 +650,8 @@
                 alert('The Medical Certificate for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
                 return;
               } else {
-                var uploadPromise3 = declarationRef.put(medicalcertiFile).then(() => {
-                  console.log('Uploaded declaration document for traveler ' + i);
+                var uploadPromise4 = declarationRef.put(medicalcertiFile).then(() => {
+                  console.log('Uploaded medical document for traveler ' + i);
                 })
                   .catch((error) => console.error(error));
                 uploadPromises.push(uploadPromise4);
