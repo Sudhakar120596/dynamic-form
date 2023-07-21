@@ -643,7 +643,9 @@
                   .catch((error) => console.error(error));
                 uploadPromises.push(uploadPromise3);
               }
-              if(medicalcertiFile) {
+            }
+          if (serviceType === 'Trek')
+            if(medicalcertiFile) {
               if (medicalcertiFile.size > maxSizeInBytes) {
                 alert('The Medical Certificate for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
                 return;
