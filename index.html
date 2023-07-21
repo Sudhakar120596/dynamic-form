@@ -328,11 +328,13 @@
           $('.foodChoice').hide();
           $('.foodAllergy').hide();
           $('.declarationFile').hide();
+          $('.medicalcerti').hide();
         } else {
           $('.foodChoice').show();
           $('.foodAllergy').show();
           if ($(this).val() === 'Trek') {
             $('.declarationFile').show();
+            $('.medicalcerti').show();
           } else {
             $('.declarationFile').hide();
           }
@@ -454,6 +456,9 @@
 
           <label class="declarationFile" for="declarationFile${i}">Declaration Document (Max 10mb):</label>
           <input class="declarationFile" type="file" id="declarationFile${i}" name="declarationFile${i}" required>
+
+          <label class="medicalcerti" for="medicalcerti${i}">Medical Certificate(For Below 12 and above 45 year) (Max 10mb):</label>
+          <input class="medicalcerti" type="file" id="medicalcerti${i}" name="medicalcerti${i}">
         </div>
         `);
           
@@ -591,12 +596,14 @@
           var idProofFile = document.getElementById('idProof' + i).files[0];
           var vaccineCertFile = document.getElementById('vaccineCertificate' + i).files[0];
           var declarationFile = document.getElementById('declarationFile' + i).files[0];
+          var medicalcertiFile = document.getElementById('medicalcerti' + i).files[0];
           var maxSizeInBytes = 10 * 1024 * 1024; // 10MB in bytes
           
           var storageRef = firebase.storage().ref();
           var idProofRef = storageRef.child('idProofs/' + formData['bookingID'] + '/traveler' + i);
           var vaccineCertRef = storageRef.child('vaccineCertificates/' + formData['bookingID'] + '/traveler' + i);
           var declarationRef = storageRef.child('declarationDocuments/' + formData['bookingID'] + '/traveler' + i);
+          var medicalcertiRef = storageRef.child('medicalcertiDocuments/' + formData['bookingID'] + '/traveler' + i);
           
           if (idProofFile) {
             if (idProofFile.size > maxSizeInBytes) {
@@ -635,6 +642,17 @@
                 })
                   .catch((error) => console.error(error));
                 uploadPromises.push(uploadPromise3);
+              }
+              if(medicalcertiFile) {
+              if (medicalcertiFile.size > maxSizeInBytes) {
+                alert('The Medical Certificate for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
+                return;
+              } else {
+                var uploadPromise3 = declarationRef.put(medicalcertiFile).then(() => {
+                  console.log('Uploaded declaration document for traveler ' + i);
+                })
+                  .catch((error) => console.error(error));
+                uploadPromises.push(uploadPromise4);
               }
             }
           
