@@ -572,6 +572,7 @@
           traveler['phone'] = phoneNumber;
           traveler['emergencyContactName'] = formData['emergencyContactName' + i];
           traveler['emergencyContactPhone'] = emergencyContactPhone;
+          traveler['foodChoice' = formData['foodChoice'+i];
           traveler['foodAllergy'] = formData['foodAllergy' + i];
           traveler['foodAllergyDetails'] = formData['foodAllergyDetails' + i];
           traveler['covidSymptoms'] = formData['covidSymptoms' + i];
@@ -579,7 +580,7 @@
           traveler['vaccineDose'] = formData['vaccineDose' + i];
           // Remove the individual traveler fields from the form data
           ['travelerName', 'dob', 'gender', 'email', 'phone', 'emergencyContactName', 
-           'emergencyContactPhone', 'foodAllergy', 'foodAllergyDetails', 
+           'emergencyContactPhone','foodChoice', 'foodAllergy', 'foodAllergyDetails', 
            'covidSymptoms', 'covidAffected', 'vaccineDose'].forEach(function(field) {
              delete formData[field + i];
            });
