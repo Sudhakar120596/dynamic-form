@@ -76,22 +76,6 @@
       display: none;
     }
 
-    input[type="submit"] {
-      display: block;
-      width: 100%;
-      padding: 15px;
-      background-color: #4CAF50;
-      color: #ffffff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    input[type="submit"]:hover {
-      background-color: #45a049;
-    }
-
     /* Error Styles */
     label.error {
       display: inline-block;
@@ -650,7 +634,7 @@
                 alert('The Medical Certificate for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
                 return;
               } else {
-                var uploadPromise4 = declarationRef.put(medicalcertiFile).then(() => {
+                var uploadPromise4 = medicalcertiRef.put(medicalcertiFile).then(() => {
                   console.log('Uploaded medical document for traveler ' + i);
                 })
                   .catch((error) => console.error(error));
