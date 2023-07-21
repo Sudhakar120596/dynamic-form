@@ -564,9 +564,20 @@
           var emergencyContactPhone = '+' + itiPhoneEmergency.getSelectedCountryData().dialCode + formData['emergencyContactPhone' + i];
           
           // Update the traveler object with the modified phone number and emergency contact number
+          // Update the traveler object with the modified phone number and emergency contact number
+          traveler['travelerName'] = formData['travelerName' + i];
+          traveler['dob'] = formData['dob' + i];
+          traveler['gender'] = formData['gender' + i];
+          traveler['email'] = email;
           traveler['phone'] = phoneNumber;
+          traveler['emergencyContactName'] = formData['emergencyContactName' + i];
           traveler['emergencyContactPhone'] = emergencyContactPhone;
-
+          traveler['foodAllergy'] = formData['foodAllergy' + i];
+          traveler['foodAllergyDetails'] = formData['foodAllergyDetails' + i];
+          traveler['covidSymptoms'] = formData['covidSymptoms' + i];
+          traveler['covidAffected'] = formData['covidAffected' + i];
+          traveler['vaccineDose'] = formData['vaccineDose' + i];
+          
           // Handle file uploads for each traveler
           var serviceType = formData['serviceType'];
           var idProofFile = document.getElementById('idProof' + i).files[0];
