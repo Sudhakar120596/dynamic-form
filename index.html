@@ -526,6 +526,30 @@
       
       // Trigger the change event manually
       $('#numberOfTravelers').change();
+
+      function checkFolderExistence(folderPath) {
+        return firebase.storage().ref(folderPath).listAll().then(listResult => {
+          return listResult.prefixes.length > 0; // True if folder exists
+        }).catch(error => {
+          console.error('Error checking folder existence: ', error);
+          return false; 
+        });
+      }
+      
+      async function getBookingIDWithSuffix(bookingID) {
+        let originalBookingID = bookingID;
+        let suffix = 0;
+        
+        while (await checkFolderExistence('idProofs/' + bookingID)) {
+          suffix++;
+          bookingID = originalBookingID + '_' + suffix;
+        }
+        
+        return bookingID;
+      }
+      
+      // Then, inside your form submission logic, call the above functions:
+      let finalBookingID = await getBookingIDWithSuffix(formData['bookingID']);
       
       // AJAX function to submit the form
       $('#TripForm').submit(function(e) {
@@ -600,10 +624,10 @@
           var maxSizeInBytes = 10 * 1024 * 1024; // 10MB in bytes
           
           var storageRef = firebase.storage().ref();
-          var idProofRef = storageRef.child('idProofs/' + formData['bookingID'] + '/traveler' + i);
-          var vaccineCertRef = storageRef.child('vaccineCertificates/' + formData['bookingID'] + '/traveler' + i);
-          var declarationRef = storageRef.child('declarationDocuments/' + formData['bookingID'] + '/traveler' + i);
-          var medicalcertiRef = storageRef.child('medicalcertiDocuments/' + formData['bookingID'] + '/traveler' + i);
+          var idProofRef = storageRef.child('idProofs/' + finalBookingID + '/traveler' + i);
+          var vaccineCertRef = storageRef.child('vaccineCertificates/' + finalBookingID + '/traveler' + i);
+          var declarationRef = storageRef.child('declarationDocuments/' + finalBookingID + '/traveler' + i);
+          var medicalcertiRef = storageRef.child('medicalcertiDocuments/' + finalBookingID + '/traveler' + i);
           
           if (idProofFile) {
             if (idProofFile.size > maxSizeInBytes) {
@@ -662,7 +686,7 @@
           if (numberOfChildren > 0) {
             for (var j = 0; j < numberOfChildren; j++) {
               var childIdProofFile = document.getElementById('childidProof' + j).files[0];
-              var childIdProofRef = storageRef.child('childIdProofs/' + formData['bookingID'] + '/child' + j);
+              var childIdProofRef = storageRef.child('childIdProofs/' + finalBookingID + '/child' + j);
               
               if (childIdProofFile) {
                 if (childIdProofFile.size > maxSizeInBytes) {
