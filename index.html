@@ -595,7 +595,7 @@
           formData.timestamp = firebase.firestore.FieldValue.serverTimestamp();
           
           // Handle file uploads for each traveler
-          var uploadPromises = [];
+          var uploadDataPromises = [];  // Initialize the array here
           for (var i = 0; i < numberOfTravelers; i++) {
             var traveler = {};
             traveler['travelerName'] = formData['travelerName' + i];
