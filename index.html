@@ -527,27 +527,6 @@
       // Trigger the change event manually
       $('#numberOfTravelers').change();
 
-      function checkFolderExistence(folderPath) {
-        return firebase.storage().ref(folderPath).listAll().then(listResult => {
-          return listResult.prefixes.length > 0; // True if folder exists
-        }).catch(error => {
-          console.error('Error checking folder existence: ', error);
-          return false; 
-        });
-      }
-      
-      async function getBookingIDWithSuffix(bookingID) {
-        let originalBookingID = bookingID;
-        let suffix = 0;
-        
-        while (await checkFolderExistence('idProofs/' + bookingID)) {
-          suffix++;
-          bookingID = originalBookingID + '_' + suffix;
-        }
-        
-        return bookingID;
-      }
-
       async function folderExists(folderPath) {
         try {
           const listResult = await firebase.storage().ref(folderPath).listAll();
@@ -557,6 +536,18 @@
           console.error(`Error checking existence of folder ${folderPath}:`, error);
           return false;
         }
+      }
+      
+      async function getBookingIDWithSuffix(bookingID) {
+        let originalBookingID = bookingID;
+        let suffix = 0;
+        
+        while (await folderExists('idProofs/' + bookingID)) {
+          suffix++;
+          bookingID = originalBookingID + '_' + suffix;
+        }
+        
+        return bookingID;
       }
       
       // AJAX function to submit the form
