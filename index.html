@@ -549,12 +549,11 @@
       }
       
       // AJAX function to submit the form
-      $(document).ready(function() {
-        $('#TripForm').submit(async function(e) {
-          e.preventDefault();
-
-          try {
-            // Get the form data
+      $('#TripForm').submit(async function(e) {
+        e.preventDefault();
+        
+        try {
+          // Get the form data
           var data = $(this).serializeArray();
           
           // Convert the form data to an object
@@ -760,6 +759,6 @@
       // Initialize the jQuery Validate plugin
       $('#TripForm').validate();
     });
-  </script>
+      </script>
 </body>
 </html>
