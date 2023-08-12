@@ -548,184 +548,184 @@
         return bookingID;
       }
       
-      // Then, inside your form submission logic, call the above functions:
-      let finalBookingID = await getBookingIDWithSuffix(formData['bookingID']);
-      
       // AJAX function to submit the form
-      $('#TripForm').submit(function(e) {
-        e.preventDefault();
-        
-        // Get the form data
-        var data = $(this).serializeArray();
-        
-        // Convert the form data to an object
-        var formData = {};
-        data.forEach(function(item) {
-          formData[item.name] = item.value;
-        });
-        
-        // Get the traveler data
-        var travelerData = [];
-        var numberOfTravelers = formData['numberOfTravelers'];
-        var numberOfChildren = formData['numberOfChildren'];
-
-        // Validate the email address with domain format
-        var emailRegex = /^[A-Za-z0-9._%+-]+@(?:[A-Za-z0-9-]+\.)+(?:com|in)$/;
-
-        // Add the timestamp to the formData object
-        formData.timestamp = firebase.firestore.FieldValue.serverTimestamp();
-        
-        // Handle file uploads for each traveler
-        var uploadPromises = [];
-        for (var i = 0; i < numberOfTravelers; i++) {
-          var traveler = {};
-          traveler['travelerName'] = formData['travelerName' + i];
-
-          // Validate the email address
-          var email = formData['email' + i];
-          if (!emailRegex.test(email)) {
-            alert("Please enter a valid email address with a valid domain (e.g., username@domain.com or username@domain.in) for traveler " + (i+1));
-            return;
-          }
+      $(document).ready(function() {
+        $('#TripForm').submit(async function(e) {
+          e.preventDefault();        
           
-          // Add the country code to the phone number and emergency contact number
-          var phoneNumber = '+' + itiPhone.getSelectedCountryData().dialCode + formData['phone' + i];
-          var emergencyContactPhone = '+' + itiPhoneEmergency.getSelectedCountryData().dialCode + formData['emergencyContactPhone' + i];
+          // Get the form data
+          var data = $(this).serializeArray();
           
-          // Update the traveler object with the modified phone number and emergency contact number
-          // Update the traveler object with the modified phone number and emergency contact number
-          traveler['travelerName'] = formData['travelerName' + i];
-          traveler['dob'] = formData['dob' + i];
-          traveler['gender'] = formData['gender' + i];
-          traveler['email'] = email;
-          traveler['phone'] = phoneNumber;
-          traveler['emergencyContactName'] = formData['emergencyContactName' + i];
-          traveler['emergencyContactPhone'] = emergencyContactPhone;
-          traveler['foodChoice'] = formData['foodChoice'+i];
-          traveler['foodAllergy'] = formData['foodAllergy' + i];
-          traveler['foodAllergyDetails'] = formData['foodAllergyDetails' + i];
-          traveler['covidSymptoms'] = formData['covidSymptoms' + i];
-          traveler['covidAffected'] = formData['covidAffected' + i];
-          traveler['vaccineDose'] = formData['vaccineDose' + i];
-          // Remove the individual traveler fields from the form data
-          ['travelerName', 'dob', 'gender', 'email', 'phone', 'emergencyContactName', 
-           'emergencyContactPhone','foodChoice', 'foodAllergy', 'foodAllergyDetails', 
-           'covidSymptoms', 'covidAffected', 'vaccineDose'].forEach(function(field) {
-             delete formData[field + i];
-           });
-          travelerData.push(traveler);
+          // Convert the form data to an object
+          var formData = {};
+          data.forEach(function(item) {
+            formData[item.name] = item.value;
+          });
+          
+          // Get the traveler data
+          var travelerData = [];
+          var numberOfTravelers = formData['numberOfTravelers'];
+          var numberOfChildren = formData['numberOfChildren'];
+          var finalBookingID = await getBookingIDWithSuffix(formData['bookingID']);
+          console.log("Final Booking ID:", finalBookingID);
+          
+          // Validate the email address with domain format
+          var emailRegex = /^[A-Za-z0-9._%+-]+@(?:[A-Za-z0-9-]+\.)+(?:com|in)$/;
+          
+          // Add the timestamp to the formData object
+          formData.timestamp = firebase.firestore.FieldValue.serverTimestamp();
           
           // Handle file uploads for each traveler
-          var serviceType = formData['serviceType'];
-          var idProofFile = document.getElementById('idProof' + i).files[0];
-          var vaccineCertFile = document.getElementById('vaccineCertificate' + i).files[0];
-          var declarationFile = document.getElementById('declarationFile' + i).files[0];
-          var medicalcertiFile = document.getElementById('medicalcerti' + i).files[0];
-          var maxSizeInBytes = 10 * 1024 * 1024; // 10MB in bytes
-          
-          var storageRef = firebase.storage().ref();
-          var idProofRef = storageRef.child('idProofs/' + finalBookingID + '/traveler' + i);
-          var vaccineCertRef = storageRef.child('vaccineCertificates/' + finalBookingID + '/traveler' + i);
-          var declarationRef = storageRef.child('declarationDocuments/' + finalBookingID + '/traveler' + i);
-          var medicalcertiRef = storageRef.child('medicalcertiDocuments/' + finalBookingID + '/traveler' + i);
-          
-          if (idProofFile) {
-            if (idProofFile.size > maxSizeInBytes) {
-              alert('The ID proof file for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
+          var uploadPromises = [];
+          for (var i = 0; i < numberOfTravelers; i++) {
+            var traveler = {};
+            traveler['travelerName'] = formData['travelerName' + i];
+            
+            // Validate the email address
+            var email = formData['email' + i];
+            if (!emailRegex.test(email)) {
+              alert("Please enter a valid email address with a valid domain (e.g., username@domain.com or username@domain.in) for traveler " + (i+1));
               return;
-            } else {
-              var uploadPromise1 = idProofRef.put(idProofFile).then(() => {
-                console.log('Uploaded ID proof for traveler ' + i);
-              })
-                .catch((error) => console.error(error));
-              uploadPromises.push(uploadPromise1);
             }
-          }
-          
-          if (vaccineCertFile) {
-            if (vaccineCertFile.size > maxSizeInBytes) {
-              alert('The vaccine certificate file for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
-              return;
-            } else {
-              var uploadPromise2 = vaccineCertRef.put(vaccineCertFile).then(() => {
-                console.log('Uploaded vaccine certificate for traveler ' + i);
-              })
-                .catch((error) => console.error(error));
-              uploadPromises.push(uploadPromise2);
-            }
-          }
-          
-          if (serviceType === 'Trek')
-            if(declarationFile) {
-              if (declarationFile.size > maxSizeInBytes) {
-                alert('The Declaration file for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
+            
+            // Add the country code to the phone number and emergency contact number
+            var phoneNumber = '+' + itiPhone.getSelectedCountryData().dialCode + formData['phone' + i];
+            var emergencyContactPhone = '+' + itiPhoneEmergency.getSelectedCountryData().dialCode + formData['emergencyContactPhone' + i];
+            
+            // Update the traveler object with the modified phone number and emergency contact number
+            traveler['travelerName'] = formData['travelerName' + i];
+            traveler['dob'] = formData['dob' + i];
+            traveler['gender'] = formData['gender' + i];
+            traveler['email'] = email;
+            traveler['phone'] = phoneNumber;
+            traveler['emergencyContactName'] = formData['emergencyContactName' + i];
+            traveler['emergencyContactPhone'] = emergencyContactPhone;
+            traveler['foodChoice'] = formData['foodChoice'+i];
+            traveler['foodAllergy'] = formData['foodAllergy' + i];
+            traveler['foodAllergyDetails'] = formData['foodAllergyDetails' + i];
+            traveler['covidSymptoms'] = formData['covidSymptoms' + i];
+            traveler['covidAffected'] = formData['covidAffected' + i];
+            traveler['vaccineDose'] = formData['vaccineDose' + i];
+            // Remove the individual traveler fields from the form data
+            ['travelerName', 'dob', 'gender', 'email', 'phone', 'emergencyContactName', 
+             'emergencyContactPhone','foodChoice', 'foodAllergy', 'foodAllergyDetails', 
+             'covidSymptoms', 'covidAffected', 'vaccineDose'].forEach(function(field) {
+               delete formData[field + i];
+             });
+            travelerData.push(traveler);
+            
+            // Handle file uploads for each traveler
+            var serviceType = formData['serviceType'];
+            var idProofFile = document.getElementById('idProof' + i).files[0];
+            var vaccineCertFile = document.getElementById('vaccineCertificate' + i).files[0];
+            var declarationFile = document.getElementById('declarationFile' + i).files[0];
+            var medicalcertiFile = document.getElementById('medicalcerti' + i).files[0];
+            var maxSizeInBytes = 10 * 1024 * 1024; // 10MB in bytes
+            
+            var storageRef = firebase.storage().ref();
+            var idProofRef = storageRef.child('idProofs/' + finalBookingID + '/traveler' + i);
+            var vaccineCertRef = storageRef.child('vaccineCertificates/' + finalBookingID + '/traveler' + i);
+            var declarationRef = storageRef.child('declarationDocuments/' + finalBookingID + '/traveler' + i);
+            var medicalcertiRef = storageRef.child('medicalcertiDocuments/' + finalBookingID + '/traveler' + i);
+            
+            if (idProofFile) {
+              if (idProofFile.size > maxSizeInBytes) {
+                alert('The ID proof file for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
                 return;
               } else {
-                var uploadPromise3 = declarationRef.put(declarationFile).then(() => {
-                  console.log('Uploaded declaration document for traveler ' + i);
+                var uploadPromise1 = idProofRef.put(idProofFile).then(() => {
+                  console.log('Uploaded ID proof for traveler ' + i);
                 })
                   .catch((error) => console.error(error));
-                uploadPromises.push(uploadPromise3);
+                uploadPromises.push(uploadPromise1);
               }
             }
-          if (serviceType === 'Trek')
-            if(medicalcertiFile) {
-              if (medicalcertiFile.size > maxSizeInBytes) {
-                alert('The Medical Certificate for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
+            
+            if (vaccineCertFile) {
+              if (vaccineCertFile.size > maxSizeInBytes) {
+                alert('The vaccine certificate file for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
                 return;
               } else {
-                var uploadPromise4 = medicalcertiRef.put(medicalcertiFile).then(() => {
-                  console.log('Uploaded medical document for traveler ' + i);
+                var uploadPromise2 = vaccineCertRef.put(vaccineCertFile).then(() => {
+                  console.log('Uploaded vaccine certificate for traveler ' + i);
                 })
                   .catch((error) => console.error(error));
-                uploadPromises.push(uploadPromise4);
+                uploadPromises.push(uploadPromise2);
               }
             }
-          
-          // Skip the children handling if numberOfChildren is 0
-          if (numberOfChildren > 0) {
-            for (var j = 0; j < numberOfChildren; j++) {
-              var childIdProofFile = document.getElementById('childidProof' + j).files[0];
-              var childIdProofRef = storageRef.child('childIdProofs/' + finalBookingID + '/child' + j);
-              
-              if (childIdProofFile) {
-                if (childIdProofFile.size > maxSizeInBytes) {
-                  alert('The ID proof file for child ' + (j+1) + ' is too large. Please upload a file less than 10MB.');
+            
+            if (serviceType === 'Trek')
+              if(declarationFile) {
+                if (declarationFile.size > maxSizeInBytes) {
+                  alert('The Declaration file for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
                   return;
                 } else {
-                  var uploadPromiseChild = childIdProofRef.put(childIdProofFile).then(() => {
-                    console.log('Uploaded ID proof for child ' + j);
+                  var uploadPromise3 = declarationRef.put(declarationFile).then(() => {
+                    console.log('Uploaded declaration document for traveler ' + i);
                   })
                     .catch((error) => console.error(error));
-                  uploadPromises.push(uploadPromiseChild);
+                  uploadPromises.push(uploadPromise3);
+                }
+              }
+            
+            if (serviceType === 'Trek')
+              if(medicalcertiFile) {
+                if (medicalcertiFile.size > maxSizeInBytes) {
+                  alert('The Medical Certificate for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
+                  return;
+                } else {
+                  var uploadPromise4 = medicalcertiRef.put(medicalcertiFile).then(() => {
+                    console.log('Uploaded medical document for traveler ' + i);
+                  })
+                    .catch((error) => console.error(error));
+                  uploadPromises.push(uploadPromise4);
+                }
+              }
+            
+            // Skip the children handling if numberOfChildren is 0
+            if (numberOfChildren > 0) {
+              for (var j = 0; j < numberOfChildren; j++) {
+                var childIdProofFile = document.getElementById('childidProof' + j).files[0];
+                var childIdProofRef = storageRef.child('childIdProofs/' + finalBookingID + '/child' + j);
+                
+                if (childIdProofFile) {
+                  if (childIdProofFile.size > maxSizeInBytes) {
+                    alert('The ID proof file for child ' + (j+1) + ' is too large. Please upload a file less than 10MB.');
+                    return;
+                  } else {
+                    var uploadPromiseChild = childIdProofRef.put(childIdProofFile).then(() => {
+                      console.log('Uploaded ID proof for child ' + j);
+                    })
+                      .catch((error) => console.error(error));
+                    uploadPromises.push(uploadPromiseChild);
+                  }
                 }
               }
             }
           }
-        }
-        
-        // Remove the individual traveler fields from the form data
-        Object.keys(formData).forEach(function(key) {
-          if (key.startsWith('traveler')) {
-            delete formData[key];
+          
+          // Remove the individual traveler fields from the form data
+          Object.keys(formData).forEach(function(key) {
+            if (key.startsWith('traveler')) {
+              delete formData[key];
+            }
+          });
+          
+          // Add the traveler data to the form data
+          formData['travelers'] = travelerData;
+          
+          // Validate form data...
+          if (!$(this).valid()) {
+            return;
           }
-        });
-        
-        // Add the traveler data to the form data
-        formData['travelers'] = travelerData;
-        
-        // Validate form data...
-        if (!$(this).valid()) {
-          return;
-        }
-        
-        // Disable the submit button
-        var submitButton = $(this).find(':submit');
-        console.log("About to disable the button");
-        submitButton.prop('disabled', true);
-        console.log("Button should now be disabled");
-        
-        // Adding document to Firestore
+          
+          // Disable the submit button
+          var submitButton = $(this).find(':submit');
+          console.log("About to disable the button");
+          submitButton.prop('disabled', true);
+          console.log("Button should now be disabled");
+          
+          // Adding document to Firestore
           Promise.all(uploadPromises)
             .then(() => {
               // Then add the document to Firestore
@@ -751,7 +751,11 @@
               freshSubmitButton.prop('disabled', false);
               console.log("Button should now be enabled");
             });
-      });
+        
+        } catch (error) {
+          console.error('An error occurred:', error);
+      }
+                        });
       // Initialize the jQuery Validate plugin
       $('#TripForm').validate();
     });
