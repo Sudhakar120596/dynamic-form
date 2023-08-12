@@ -549,9 +549,14 @@
       }
 
       async function folderExists(folderPath) {
-        const listResult = await firebase.storage().ref(folderPath).listAll();
-        // Check both items and prefixes to determine existence
-        return listResult.items.length > 0 || listResult.prefixes.length > 0;
+        try {
+          const listResult = await firebase.storage().ref(folderPath).listAll();
+          console.log(`Listing for ${folderPath}:`, listResult);
+          return listResult.items.length > 0 || listResult.prefixes.length > 0;
+        } catch (error) {
+          console.error(`Error checking existence of folder ${folderPath}:`, error);
+          return false;
+        }
       }
       
       // AJAX function to submit the form
