@@ -547,6 +547,12 @@
         
         return bookingID;
       }
+
+      async function folderExists(folderPath) {
+        const listResult = await firebase.storage().ref(folderPath).listAll();
+        // Check both items and prefixes to determine existence
+        return listResult.items.length > 0 || listResult.prefixes.length > 0;
+      }
       
       // AJAX function to submit the form
       $('#TripForm').submit(async function(e) {
