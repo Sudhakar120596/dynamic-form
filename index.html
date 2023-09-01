@@ -324,15 +324,21 @@
       
       // Update form fields when service type changes
       $('#serviceType').change(function() {
-        var serviceTypeVal = $(this).val();
-        
-        $('.foodChoice').toggle(serviceTypeVal !== 'CabRental');
-        $('.foodAllergy').toggle(serviceTypeVal !== 'CabRental');
-        
-        var isTrek = serviceTypeVal === 'Trek';
-        
-        $('.declarationFile').toggle(isTrek);
-        $('.medicalcerti').toggle(isTrek);
+        if ($(this).val() === 'CabRental') {
+          $('.foodChoice').hide();
+          $('.foodAllergy').hide();
+          $('.declarationFile').hide();
+          $('.medicalcerti').hide();
+        } else {
+          $('.foodChoice').show();
+          $('.foodAllergy').show();
+          if ($(this).val() === 'Trek') {
+            $('.declarationFile').show();
+            $('.medicalcerti').show();
+          } else {
+            $('.declarationFile').hide();
+          }
+        }
       });
       
       $('#goToSection2').click(function() {
@@ -562,7 +568,6 @@
           var travelerData = [];
           var numberOfTravelers = formData['numberOfTravelers'];
           var numberOfChildren = formData['numberOfChildren'];
-          var serviceType = formData['serviceType'];
           var finalBookingID = await getBookingIDWithSuffix(formData['bookingID']);
           console.log("Final Booking ID:", finalBookingID);
           
@@ -575,13 +580,6 @@
           // Handle file uploads for each traveler
           var uploadPromises = [];
           for (var i = 0; i < numberOfTravelers; i++) {
-            if (serviceType !== 'Trek') {
-              $('#declarationFile' + i).parent().hide();  // Assuming these are wrapped in a parent div
-              $('#medicalcerti' + i).parent().hide();     // Hide the parent div containing the input
-            } else {
-              $('#declarationFile' + i).parent().show();
-              $('#medicalcerti' + i).parent().show();
-            }
             var traveler = {};
             traveler['travelerName'] = formData['travelerName' + i];
             
@@ -658,7 +656,7 @@
               }
             }
             
-            if (serviceType === 'Trek'){
+            if (serviceType === 'Trek')
               if(declarationFile) {
                 if (declarationFile.size > maxSizeInBytes) {
                   alert('The Declaration file for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
@@ -671,6 +669,8 @@
                   uploadPromises.push(uploadPromise3);
                 }
               }
+            
+            if (serviceType === 'Trek')
               if(medicalcertiFile) {
                 if (medicalcertiFile.size > maxSizeInBytes) {
                   alert('The Medical Certificate for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
@@ -683,8 +683,6 @@
                   uploadPromises.push(uploadPromise4);
                 }
               }
-            }
-              
             
             // Skip the children handling if numberOfChildren is 0
             if (numberOfChildren > 0) {
