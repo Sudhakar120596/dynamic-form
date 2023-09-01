@@ -454,12 +454,14 @@
 
           <label for="vaccineCertificate${i}">If yes, upload your vaccination certificate (Max 10mb):</label>
           <input type="file" id="vaccineCertificate${i}" name="vaccineCertificate${i}" required>
-
+          
+          ${serviceType === 'Trek' ? `
           <label class="declarationFile" for="declarationFile${i}">Declaration Document (Max 10mb):</label>
-          <input class="declarationFile" type="file" id="declarationFile${i}" name="declarationFile${i}" style="display: ${serviceType === 'Trek' ? 'block' : 'none'};" ${serviceType === 'Trek' ? 'required' : ''}>
-
+          <input class="declarationFile" type="file" id="declarationFile${i}" name="declarationFile${i}" required>
+          
           <label class="medicalcerti" for="medicalcerti${i}">Medical Certificate(For Below 12 and above 45 year) (Max 10mb):</label>
-          <input class="medicalcerti" type="file" id="medicalcerti${i}" name="medicalcerti${i}" style="display: ${serviceType === 'Trek' ? 'block' : 'none'}">
+          <input class="medicalcerti" type="file" id="medicalcerti${i}" name="medicalcerti${i}">
+          ` : ''}
         </div>
         `);
           
