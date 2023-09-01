@@ -324,15 +324,21 @@
       
       // Update form fields when service type changes
       $('#serviceType').change(function() {
-        var serviceTypeVal = $(this).val();
-        
-        $('.foodChoice').toggle(serviceTypeVal !== 'CabRental');
-        $('.foodAllergy').toggle(serviceTypeVal !== 'CabRental');
-        
-        var isTrek = serviceTypeVal === 'Trek';
-        
-        $('.declarationFile').toggle(isTrek);
-        $('.medicalcerti').toggle(isTrek);
+        if ($(this).val() === 'CabRental') {
+          $('.foodChoice').hide();
+          $('.foodAllergy').hide();
+          $('.declarationFile').hide();
+          $('.medicalcerti').hide();
+        } else {
+          $('.foodChoice').show();
+          $('.foodAllergy').show();
+          if ($(this).val() === 'Trek') {
+            $('.declarationFile').show();
+            $('.medicalcerti').show();
+          } else {
+            $('.declarationFile').hide();
+          }
+        }
       });
       
       $('#goToSection2').click(function() {
@@ -544,7 +550,6 @@
         return bookingID;
       }
       
-      
       // AJAX function to submit the form
       $('#TripForm').submit(async function(e) {
         e.preventDefault();
@@ -651,7 +656,7 @@
               }
             }
             
-            if (serviceType === 'Trek'){
+            if (serviceType === 'Trek')
               if(declarationFile) {
                 if (declarationFile.size > maxSizeInBytes) {
                   alert('The Declaration file for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
@@ -664,6 +669,8 @@
                   uploadPromises.push(uploadPromise3);
                 }
               }
+            
+            if (serviceType === 'Trek')
               if(medicalcertiFile) {
                 if (medicalcertiFile.size > maxSizeInBytes) {
                   alert('The Medical Certificate for traveler ' + (i+1) + ' is too large. Please upload a file less than 10MB.');
@@ -676,12 +683,6 @@
                   uploadPromises.push(uploadPromise4);
                 }
               }
-            } else {
-              declarationFile = null;
-              medicalcertiFile = null;
-            }
-              
-            
             
             // Skip the children handling if numberOfChildren is 0
             if (numberOfChildren > 0) {
