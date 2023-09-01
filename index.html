@@ -562,6 +562,7 @@
           var travelerData = [];
           var numberOfTravelers = formData['numberOfTravelers'];
           var numberOfChildren = formData['numberOfChildren'];
+          var serviceType = formData['serviceType'];
           var finalBookingID = await getBookingIDWithSuffix(formData['bookingID']);
           console.log("Final Booking ID:", finalBookingID);
           
@@ -574,6 +575,13 @@
           // Handle file uploads for each traveler
           var uploadPromises = [];
           for (var i = 0; i < numberOfTravelers; i++) {
+            if (serviceType !== 'Trek') {
+              $('#declarationFile' + i).parent().hide();  // Assuming these are wrapped in a parent div
+              $('#medicalcerti' + i).parent().hide();     // Hide the parent div containing the input
+            } else {
+              $('#declarationFile' + i).parent().show();
+              $('#medicalcerti' + i).parent().show();
+            }
             var traveler = {};
             traveler['travelerName'] = formData['travelerName' + i];
             
