@@ -324,21 +324,15 @@
       
       // Update form fields when service type changes
       $('#serviceType').change(function() {
-        if ($(this).val() === 'CabRental') {
-          $('.foodChoice').hide();
-          $('.foodAllergy').hide();
-          $('.declarationFile').hide();
-          $('.medicalcerti').hide();
-        } else {
-          $('.foodChoice').show();
-          $('.foodAllergy').show();
-          if ($(this).val() === 'Trek') {
-            $('.declarationFile').show();
-            $('.medicalcerti').show();
-          } else {
-            $('.declarationFile').hide();
-          }
-        }
+        var serviceTypeVal = $(this).val();
+        
+        $('.foodChoice').toggle(serviceTypeVal !== 'CabRental');
+        $('.foodAllergy').toggle(serviceTypeVal !== 'CabRental');
+        
+        var isTrek = serviceTypeVal === 'Trek';
+        
+        $('.declarationFile').toggle(isTrek);
+        $('.medicalcerti').toggle(isTrek);
       });
       
       $('#goToSection2').click(function() {
