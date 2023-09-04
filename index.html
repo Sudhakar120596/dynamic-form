@@ -459,11 +459,11 @@
           <label for="vaccineCertificate${i}">If yes, upload your vaccination certificate (Max 10mb):</label>
           <input type="file" id="vaccineCertificate${i}" name="vaccineCertificate${i}" required>
           
-          <label class="declarationFile" for="declarationFile${i}">Declaration Document (Max 10mb):</label>
-          <input class="declarationFile" type="file" id="declarationFile${i}" name="declarationFile${i}" required>
+          <label class="declarationFile" for="declarationFile${i}" style="display: ${$('#serviceType').val() === 'Trek' ? 'none' : 'inline-block'};">Declaration Document (Max 10mb):</label>
+          <input class="declarationFile" type="file" id="declarationFile${i}" name="declarationFile${i}" required style="display: ${$('#serviceType').val() === 'Trek' ? 'none' : 'inline-block'};" required>
           
-          <label class="medicalcerti" for="medicalcerti${i}">Medical Certificate(For Below 12 and above 45 year) (Max 10mb):</label>
-          <input class="medicalcerti" type="file" id="medicalcerti${i}" name="medicalcerti${i}">
+          <label class="medicalcerti" for="medicalcerti${i}" style="display: ${$('#serviceType').val() === 'Trek' ? 'none' : 'inline-block'};">Medical Certificate(For Below 12 and above 45 year) (Max 10mb):</label>
+          <input class="medicalcerti" type="file" id="medicalcerti${i}" name="medicalcerti${i}" required style="display: ${$('#serviceType').val() === 'Trek' ? 'none' : 'inline-block'};" required>
         </div>
         `);
           
