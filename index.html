@@ -324,7 +324,9 @@
       
       // Update form fields when service type changes
       $('#serviceType').change(function() {
-        if ($(this).val() === 'CabRental') {
+        var selectedService = $(this).val();
+        
+        if (selectedService === 'CabRental') {
           $('.foodChoice').hide();
           $('.foodAllergy').hide();
           $('.declarationFile').hide();
@@ -332,7 +334,8 @@
         } else {
           $('.foodChoice').show();
           $('.foodAllergy').show();
-          if ($(this).val() === 'Trek') {
+          
+          if (selectedService === 'Trek') {
             $('.declarationFile').show();
             $('.medicalcerti').show();
           } else {
